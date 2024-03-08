@@ -2,7 +2,7 @@
 
 <html>
 	<head>
-		<title>Index view</title>
+		<title>York County Horror TBAG</title>
 	</head>
 
 	<body>

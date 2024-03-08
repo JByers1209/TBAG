@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ page import="edu.ycp.cs320.lab02.model.Numbers" %>
+<%@ page import="edu.ycp.cs320.tbag.model.Numbers" %>
 
 <html>
 	<head>

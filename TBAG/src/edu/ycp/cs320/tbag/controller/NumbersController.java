@@ -1,4 +1,4 @@
-package edu.ycp.cs320.lab02.controller;
+package edu.ycp.cs320.tbag.controller;
 
 public class NumbersController {
 	
