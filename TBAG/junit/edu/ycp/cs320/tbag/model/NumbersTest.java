@@ -1,11 +1,11 @@
-package edu.ycp.cs320.lab02.model;
+package edu.ycp.cs320.tbag.model;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.ycp.cs320.lab02.model.Numbers;
+import edu.ycp.cs320.tbag.model.Numbers;
 
 public class NumbersTest {
 	private Numbers model;
