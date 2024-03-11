@@ -1,4 +1,4 @@
-package edu.ycp.cs320.lab02.servlet.ajax;
+package edu.ycp.cs320.tbag.servlet.ajax;
 
 import java.io.IOException;
 
@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.ycp.cs320.lab02.controller.NumbersController;
+import edu.ycp.cs320.tbag.controller.NumbersController;
 
-public class MultiplyNumbersAjaxServlet extends HttpServlet {
+public class AddNumbersAjaxServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -28,16 +28,17 @@ public class MultiplyNumbersAjaxServlet extends HttpServlet {
 		// Get parameters
 		Double first = getDouble(req, "first");
 		Double second = getDouble(req, "second");
+		Double third = getDouble(req, "third");
 		
 		// Check whether parameters are valid
-		if (first == null || second == null) {
+		if (first == null || second == null || third == null) {
 			badRequest("Bad parameters", resp);
 			return;
 		}
 		
 		// Use a controller to process the request
 		NumbersController controller = new NumbersController();
-		Double result = controller.multiply(first, second);
+		Double result = controller.add(first, second, third);
 		
 		// Send back a response
 		resp.setContentType("text/plain");

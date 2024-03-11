@@ -1,12 +1,12 @@
-package edu.ycp.cs320.lab02.controller;
+package edu.ycp.cs320.tbag.controller;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.ycp.cs320.lab02.controller.NumbersController;
-import edu.ycp.cs320.lab02.model.Numbers;
+import edu.ycp.cs320.tbag.controller.NumbersController;
+import edu.ycp.cs320.tbag.model.Numbers;
 
 public class NumbersControllerTest {
 	private NumbersController controller;
