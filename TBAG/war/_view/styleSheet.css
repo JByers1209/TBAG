@@ -1,0 +1,44 @@
+body {
+    background-color: var(--gray);
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+:root{
+    --gray: #575859;
+}
+
+.container {
+    margin-top: 100px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #ff0606;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#login-form {
+    display: none;
+    margin-top: 20px;
+}
+
+#login-form input[type="text"],
+#login-form input[type="password"] {
+    padding: 10px;
+    margin: 5px;
+    width: 200px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#login-form button {
+    margin-top: 10px;
+}
