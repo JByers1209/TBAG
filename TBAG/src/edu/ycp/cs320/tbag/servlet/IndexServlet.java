@@ -19,12 +19,8 @@ public class IndexServlet extends HttpServlet {
 		
 		String function = req.getParameter("function");
 
-        if ("Add Numbers".equals(function)) {
-            req.getRequestDispatcher("/_view/addNumbers.jsp").forward(req, resp);
-        } else if ("Multiply Numbers".equals(function)) {
-            req.getRequestDispatcher("/_view/multiplyNumbers.jsp").forward(req, resp);
-        } else if ("Guessing Game".equals(function)) {
-            req.getRequestDispatcher("/_view/guessingGame.jsp").forward(req, resp);
+        if ("Play".equals(function)) {
+            req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
         } else {
         	req.getRequestDispatcher("/_view/index.jsp").forward(req, resp);
         }

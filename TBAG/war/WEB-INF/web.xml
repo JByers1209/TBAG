@@ -44,7 +44,7 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>AddNumbersServlet</servlet-name>
-    <url-pattern>/addNumbers</url-pattern>
+    <url-pattern>/game</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>MultiplyNumbersServlet</servlet-name>
@@ -62,7 +62,7 @@
   <!--  AJAX servlet mappings. -->
   <servlet-mapping>
     <servlet-name>AddNumbersAjaxServlet</servlet-name>
-    <url-pattern>/ajax/addNumbers</url-pattern>
+    <url-pattern>/ajax/game</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>MultiplyNumbersAjaxServlet</servlet-name>
