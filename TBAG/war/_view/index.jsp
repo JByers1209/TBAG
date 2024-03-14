@@ -13,7 +13,9 @@
             <img src="https://blog.flamingtext.com/blog/2024/03/13/flamingtext_com_1710299127_29928695.png" border="0" alt="Game subtitle" title="subtitle">
         </div>
         <div id ="login-form">
-            <button id="play-button">Play</button>
+            <form function="IndexServlet" method="get">
+                <input type="submit" name="function" value="Add Numbers">
+            </form>
         </div>
     </div>
 </body>
