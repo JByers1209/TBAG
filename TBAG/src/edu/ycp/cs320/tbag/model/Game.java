@@ -7,10 +7,10 @@ package edu.ycp.cs320.tbag.model;
 //    a call to model.getMin()
 // when the JSP specifies if(game.done), that gets converted to
 //    a call to model.isDone()
-public class Numbers {
+public class Game {
 	private Double first, second, third, result;
 	
-	public Numbers(Double first, Double second, Double third, Double result) {
+	public Game(Double first, Double second, Double third, Double result) {
 		this.first = first;
 		this.second = second;
 		this.third = third;

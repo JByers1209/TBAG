@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.ycp.cs320.tbag.controller.NumbersController;
-import edu.ycp.cs320.tbag.model.Numbers;
+import edu.ycp.cs320.tbag.controller.GameEngine;
+import edu.ycp.cs320.tbag.model.Game;
 
-public class AddNumbersServlet extends HttpServlet {
+public class GameServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	@Override
@@ -32,7 +32,7 @@ public class AddNumbersServlet extends HttpServlet {
 		String errorMessage = null;
 		
 		// decode POSTed form parameters and dispatch to controller
-		Numbers model = new Numbers(null, null, null, null);
+		Game model = new Game(null, null, null, null);
 		
 		try {
 			
@@ -49,7 +49,7 @@ public class AddNumbersServlet extends HttpServlet {
 			// the view does not alter data, only controller methods should be used for that
 			// thus, always call a controller method to operate on the data
 			else {
-				NumbersController controller = new NumbersController();
+				GameEngine controller = new GameEngine();
 				model.setResult(controller.add(model.getFirst(), model.getSecond(), model.getThird()));
 			}
 		} catch (NumberFormatException e) {

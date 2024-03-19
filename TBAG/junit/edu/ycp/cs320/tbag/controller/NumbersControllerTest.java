@@ -5,15 +5,15 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.ycp.cs320.tbag.controller.NumbersController;
-import edu.ycp.cs320.tbag.model.Numbers;
+import edu.ycp.cs320.tbag.controller.GameEngine;
+import edu.ycp.cs320.tbag.model.Game;
 
 public class NumbersControllerTest {
-	private NumbersController controller;
+	private GameEngine controller;
 	
 	@Before
 	public void setUp() {
-		controller = new NumbersController();
+		controller = new GameEngine();
 	}
 	
 	@Test

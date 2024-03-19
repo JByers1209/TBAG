@@ -1,6 +1,6 @@
 package edu.ycp.cs320.tbag.controller;
 
-public class NumbersController {
+public class GameEngine {
 	
 	public Double add(Double first, Double second, Double third) {
 		return first + second + third;
