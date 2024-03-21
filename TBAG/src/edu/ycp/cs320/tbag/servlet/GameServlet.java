@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.ycp.cs320.tbag.controller.GameEngine;
 
 public class GameServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -26,6 +25,9 @@ public class GameServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 	        throws ServletException, IOException {
 
+		
+		System.out.println("Game Servlet: doPost");	
+		
 	    req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
 	    
 	}
