@@ -14,15 +14,28 @@ public class IndexServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		//System.out.println("Index Servlet: doGet");
+		System.out.println("Index Servlet: doGet");
 		
-		
-		String function = req.getParameter("function");
-
-        if ("Play".equals(function)) {
-            req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
-        } else {
-        	req.getRequestDispatcher("/_view/index.jsp").forward(req, resp);
-        }
+		req.getRequestDispatcher("/_view/index.jsp").forward(req, resp);
 	}
+	
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		
+		System.out.println("Index Servlet: doPost");
+		
+		String selection = req.getParameter("function");
+		
+		if(selection != null) {
+			if(selection.equals("Play")) {
+				req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
+			}
+		}else {
+			req.getRequestDispatcher("/_view/index.jsp").forward(req, resp);
+		}
+		
+		
+	}	
+	
+	
 }

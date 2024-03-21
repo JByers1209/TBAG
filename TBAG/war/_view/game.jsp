@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Spooky York</title>
+    <title>Spooky York Game</title>
     <link rel="stylesheet" type="text/css" href="styleSheet2.css">
 </head>
 
@@ -17,22 +17,11 @@
         </div>
         <form id="command-form" action="GameServlet" method="post">
             <input type="text" id="command-line" name="userInput" placeholder="Type your command...">
-            <input type="submit" value="Submit">
         </form>        
     </div>
 
     <script>
-        // Get the form
-        var form = document.getElementById("command-form");
         
-        // Add event listener for form submission
-        form.addEventListener("submit", function(event) {
-            // Prevent the default form submission behavior
-            event.preventDefault();
-            
-            // Submit the form
-            form.submit();
-        });
     </script>
     
     
