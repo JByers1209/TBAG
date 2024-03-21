@@ -1,12 +1,20 @@
 package edu.ycp.cs320.tbag.controller;
 
 public class GameEngine {
-	
-	public Double add(Double first, Double second, Double third) {
-		return first + second + third;
-	}
-	
-	public Double multiply(Double first, Double second) {
-		return first * second;
-	}
+    // Method to process user input commands and return game responses
+    public String processUserInput(String userInput) {
+        // Process user input and generate game response
+        switch (userInput.toLowerCase()) {
+            case "up":
+                return "You moved up!";
+            case "down":
+                return "You moved down!";
+            case "left":
+                return "You moved left!";
+            case "right":
+                return "You moved right!";
+            default:
+                return "Invalid command.";
+        }
+    }
 }
