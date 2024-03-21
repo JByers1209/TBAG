@@ -10,34 +10,29 @@ import javax.servlet.http.HttpServletResponse;
 import edu.ycp.cs320.tbag.controller.GameEngine;
 
 public class GameServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+    private static final long serialVersionUID = 1L;
+    private GameEngine gameEngine; // Instantiate GameEngine
 
-		System.out.println("Game Servlet: doGet");	
-		
-		// call JSP to generate empty form
-		req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
-	}
-	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-	        throws ServletException, IOException {
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        gameEngine = new GameEngine(); // Initialize GameEngine
+    }
 
-	    // Retrieve user input from the form
-	    String userInput = req.getParameter("userInput");
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        // Extract user input from request
+        String userInput = req.getParameter("userInput");
 
-	    // Process the user input
-	    String result = ""; // Process the input and get the result
+        // Process user input using GameEngine
+        String gameResponse = gameEngine.processUserInput(userInput);
 
-	    // Set the result as an attribute
-	    req.setAttribute("result", result);
+        // Set response content type
+        resp.setContentType("text/plain");
 
-	    // Forward to view to render the result HTML document
-	    req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
-	}
-
-
+        // Send game response back to client
+        resp.getWriter().write(gameResponse);
+    }
 }
+

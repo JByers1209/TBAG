@@ -12,28 +12,37 @@
 
     <div id="game-container">
         <div id="game-text">
-            
+            <!-- This is where the game text will appear -->
         </div>
-        <form id="command-form" action="GameServlet" method="post">
-            <input type="text" id="command-line" name="userInput" placeholder="Type your command...">
-            <input type="submit" value="Submit">
-        </form>        
+        <form id="game-form" action="game" method="post"> <!-- Form element added -->
+            <input type="text" id="command-line" name="userInput" placeholder="Type your command..."> <!-- Name attribute added -->
+        </form>
     </div>
 
     <script>
-        // Get the form
-        var form = document.getElementById("command-form");
-        
-        // Add event listener for form submission
-        form.addEventListener("submit", function(event) {
-            // Prevent the default form submission behavior
-            event.preventDefault();
-            
-            // Submit the form
-            form.submit();
+        document.addEventListener("DOMContentLoaded", function() {
+            var form = document.getElementById("game-form");
+            var commandLine = document.getElementById("command-line");
+
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                var userInput = commandLine.value.trim(); // Extract user input
+                commandLine.value = ""; // Clear input field
+
+                // Send AJAX request to server
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", form.action, true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Update game interface with response from server
+                        document.getElementById("game-text").innerHTML = xhr.responseText;
+                    }
+                };
+                xhr.send("userInput=" + encodeURIComponent(userInput));
+            });
         });
     </script>
-    
-    
 </body>
 </html>

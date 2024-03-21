@@ -31,16 +31,10 @@ body {
 }
 
 #game-text {
-            border: 1px solid black;
-            padding: 2px;
-            height: 300px; /* Set a fixed height to enable scrolling */
-            overflow-y: scroll; /* Enable vertical scrolling if content exceeds the height */
-        }
-
-        /* Style for the command text */
-        .command-text {
-            margin-bottom: 5px;
-        }
+    height: calc(100% - 40px); /* Adjusted height to accommodate the input field */
+    overflow-y: auto;
+    margin-bottom: 10px; /* Added margin to create space for the input field */
+}
 
 #command-line {
     width: calc(100% - 20px); /* Adjusted width to accommodate padding */
