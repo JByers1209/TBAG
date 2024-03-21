@@ -23,6 +23,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             var form = document.getElementById("game-form");
             var commandLine = document.getElementById("command-line");
+            var gameText = document.getElementById("game-text");
 
             form.addEventListener("submit", function(event) {
                 event.preventDefault(); // Prevent default form submission
@@ -36,8 +37,8 @@
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState == 4 && xhr.status == 200) {
-                        // Update game interface with response from server
-                        document.getElementById("game-text").innerHTML = xhr.responseText;
+                        // Append new text to existing content
+                        gameText.innerHTML += "<p>" + ">" + xhr.responseText + "</p>";
                     }
                 };
                 xhr.send("userInput=" + encodeURIComponent(userInput));
