@@ -1,3 +1,5 @@
+package edu.ycp.cs320.tbag.controller;
+
 public class GameEngine {
     private String testText;
 
