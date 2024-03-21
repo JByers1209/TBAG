@@ -24,26 +24,31 @@
             var form = document.getElementById("game-form");
             var commandLine = document.getElementById("command-line");
             var gameText = document.getElementById("game-text");
-
+    
             form.addEventListener("submit", function(event) {
                 event.preventDefault(); // Prevent default form submission
-
+    
                 var userInput = commandLine.value.trim(); // Extract user input
                 commandLine.value = ""; // Clear input field
-
+    
                 // Send AJAX request to server
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", form.action, true);
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState == 4 && xhr.status == 200) {
-                        // Append new text to existing content
-                        gameText.innerHTML += "<p>" + ">" + xhr.responseText + "</p>";
+                        // Append user input and game response to existing content
+                        gameText.innerHTML += "<p><strong>> </strong> " + userInput + "</p>";
+                        gameText.innerHTML += "<p>" + xhr.responseText + "</p>";
+    
+                        // Scroll to the bottom of the game text
+                        gameText.scrollTop = gameText.scrollHeight;
                     }
                 };
                 xhr.send("userInput=" + encodeURIComponent(userInput));
             });
         });
     </script>
+    
 </body>
 </html>

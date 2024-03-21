@@ -14,9 +14,6 @@ public class IndexServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		//System.out.println("Index Servlet: doGet");
-		
-		
 		String function = req.getParameter("function");
 
         if ("Play".equals(function)) {

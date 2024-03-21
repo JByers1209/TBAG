@@ -34,8 +34,8 @@ body {
     height: calc(100% - 40px); /* Adjusted height to accommodate the input field */
     overflow-y: auto;
     margin-bottom: 10px; /* Added margin to create space for the input field */
+    max-height: 80vh; /* Set maximum height */
 }
-
 #command-line {
     width: calc(100% - 20px); /* Adjusted width to accommodate padding */
     padding: 5px;
