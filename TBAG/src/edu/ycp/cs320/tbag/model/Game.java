@@ -8,46 +8,28 @@ package edu.ycp.cs320.tbag.model;
 // when the JSP specifies if(game.done), that gets converted to
 //    a call to model.isDone()
 public class Game {
-	private Double first, second, third, result;
+	private String input, result;
 	
-	public Game(Double first, Double second, Double third, Double result) {
-		this.first = first;
-		this.second = second;
-		this.third = third;
+	public Game(String input, String result) {
+		this.input = input;
 		this.result = result;
 	}
 	
-	public void setFirst(Double first) {
-		this.first = first;
+	public void setInput(String input) {
+		this.input = input;
 		}
 	
-	public void setSecond(Double second) {
-		this.second = second;
-		}
-	
-	public void setThird(Double third) {
-		this.third = third;
-		}
-	
-	public void setResult(Double result) {
+	public void setResult(String result) {
 		this.result = result;
 	}
 	
-	public Double getResult() {
+	public String getResult() {
 		return result;
 	}
 	
-	public Double getFirst() {
-		return first;
+	public String getInput() {
+		return input;
 	}
-	
-	public Double getSecond() {
-		return second;
-	}
-	
-	
-	public Double getThird() {
-		return third;
-	}
+
 	
 }
