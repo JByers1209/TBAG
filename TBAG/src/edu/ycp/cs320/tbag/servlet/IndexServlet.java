@@ -29,9 +29,9 @@ public class IndexServlet extends HttpServlet {
 		if(selection != null) {
 			if(selection.equals("Play")) {
 				req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
-			}
-		}else {
+			}else {
 			req.getRequestDispatcher("/_view/index.jsp").forward(req, resp);
+			}	
 		}
 		
 		

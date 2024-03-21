@@ -17,7 +17,7 @@
         </div>
         
         <div id ="login-form">
-            <form function="IndexServlet" method="post">
+            <form id ="index-form" action="index" method="post">
                 <input type="submit" name="function" value="Play" class="submit">
             </form>
         </div>

@@ -15,7 +15,7 @@
         <div id="game-text">
             
         </div>
-        <form id="command-form" action="GameServlet" method="post">
+        <form id="game-form" action="game" method="post">
             <input type="text" id="command-line" name="userInput" placeholder="Type your command...">
         </form>        
     </div>
