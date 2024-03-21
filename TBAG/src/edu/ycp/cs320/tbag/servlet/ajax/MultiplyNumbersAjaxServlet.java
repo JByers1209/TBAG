@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.ycp.cs320.tbag.controller.NumbersController;
+import edu.ycp.cs320.tbag.controller.GameEngine;
 
 public class MultiplyNumbersAjaxServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -36,7 +36,7 @@ public class MultiplyNumbersAjaxServlet extends HttpServlet {
 		}
 		
 		// Use a controller to process the request
-		NumbersController controller = new NumbersController();
+		GameEngine controller = new GameEngine();
 		Double result = controller.multiply(first, second);
 		
 		// Send back a response

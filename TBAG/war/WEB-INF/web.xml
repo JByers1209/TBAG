@@ -11,8 +11,8 @@
     <servlet-class>edu.ycp.cs320.tbag.servlet.IndexServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>AddNumbersServlet</servlet-name>
-    <servlet-class>edu.ycp.cs320.tbag.servlet.AddNumbersServlet</servlet-class>
+    <servlet-name>GameServlet</servlet-name>
+    <servlet-class>edu.ycp.cs320.tbag.servlet.GameServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>MultiplyNumbersServlet</servlet-name>
@@ -25,8 +25,8 @@
   
   <!-- AJAX servlets. -->
   <servlet>
-    <servlet-name>AddNumbersAjaxServlet</servlet-name>
-    <servlet-class>edu.ycp.cs320.tbag.servlet.ajax.AddNumbersAjaxServlet</servlet-class>
+    <servlet-name>GameAjaxServlet</servlet-name>
+    <servlet-class>edu.ycp.cs320.tbag.servlet.ajax.GameAjaxServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>MultiplyNumbersAjaxServlet</servlet-name>
@@ -43,7 +43,7 @@
     <url-pattern>/index</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>AddNumbersServlet</servlet-name>
+    <servlet-name>GameServlet</servlet-name>
     <url-pattern>/game</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
@@ -57,7 +57,7 @@
   
   <!--  AJAX servlet mappings. -->
   <servlet-mapping>
-    <servlet-name>AddNumbersAjaxServlet</servlet-name>
+    <servlet-name>GameAjaxServlet</servlet-name>
     <url-pattern>/ajax/game</url-pattern>
   </servlet-mapping>
   <servlet-mapping>

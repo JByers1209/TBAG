@@ -5,14 +5,14 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.ycp.cs320.tbag.model.Numbers;
+import edu.ycp.cs320.tbag.model.Game;
 
 public class NumbersTest {
-	private Numbers model;
+	private Game model;
 	
 	@Before
 	public void setUp() {
-		model = new Numbers(null, null, null, null);
+		model = new Game(null, null, null, null);
 	}
 	
 	@Test
