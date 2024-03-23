@@ -1,53 +1,22 @@
 package edu.ycp.cs320.tbag.model;
 
-// model class for GuessingGame
-// only the controller should be allowed to call the set methods
-// the JSP will call the "get" and "is" methods implicitly
-// when the JSP specifies game.min, that gets converted to
-//    a call to model.getMin()
-// when the JSP specifies if(game.done), that gets converted to
-//    a call to model.isDone()
 public class Game {
-	private Double first, second, third, result;
-	
-	public Game(Double first, Double second, Double third, Double result) {
-		this.first = first;
-		this.second = second;
-		this.third = third;
-		this.result = result;
-	}
-	
-	public void setFirst(Double first) {
-		this.first = first;
-		}
-	
-	public void setSecond(Double second) {
-		this.second = second;
-		}
-	
-	public void setThird(Double third) {
-		this.third = third;
-		}
-	
-	public void setResult(Double result) {
-		this.result = result;
-	}
-	
-	public Double getResult() {
-		return result;
-	}
-	
-	public Double getFirst() {
-		return first;
-	}
-	
-	public Double getSecond() {
-		return second;
-	}
-	
-	
-	public Double getThird() {
-		return third;
-	}
-	
+    public String processUserInput(String userInput) {
+        // Convert user input to lowercase for case-insensitive comparison
+        String input = userInput.toLowerCase();
+
+        // Process user input and return game response
+        if (input.equals("up")) {
+            return "You moved up!";
+        } else if (input.equals("down")) {
+            return "You moved down!";
+        } else if (input.equals("left")) {
+            return "You moved left!";
+        } else if (input.equals("right")) {
+            return "You moved right!";
+        } else {
+            return "Invalid command.";
+        }
+    }
 }
+
