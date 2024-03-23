@@ -21,9 +21,12 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // Display initial prompt
+            var gameText = document.getElementById("game-text");
+            gameText.innerHTML += "<p>Welcome to Spooky York! Type your commands in the box below.</p>";
+
             var form = document.getElementById("game-form");
             var commandLine = document.getElementById("command-line");
-            var gameText = document.getElementById("game-text");
 
             form.addEventListener("submit", function(event) {
                 event.preventDefault(); // Prevent default form submission
@@ -38,7 +41,8 @@
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState == 4 && xhr.status == 200) {
                         // Append new text to existing content
-                        gameText.innerHTML += "<p>" + ">" + xhr.responseText + "</p>";
+    					gameText.innerHTML += "<p><strong> >  "  + userInput +  "</p>";                                             
+                        gameText.innerHTML += "<p>" + xhr.responseText + "</p>";
                     }
                 };
                 xhr.send("userInput=" + encodeURIComponent(userInput));
