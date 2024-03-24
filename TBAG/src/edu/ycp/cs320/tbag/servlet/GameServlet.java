@@ -1,4 +1,3 @@
-
 package edu.ycp.cs320.tbag.servlet;
 
 import java.io.IOException;
@@ -33,6 +32,7 @@ public class GameServlet extends HttpServlet {
         resp.setContentType("text/plain");
 
         // Send game response back to client
-        resp.getWriter().write(gameResponse);  
-	}
+        resp.getWriter().write(gameResponse);
+    }
 }
+

@@ -1,5 +1,7 @@
 package edu.ycp.cs320.tbag.model;
 
+import java.awt.ItemSelectable;
+
 public abstract class Actor {
 
 	
@@ -9,17 +11,13 @@ public abstract class Actor {
 	private int currentHealth, maxHealth;
 	private int level;
 	
-	
-	
 	public Actor(Room room) {
 		location = room;
 		inventory = new Inventory();
 	}
 	
-	
-	
-	public void moveTo(RoomConnection roomConnection) {
-		
+	public void moveTo(Room room) {
+		this.location = room;
 	}
 	
 	public Room getCurrentRoom() {
@@ -27,11 +25,11 @@ public abstract class Actor {
 	}
 	
 	public void pickupItem(Item item) {
-		
+		inventory.addItem(item);
 	}
 	
 	public void dropItem(Item item) {
-		
+		inventory.removeItem(item);
 	}
 	
 	

@@ -10,12 +10,6 @@ public class Player extends Actor {
 
 	private int xp;
 	
-	
-	
-	
-	
-	
-	
 	public int getXP() {
 		return xp;
 	}

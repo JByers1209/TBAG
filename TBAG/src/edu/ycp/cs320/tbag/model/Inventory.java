@@ -3,30 +3,11 @@ package edu.ycp.cs320.tbag.model;
 import java.util.ArrayList;
 import java.util.List;
 
-// Superclass for all items
-class Item {
-    private String name;
-
-    public Item(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-}
-
 // Subclass for key items-------------------------------------------------------------------------
 class KeyItem extends Item {
-	private boolean throwable;
 	
     public KeyItem(String name, boolean throwable) {
-        super(name);
-        this.throwable = throwable;
-    }
-    
-    public boolean getThrowable() {
-    	return throwable;
+        super(name, throwable);
     }
 }
 
@@ -35,7 +16,7 @@ class Weapon extends Item {
     private int damage;
 
     public Weapon(String name, boolean throwable, int damage) {
-        super(name);
+        super(name, throwable);
         this.damage = damage;
     }
     
@@ -48,8 +29,8 @@ class Weapon extends Item {
 class Consumable extends Item {
     private String effect;
 
-    public Consumable(String name, String effect) {
-        super(name);
+    public Consumable(String name, boolean throwable, String effect) {
+        super(name, throwable);
         this.effect = effect;
     }
 
@@ -71,13 +52,15 @@ class Inventory {
     private void initializeItems() {
         items.add(new KeyItem("GreenKey", false));
         items.add(new Weapon("Sword", true, 10));
-        items.add(new Consumable("Bandages", "Restores health"));
-        // Add more initial items as needed
+        items.add(new Consumable("Bandages", false, "Restores health"));
     }
 
-    // Method to add item to the inventory
     public void addItem(Item item) {
         items.add(item);
+    }
+    
+    public void removeItem(Item item) {
+    	items.remove(item);
     }
 }
 
