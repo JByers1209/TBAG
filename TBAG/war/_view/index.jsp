@@ -16,7 +16,6 @@
        <!-- login button--> 
         <div id ="login-form">
         	<form action="IndexServlet" method="get">
-        	  	<input type="hidden" name="function" value="Login">
                 <input type="submit" value="Login" class="submit">
             </form>
         </div>
@@ -24,7 +23,6 @@
        <!-- play button -->  
         <div id ="play-form">
             <form action="IndexServlet" method="get">
-				 <input type="hidden" name="function" value="Play">
                 <input type="submit" value="Play" class="submit"> 
             </form>
         </div>
