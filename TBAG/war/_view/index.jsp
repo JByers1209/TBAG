@@ -21,7 +21,7 @@
         <!-- login button --> 
         <div id="login-form">
             <form action="IndexServlet" method="get">
-                <input type="submit" value="Log in" class="submit">
+                <input type="submit" value="Login" class="submit">
             </form>
         </div>
     </div>
