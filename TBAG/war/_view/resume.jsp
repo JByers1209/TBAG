@@ -1,3 +1,4 @@
+<<<<<<< HEAD:TBAG/war/_view/resume.jsp
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,3 +30,5 @@
     </div>
 </body>
 </html>
+=======
+>>>>>>> parent of 9ec99bd (test):TBAG/war/_view/resumePage.jsp

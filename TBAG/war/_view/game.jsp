@@ -14,15 +14,15 @@
         <div id="game-text">
             <!-- This is where the game text will appear -->
         </div>
-        <form id="game-form" action="game" method="post"> <!-- Form element added -->
-            <input type="text" id="command-line" name="userInput" placeholder="Type your command..."> <!-- Name attribute added -->
+        <form id="game-form" action="game" method="post"> <!-- Changed method to "post" -->
+            <input type="text" id="command-line" name="userInput" placeholder="Type your command..."> <!-- Added name attribute -->
         </form>
     </div>
-<div>
-    <form function="GameServlet" method="get">
-        <input type="submit" name="function" value="Pause" class="submit">
-    </form>
-</div>
+    <div> <!-- Moved form inside a container -->
+        <form action="GameServlet" method="get"> <!-- Changed "function" to "action" -->
+            <input type="submit" name="function" value="Pause" class="submit">
+        </form>
+    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -46,7 +46,7 @@
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState == 4 && xhr.status == 200) {
                         // Append new text to existing content
-    					gameText.innerHTML += "<p><strong> >  "  + userInput +  "</p>";                                             
+                        gameText.innerHTML += "<p><strong> >  "  + userInput +  "</p>";                                             
                         gameText.innerHTML += "<p>" + xhr.responseText + "</p>";
                     }
                 };
@@ -55,5 +55,4 @@
         });
     </script>
 </body>
-
 </html>
