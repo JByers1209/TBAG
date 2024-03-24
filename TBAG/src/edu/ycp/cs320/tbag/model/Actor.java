@@ -24,6 +24,10 @@ public abstract class Actor {
 		return location;
 	}
 	
+	public void setCurrentRoom(Room room) {
+		this.location = room;
+	}
+	
 	public void pickupItem(Item item) {
 		inventory.addItem(item);
 	}

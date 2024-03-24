@@ -25,7 +25,7 @@ public class Room {
 	    this.description = description;
 	}
 
-	public void setExit(Room current, String direction, Room neighbor) {
+	public void setExit(String direction, Room neighbor) {
 	    exits.put(direction, neighbor);
 	}
 
