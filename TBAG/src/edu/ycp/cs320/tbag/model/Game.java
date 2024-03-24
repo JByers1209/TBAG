@@ -1,22 +1,21 @@
 package edu.ycp.cs320.tbag.model;
 
 public class Game {
-    public String processUserInput(String userInput) {
-        // Convert user input to lowercase for case-insensitive comparison
-        String input = userInput.toLowerCase();
+	
+	String response;
+	
+	Room start = new Room("Start", "You are in the starter room!");
+	Room up = new Room("Above", "The above room");
+	Room left = new Room("Left", "The left room");
+	Room right = new Room("Right", "The right room");
+	Room down = new Room("Below", "The below room");
+	
+	Player player = new Player(start);
 
-        // Process user input and return game response
-        if (input.equals("up")) {
-            return "You moved up!";
-        } else if (input.equals("down")) {
-            return "You moved down!";
-        } else if (input.equals("left")) {
-            return "You moved left!";
-        } else if (input.equals("right")) {
-            return "You moved right!";
-        } else {
-            return "Invalid command.";
-        }
-    }
+	public String start() {
+		String start
+		return player.getCurrentRoom();
+	}
+
 }
 

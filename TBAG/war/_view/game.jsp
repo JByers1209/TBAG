@@ -23,7 +23,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             // Display initial prompt
             var gameText = document.getElementById("game-text");
-            gameText.innerHTML += "<p>Welcome to Spooky York! Type your commands in the box below.</p>";
+            gameText.innerHTML += "<p>Welcome to Spooky York! Type 'start' to begin.</p>";
 
             var form = document.getElementById("game-form");
             var commandLine = document.getElementById("command-line");
