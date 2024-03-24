@@ -18,6 +18,11 @@
             <input type="text" id="command-line" name="userInput" placeholder="Type your command..."> <!-- Name attribute added -->
         </form>
     </div>
+<div>
+    <form function="GameServlet" method="get">
+        <input type="submit" name="function" value="Pause" class="submit">
+    </form>
+</div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -50,4 +55,5 @@
         });
     </script>
 </body>
+
 </html>
