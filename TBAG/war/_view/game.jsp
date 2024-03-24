@@ -17,7 +17,7 @@
         <form id="game-form" action="game" method="post"> <!-- Form element added -->
             <input type="text" id="command-line" name="userInput" placeholder="Type your command..."> <!-- Name attribute added -->
         </form>
-    </div>\
+    </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Display initial prompt
