@@ -14,21 +14,15 @@
         <div id="game-text">
             <!-- This is where the game text will appear -->
         </div>
-        <form id="game-form" action="game" method="post"> <!-- Changed method to "post" -->
-            <input type="text" id="command-line" name="userInput" placeholder="Type your command..."> <!-- Added name attribute -->
+        <form id="game-form" action="game" method="post"> <!-- Form element added -->
+            <input type="text" id="command-line" name="userInput" placeholder="Type your command..."> <!-- Name attribute added -->
         </form>
-    </div>
-    <div> <!-- Moved form inside a container -->
-        <form action="GameServlet" method="get"> <!-- Changed "function" to "action" -->
-            <input type="submit" name="function" value="Pause" class="submit">
-        </form>
-    </div>
-
+    </div>\
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Display initial prompt
             var gameText = document.getElementById("game-text");
-            gameText.innerHTML += "<p>Welcome to Spooky York! Type your commands in the box below.</p>";
+            gameText.innerHTML += "<p>Welcome to Spooky York! Type 'start' to begin.</p>";
 
             var form = document.getElementById("game-form");
             var commandLine = document.getElementById("command-line");
@@ -46,13 +40,17 @@
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState == 4 && xhr.status == 200) {
                         // Append new text to existing content
-                        gameText.innerHTML += "<p><strong> >  "  + userInput +  "</p>";                                             
+                        gameText.innerHTML += "<p><strong> >  " + userInput + "</p>";
                         gameText.innerHTML += "<p>" + xhr.responseText + "</p>";
+
+                        // Scroll to the bottom of the textbox
+                        gameText.scrollTop = gameText.scrollHeight;
                     }
                 };
                 xhr.send("userInput=" + encodeURIComponent(userInput));
             });
         });
     </script>
+
 </body>
 </html>

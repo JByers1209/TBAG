@@ -1,3 +1,5 @@
+
+
 package edu.ycp.cs320.tbag.servlet;
 
 import java.io.IOException;
@@ -22,7 +24,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-    	  String username = req.getParameter("username");
+          String username = req.getParameter("username");
           String password = req.getParameter("password");
           
           boolean isAuthenticated = authenticateUser(username, password);
@@ -31,13 +33,19 @@ public class LoginServlet extends HttpServlet {
               // Forward to the game page upon successful login
               req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
           } else {
-              // Redirect back to the login page with an error message
-              resp.sendRedirect("/login.jsp?error=1");
+              // Redirect back to the index page with an error message
+              resp.sendRedirect("/index.jsp?error=1");
           }   
-	}
- // Placeholder method for authentication (replace with actual authentication logic)
-    private boolean authenticateUser(String username, String password) {
-        // This is a placeholder implementation, you should replace it with your actual authentication logic
-        return username.equals("admin") && password.equals("password");
     }
+
+	private boolean authenticateUser(String username, String password) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
+// // Placeholder method for authentication (replace with actual authentication logic)
+//    private boolean authenticateUser(String username, String password) {
+//        // This is a placeholder implementation, you should replace it with your actual authentication logic
+//        return username.equals("admin") && password.equals("password");
+//    }
+//}

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,16 +8,16 @@
 </head>
 <body>
     <div class="container">
-        <!-- play button -->
         <div class="logo-container">
             <img src="https://blog.flamingtext.com/blog/2024/03/13/flamingtext_com_1710299194_29928696.png" border="0" alt="Game title" title="title">
             <img src="https://blog.flamingtext.com/blog/2024/03/13/flamingtext_com_1710299127_29928695.png" border="0" alt="Game subtitle" title="subtitle">
         </div>
-        <div id="play-form">
-            <form action="IndexServlet" method="get">
-                <input type="submit" value="Play" class="submit">
+        <div id ="login-form">
+            <form function="IndexServlet" method="get">
+                <input type="submit" name="function" value="Play" class="submit">
             </form>
         </div>
+          </div>
         <!-- login button --> 
         <div id="login-form">
             <form action="IndexServlet" method="get">

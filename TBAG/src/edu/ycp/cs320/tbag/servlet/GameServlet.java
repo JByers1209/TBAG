@@ -35,4 +35,3 @@ public class GameServlet extends HttpServlet {
         resp.getWriter().write(gameResponse);
     }
 }
-
