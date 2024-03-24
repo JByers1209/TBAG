@@ -32,20 +32,7 @@ public class GameServlet extends HttpServlet {
         resp.setContentType("text/plain");
 
         // Send game response back to client
-        resp.getWriter().write(gameResponse);  
-	}
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		
-		String function = req.getParameter("function");
-
-        if ("Pause".equals(function)) {
-            req.getRequestDispatcher("/_view/resume.jsp").forward(req, resp);
-        } 
-        else {
-        	req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
-        }
-       
-	}
+        resp.getWriter().write(gameResponse);
+    }
 }
 
