@@ -24,10 +24,6 @@ public class GameEngine {
 	public String start() {
 		
 		Room room = player.getCurrentRoom();
-		room.setExit("west", west);
-		room.setExit("east", east);
-		room.setExit("north", north);
-		room.setExit("south", south);
 		
 		if(hasStarted == true) {
 			return "Game has already started";
