@@ -24,16 +24,16 @@
             // Display initial prompt
             var gameText = document.getElementById("game-text");
             gameText.innerHTML += "<p>Welcome to Spooky York! Type 'start' to begin.</p>";
-
+    
             var form = document.getElementById("game-form");
             var commandLine = document.getElementById("command-line");
-
+    
             form.addEventListener("submit", function(event) {
                 event.preventDefault(); // Prevent default form submission
-
+    
                 var userInput = commandLine.value.trim(); // Extract user input
                 commandLine.value = ""; // Clear input field
-
+    
                 // Send AJAX request to server
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", form.action, true);
@@ -41,13 +41,17 @@
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState == 4 && xhr.status == 200) {
                         // Append new text to existing content
-    					gameText.innerHTML += "<p><strong> >  "  + userInput +  "</p>";                                             
+                        gameText.innerHTML += "<p><strong> >  " + userInput + "</p>";
                         gameText.innerHTML += "<p>" + xhr.responseText + "</p>";
+    
+                        // Scroll to the bottom of the textbox
+                        gameText.scrollTop = gameText.scrollHeight;
                     }
                 };
                 xhr.send("userInput=" + encodeURIComponent(userInput));
             });
         });
     </script>
+    
 </body>
 </html>

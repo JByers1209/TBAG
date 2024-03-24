@@ -12,10 +12,5 @@ public class Game {
 	
 	Player player = new Player(start);
 
-	public String start() {
-		String start
-		return player.getCurrentRoom();
-	}
-
 }
 
