@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.ycp.cs320.tbag.controller.NumbersController;
-import edu.ycp.cs320.tbag.model.Numbers;
+import edu.ycp.cs320.tbag.controller.GameEngine;
+import edu.ycp.cs320.tbag.model.Game;
 
 public class MultiplyNumbersServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -33,7 +33,7 @@ public class MultiplyNumbersServlet extends HttpServlet {
 		String errorMessage = null;
 		
 		// decode POSTed form parameters and dispatch to controller
-		Numbers model = new Numbers(null, null, null, null);
+		Game model = new Game(null, null, null, null);
 		try {
 			model.setFirst(getDoubleFromParameter(req.getParameter("first")));
 			model.setSecond(getDoubleFromParameter(req.getParameter("second")));
@@ -47,7 +47,7 @@ public class MultiplyNumbersServlet extends HttpServlet {
 			// the view does not alter data, only controller methods should be used for that
 			// thus, always call a controller method to operate on the data
 			else {
-				NumbersController controller = new NumbersController();
+				GameEngine controller = new GameEngine();
 				model.setResult(controller.multiply(model.getFirst(), model.getSecond()));
 				System.out.println(model.getResult());
 			}
