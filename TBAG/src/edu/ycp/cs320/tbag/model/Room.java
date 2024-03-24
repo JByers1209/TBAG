@@ -6,10 +6,12 @@ public class Room {
 	private String name;
 	private String description;
 	private HashMap<String, Room> exits;
+	private boolean hasVisited;
 
 	public Room(String name, String description) {
 		this.name = name;
 	    this.description = description;
+	    this.hasVisited = false;
 	    exits = new HashMap<>();
 	}
 
@@ -31,6 +33,14 @@ public class Room {
 
 	public Room getExit(String direction) {
 	    return exits.get(direction);
+	}
+	
+	public void setVisited(boolean hasVisited) {
+		this.hasVisited = hasVisited;
+	}
+	
+	public boolean getVisited() {
+		return hasVisited;
 	}
 
 	public String getExitString() {

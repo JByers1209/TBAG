@@ -3,6 +3,7 @@ package edu.ycp.cs320.tbag.model;
 import java.util.ArrayList;
 import edu.ycp.cs320.tbag.model.Player;
 import edu.ycp.cs320.tbag.model.Room;
+import edu.ycp.cs320.tbag.model.Inventory;
 
 public class Game {
 	
@@ -130,10 +131,15 @@ public class Game {
 		            case "west":
 		            case "east":
 		                Room nextRoom = currentRoom.getExit(input);
-		                if (nextRoom != null) {
+		                if (nextRoom != null && nextRoom.getVisited() == false) {
 		                    player.moveTo(nextRoom);
 		                    currentRoom = player.getCurrentRoom();
 		                    response = "You move " + input + ". New Location: " + currentRoom.getName();
+		                    currentRoom.setVisited(true);
+		                } else if(nextRoom != null && nextRoom.getVisited() == true) {
+		                	player.moveTo(nextRoom);
+		                    currentRoom = player.getCurrentRoom();
+		                    response = "You move " + input;
 		                } else {
 		                    response = "You cannot move that way.";
 		                }
