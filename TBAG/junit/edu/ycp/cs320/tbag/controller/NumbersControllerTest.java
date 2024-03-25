@@ -16,13 +16,13 @@ public class NumbersControllerTest {
 		controller = new GameEngine();
 	}
 	
-//	@Test
-//	public void testAdd() {
-//		assertEquals(12.5, controller.add(1.0, 5.2, 6.3), 0.001);
-//	}
-//	
-//	@Test
-//	public void testMultiply() {
-//		assertEquals(10.4, controller.multiply(2.0, 5.2), 0.001);
-//	}
+	@Test
+	public void testAdd() {
+		assertEquals(12.5, controller.add(1.0, 5.2, 6.3), 0.001);
+	}
+	
+	@Test
+	public void testMultiply() {
+		assertEquals(10.4, controller.multiply(2.0, 5.2), 0.001);
+	}
 }

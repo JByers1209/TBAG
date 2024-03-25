@@ -34,16 +34,15 @@ public class MultiplyNumbersAjaxServlet extends HttpServlet {
 			badRequest("Bad parameters", resp);
 			return;
 		}
-	}
 		
-//		// Use a controller to process the request
-//		GameEngine controller = new GameEngine();
-//		Double result = controller.multiply(first, second);
-//		
-//		// Send back a response
-//		resp.setContentType("text/plain");
-//		resp.getWriter().println(result.toString());
-//	}
+		// Use a controller to process the request
+		GameEngine controller = new GameEngine();
+		Double result = controller.multiply(first, second);
+		
+		// Send back a response
+		resp.setContentType("text/plain");
+		resp.getWriter().println(result.toString());
+	}
 
 	private Double getDouble(HttpServletRequest req, String name) {
 		String val = req.getParameter(name);

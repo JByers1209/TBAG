@@ -22,11 +22,6 @@
     <servlet-name>GuessingGameServlet</servlet-name>
     <servlet-class>edu.ycp.cs320.tbag.servlet.GuessingGameServlet</servlet-class>
   </servlet>
-   <servlet>
-    <servlet-name>LoginServlet</servlet-name>
-    <servlet-class>edu.ycp.cs320.tbag.servlet.LoginServlet</servlet-class>
-  </servlet>
-  
   
   <!-- AJAX servlets. -->
   <servlet>
@@ -59,11 +54,6 @@
     <servlet-name>GuessingGameServlet</servlet-name>
     <url-pattern>/guessingGame</url-pattern>
   </servlet-mapping>
-   <servlet-mapping>
-    <servlet-name>LoginServlet</servlet-name>
-    <url-pattern>/Login</url-pattern>
-  </servlet-mapping>
- 
   
   <!--  AJAX servlet mappings. -->
   <servlet-mapping>

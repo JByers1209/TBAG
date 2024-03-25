@@ -28,7 +28,6 @@ public class GameServlet extends HttpServlet {
         // Process user input using GameEngine
         String gameResponse = gameEngine.processUserInput(userInput);
 
-        
         // Set response content type
         resp.setContentType("text/plain");
 
@@ -36,3 +35,4 @@ public class GameServlet extends HttpServlet {
         resp.getWriter().write(gameResponse);
     }
 }
+

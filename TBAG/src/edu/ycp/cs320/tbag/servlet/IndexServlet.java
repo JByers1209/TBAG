@@ -8,22 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class IndexServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        String function = req.getParameter("function");
+	private static final long serialVersionUID = 1L;
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		
+		String function = req.getParameter("function");
 
         if ("Play".equals(function)) {
             req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
-        } 
-        else if ("Login".equals(function)) {
-            req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
+        } else {
+        	req.getRequestDispatcher("/_view/index.jsp").forward(req, resp);
         }
-        else {
-            req.getRequestDispatcher("/_view/index.jsp").forward(req, resp);
-        }
-    }
+	}
 }
