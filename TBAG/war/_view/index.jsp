@@ -17,7 +17,7 @@
         </div>
         
         <div id ="login-form">
-            <form id ="index-form" action="index" method="post">
+            <form id ="index-form" action="index" method="get">
                 <input type="submit" name="function" value="Play" class="submit">
             </form>
         </div>
