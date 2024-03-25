@@ -41,7 +41,7 @@ public class Game {
 	    Room swRoom = new Room("South West", "The soutwest room");
 	    rooms.add(swRoom);
 	    
-	    Room westRoom = new Room("East", "The west room");
+	    Room westRoom = new Room("West", "The west room");
 	    rooms.add(westRoom);
 	    
 	    Room nwRoom = new Room("North West", "The northwest room");
