@@ -4,8 +4,8 @@ public class Player extends Actor {
 	
 	
 	
-	public Player(int maxHealth, Room room) {
-		super(maxHealth, room);
+	public Player(Room room) {
+		super(room);
 	}
 
 	private int xp;
