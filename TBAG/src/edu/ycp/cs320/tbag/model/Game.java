@@ -101,7 +101,7 @@ public class Game {
 	  		nwRoom.setExit("south", westRoom);
 	  		nwRoom.setExit("west", null);
 	  	
-	        player = new Player(startRoom);
+	        player = new Player(100, startRoom);
 	        currentRoom = startRoom;
 	}
 	
