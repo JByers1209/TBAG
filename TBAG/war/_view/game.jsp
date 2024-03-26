@@ -14,13 +14,13 @@
         <div id="content-container">
             <div id="game-container">
                 <div id="game-text">
-                    <!-- This is where the game text will appear -->
+ <!-- This is where the game text will appear -->
                 </div>
                 <form id="game-form" action="game" method="post"> <!-- Form element added -->
                     <input type="text" id="command-line" name="userInput" placeholder="Type your command..."> <!-- Name attribute added -->
                 </form>
             </div>
-
+<!--arrow buttons-->
             <div id="buttons-container" style="display: none;">
                 <span id="button-span">
                     <button id="button1" class="game-button" type="button"><</button>
@@ -28,6 +28,12 @@
                     <button id="button3" class="game-button" type="button">^</button>
                     <button id="button4" class="game-button" type="button">v</button>
                 </span>
+            </div>
+<!--pause button-->
+            <div id ="pause">
+                <form function="pause" method="get">
+                    <input type="submit" name="function" value="pause" class="pause">
+                </form>
             </div>
         </div>
     </div>
