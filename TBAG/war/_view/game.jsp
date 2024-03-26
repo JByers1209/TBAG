@@ -31,8 +31,8 @@
             </div>
 <!--pause button-->
             <div id ="pause">
-                <form function="pause" method="get">
-                    <input type="submit" name="function" value="pause" class="pause">
+                <form function="PauseServlet" method="get">
+                    <input type="submit" name="function" value="Pause" class="pause">
                 </form>
             </div>
         </div>
