@@ -34,5 +34,19 @@ public class GameServlet extends HttpServlet {
         // Send game response back to client
         resp.getWriter().write(gameResponse);
     }
+    
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		
+		String function = req.getParameter("function");
+    
+    if ("Resume".equals(function)) {
+        req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
+    }
+  
+    else {
+    	req.getRequestDispatcher("/_view/pause.jsp").forward(req, resp);
+    	}
+    }
 }
 

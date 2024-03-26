@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class IndexServlet extends HttpServlet {
+public class PauseServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	@Override
@@ -16,17 +16,12 @@ public class IndexServlet extends HttpServlet {
 		
 		String function = req.getParameter("function");
 
-        if ("Play".equals(function)) {
-            req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
+        if ("Pause".equals(function)) {
+            req.getRequestDispatcher("/_view/pause.jsp").forward(req, resp);
         } 
-        else if ("Login".equals(function)) {
-            req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
-        } 
-        else if ("Quit Game".equals(function)) {
-            req.getRequestDispatcher("/_view/index.jsp").forward(req, resp);
-        } 
+       
         else {
-        	req.getRequestDispatcher("/_view/index.jsp").forward(req, resp);
+        	req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
         }
 	}
 }
