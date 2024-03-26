@@ -21,7 +21,8 @@ public class LoginServlet extends HttpServlet {
         // Check if username and password are valid (example check)
         if (isValidLogin(username, password)) {
             // If valid, redirect to a success page
-            resp.sendRedirect(req.getContextPath() + "/success.jsp");
+            resp.sendRedirect(req.getContextPath() + "/index.jsp");
+            System.out.println("Login Succesfull");
         } else {
             // If not valid, redirect back to the login page with an error message
             resp.sendRedirect(req.getContextPath() + "/login.jsp?error=1");
