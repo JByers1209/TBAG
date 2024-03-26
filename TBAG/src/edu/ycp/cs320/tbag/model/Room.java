@@ -7,11 +7,16 @@ public class Room {
 	private String description;
 	private HashMap<String, Room> exits;
 	private boolean hasVisited;
+	private boolean needsKey;
+	private String keyName;
 
-	public Room(String name, String description) {
+	Inventory roomInventory = new Inventory();
+	
+	public Room(String name, String description, boolean needsKey) {
 		this.name = name;
 	    this.description = description;
 	    this.hasVisited = false;
+	    this.setNeedsKey(needsKey);
 	    exits = new HashMap<>();
 	}
 
@@ -49,5 +54,21 @@ public class Room {
 	        exitString.append(exit).append(", ");
 	    }
 	    return exitString.substring(0, exitString.length() - 2); // Remove the last comma and space
+	}
+
+	public boolean getNeedsKey() {
+		return needsKey;
+	}
+
+	public void setNeedsKey(boolean needsKey) {
+		this.needsKey = needsKey;
+	}
+
+	public String getKeyName() {
+		return keyName;
+	}
+
+	public void setKeyName(String keyName) {
+		this.keyName = keyName;
 	}
 }

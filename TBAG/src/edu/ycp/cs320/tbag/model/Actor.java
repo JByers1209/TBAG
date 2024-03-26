@@ -7,13 +7,12 @@ public abstract class Actor {
 	
 	
 	private Room location;
-	private Inventory inventory;
 	private int currentHealth, maxHealth;
 	private int level;
+	Inventory inventory = new Inventory();
 	
 	public Actor(Room room) {
 		location = room;
-		inventory = new Inventory();
 	}
 	
 	public void moveTo(Room room) {
