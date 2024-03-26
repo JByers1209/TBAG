@@ -1,6 +1,6 @@
 package edu.ycp.cs320.tbag.model;
 
-import java.awt.ItemSelectable;
+
 
 public abstract class Actor {
 
@@ -11,9 +11,11 @@ public abstract class Actor {
 	private int currentHealth, maxHealth;
 	private int level;
 	
-	public Actor(Room room) {
+	public Actor(int maxHealth, Room room) {
 		location = room;
 		inventory = new Inventory();
+		this.maxHealth = maxHealth;
+		currentHealth = maxHealth;
 	}
 	
 	public void moveTo(Room room) {
@@ -22,10 +24,6 @@ public abstract class Actor {
 	
 	public Room getCurrentRoom() {
 		return location;
-	}
-	
-	public void setCurrentRoom(Room room) {
-		this.location = room;
 	}
 	
 	public void pickupItem(Item item) {
@@ -52,16 +50,37 @@ public abstract class Actor {
 	}
 	
 	public void setCurrentHealth(int health) {
-		currentHealth = health;
+		if(health > maxHealth) {
+			currentHealth = maxHealth;
+		}else {
+			currentHealth = health;
+		}
+			
+			
 	}
 	
 	public void setMaxHealth(int health) {
+		if(health < maxHealth) {
+			currentHealth = health;
+		}
 		maxHealth = health;
+		
 	}
 	
 	public void setLevel(int level) {
 		this.level = level;
 	}
 	
+	public Inventory getInventory() {
+		return inventory;
+	}
 	
+    public boolean hasItem(Item item) {
+    	for(Item i: inventory.getItems()) {
+    		if (i.equals(item)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
 }
