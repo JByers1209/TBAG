@@ -30,9 +30,9 @@
                 </span>
             </div>
 <!--pause button-->
-            <div id ="pause">
+            <divc id ="pause">
                 <form function="PauseServlet" method="get">
-                    <input type="submit" name="function" value="Pause" class="pause">
+                    <input type="submit" name="function" value="Pause" class="submit">
                 </form>
             </div>
         </div>

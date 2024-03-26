@@ -2,6 +2,10 @@ body {
     background-color: var(--gray);
     color: white;
     font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center; /* Horizontal centering */
+    align-items: center; /* Vertical centering */
+    height: 100vh
 }
 
 :root {
@@ -23,6 +27,23 @@ body {
 img {
     margin-bottom: -80px; /* Adjust the margin between the two images */
 }
+.login{
+    display: flex;
+    flex-direction: column; /* Arrange items vertically */
+    align-items: center; /* Center items horizontally */
+    margin-bottom: 20px;
+    text-align: center;
+
+}
+#authentication{
+    display: flex;
+    flex-direction: column; /* Arrange items vertically */
+    align-items: center; /* Center items horizontally */
+    margin-bottom: 20px;
+    text-align: center;
+
+}
+
 
 .submit {
         background-color: #511717; 

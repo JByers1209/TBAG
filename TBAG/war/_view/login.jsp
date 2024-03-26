@@ -10,18 +10,17 @@
     <div class= "logo-container">
       <img src="https://blog.flamingtext.com/blog/2024/03/13/flamingtext_com_1710299194_29928696.png" style="width:300px;height:300px;">
     </div>
-  <h2>
-    <div>
-      <img src="https://blog.flamingtext.com/blog/2024/03/14/flamingtext_com_1710447290_29928759.png" border="0" style="width:300px;height:300px;">
+    <div class="login">
+        <div>
+            <img src="https://blog.flamingtext.com/blog/2024/03/14/flamingtext_com_1710447290_29928759.png" border="0" style="width:300px;height:300px;">
+        </div>
     </div>
-  </h2>
-  <div class="login-container">
-    <form function ="LoginServlet" method="get">
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <input type="submit" value="Login">
-    </form>
-  </div>
+    <div id="authentication">
+        <form function="LoginServlet" method="get">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="submit" value="Login Now">
+        </form>
+    </div>
 </body>
 </html>
-
