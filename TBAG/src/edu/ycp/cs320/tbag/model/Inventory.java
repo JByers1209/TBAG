@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Define the Inventory class--------------------------------------------------------------------------
-class Inventory {
+public class Inventory {
     private List<Item> items;
 
     // Constructor to initialize inventory and add initial items
@@ -13,7 +13,7 @@ class Inventory {
     }
 
     // Method to initialize items in the inventory
-    private void initializeItems() {
+    public void initializeItems() {
         items.add(new KeyItem("GreenKey", false));
         items.add(new Weapon("Sword", true, 10));
         items.add(new Consumable("Bandages", false, "Restores health"));

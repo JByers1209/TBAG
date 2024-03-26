@@ -1,4 +1,4 @@
-package edu.ycp.cs320.tbag.model;
+package edu.ycp.cs320.tbag.tests;
 
 import static org.junit.Assert.*;
 
@@ -6,6 +6,12 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import edu.ycp.cs320.tbag.model.Consumable;
+import edu.ycp.cs320.tbag.model.Inventory;
+import edu.ycp.cs320.tbag.model.Item;
+import edu.ycp.cs320.tbag.model.KeyItem;
+import edu.ycp.cs320.tbag.model.Weapon;
 
 public class InventoryTest {
     private Inventory inventory;
