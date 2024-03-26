@@ -47,9 +47,9 @@ class Inventory {
     public Inventory() {
         items = new ArrayList<>();
     }
-
+    
     // Method to initialize items in the inventory
-    private void initializeItems() {
+    public void initializeItems() {
         items.add(new KeyItem("GreenKey", false));
         items.add(new Weapon("Sword", true, 10));
         items.add(new Consumable("Bandages", false, "Restores health"));
@@ -61,6 +61,10 @@ class Inventory {
     
     public void removeItem(Item item) {
     	items.remove(item);
+    }
+    
+    public List<Item> getItems() {
+        return items;
     }
 }
 
