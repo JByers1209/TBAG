@@ -22,6 +22,7 @@ public class Game {
 	    Room startRoom = new Room("Start", "You wake up in a strange place. The sky is cloudy and there is nobody else in sight."+
 	    		" You are all alone. Where will you go next?", false);
 	    rooms.add(startRoom);
+	    startRoom.setVisited(true);
 	    
 	    Room campusRoom = new Room("York College Campus", "You arrive at the york college campus. Screaming is heard in the distance.", false);
 	    rooms.add(campusRoom);
@@ -173,6 +174,13 @@ public class Game {
 		                } else {
 		                    response = "You search the room and find the following items: " + currentRoom.roomInventory.getItemNames() +
 		                               ". Do you want to take any of these items? If yes, type 'take' plus the item name.";
+		                }
+		                break;
+		            case "inventory":
+		            	if (player.inventory.getItems().isEmpty()) {
+		                    response = "Your inventory is empty :(";
+		                } else {
+		                    response = "Your inventory:\n" + player.inventory.getItemNames();
 		                }
 		                break;
 		            default:

@@ -47,7 +47,9 @@
                 event.preventDefault(); // Prevent default form submission
                 var userInput = commandLine.value.trim().toLowerCase();
                 if (userInput === "north" || userInput === "south" || userInput === "east" || userInput === "west") {
-                    directions.push(userInput); // Add direction to array
+                    if (!directions.includes(userInput)) {
+                        directions.push(userInput); // Add direction to array if not already present
+                    }
                 }
                 // Check if all directions have been entered
                 if (directions.length === 4) {
@@ -55,7 +57,7 @@
                 }
                 sendCommand(userInput);
                 commandLine.value = ""; // Clear input field
-            });
+});
 
             function sendCommand(userInput) {
                 var xhr = new XMLHttpRequest();
