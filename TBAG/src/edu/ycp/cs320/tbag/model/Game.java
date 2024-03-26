@@ -139,7 +139,7 @@ public class Game {
 		            case "west":
 		            case "east":
 		                Room nextRoom = currentRoom.getExit(input);
-		                if (nextRoom.getNeedsKey()) {
+		                if (nextRoom != null && nextRoom.getNeedsKey()) {
 		                    String keyName = nextRoom.getKeyName();
 		                    Item keyItem = player.inventory.getItemByName(keyName);
 		                    if (keyItem != null) {
