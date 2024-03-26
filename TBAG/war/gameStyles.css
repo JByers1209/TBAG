@@ -16,10 +16,6 @@ body {
     align-items: center; /* Center items vertically */
     justify-content: space-between; /* Space out the elements */
     padding: 20px; /* Add padding to the wrapper */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 
