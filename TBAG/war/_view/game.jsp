@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Spooky York</title>
-    <link rel="stylesheet" type="text/css" href="gameStyles.css">
+    <link rel="stylesheet" type="text/css" href="gameStylesheet.css">
 </head>
 <body>
     <div id="logo-container">
@@ -30,9 +30,9 @@
                 </span>
             </div>
 <!--pause button-->
-            <divc id ="pause">
+            <div id ="pause">
                 <form function="PauseServlet" method="get">
-                    <input type="submit" name="function" value="Pause" class="submit">
+                    <input type="submit" name="function" value="Pause" class="pause">
                 </form>
             </div>
         </div>

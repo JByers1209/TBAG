@@ -15,8 +15,7 @@ body {
     flex-direction: row; /* Stack elements horizontally */
     align-items: center; /* Center items vertically */
     justify-content: space-between; /* Space out the elements */
-    padding: 10px; /* Add padding to the wrapper */
-    margin-top: -30px;
+    padding: 20px; /* Add padding to the wrapper */
 }
 
 
@@ -24,13 +23,13 @@ body {
     display: flex;
     flex-direction: column; /* Arrange items vertically */
     align-items: center; /* Center items horizontally */
-    margin-bottom: 0px; /* Adjust the margin between the logo and the button */
+    margin-bottom: -20px; /* Adjust the margin between the logo and the button */
 }
 
 #content-container {
     display: flex;
     align-items: center; /* Center items vertically */
-    margin-left: 100px;
+
 }
 
 #game-container {
@@ -120,19 +119,6 @@ body {
     position: absolute;
     top: calc(50% + 300px); /* Adjust based on button size */
     transform: translate(-50%, -50%); 
-    background-color: #511717;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    transition-duration: 0.4s;
-    cursor: pointer;
-    border-radius: 10px;
-}
-
-.buttonsPause {
     background-color: #511717; 
     border: none;
     color: white;
