@@ -19,10 +19,22 @@ body {
     align-items: center; /* Center items horizontally */
     margin-bottom: 20px; /* Adjust the margin between the logo and the button */
 }
+#authentication {
+    text-align: center; /* Center the content horizontally */
+    margin-top: 50px; /* Adjust the top margin as needed */
+}
 
 img {
+    max-width: 100%; /* Ensures the image doesn't exceed its container's width */
+    height: auto; /* Allows the image's height to adjust accordingly */
     margin-bottom: -80px; /* Adjust the margin between the two images */
 }
+.logo-container2,
+.login {
+    text-align: center; /* Center the content horizontally */
+    margin-top: 50px; /* Adjust the top margin as needed */
+}
+
 
 .submit {
         background-color: #511717; 
