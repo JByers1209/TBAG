@@ -21,28 +21,28 @@ public class Game {
 	    rooms.add(startRoom);
 	    startRoom.setVisited(true);
 	    
-	    Room campusRoom = new Room("York College Campus", "You arrive at the york college campus. Screaming is heard in the distance.", false);
+	    Room campusRoom = new Room("York College Campus", "York college campus. Screaming is heard in the distance.", false);
 	    rooms.add(campusRoom);
 	    
-	    Room neRoom = new Room("North East", "The northeast room", false);
+	    Room neRoom = new Room("Yorktowne Hotel", "Towering hotel in downtown York.", false);
 	    rooms.add(neRoom);
 	    
-	    Room eastRoom = new Room("East", "The east room", false);
+	    Room eastRoom = new Room("Reymeyers Hollow", "A winding road leads you into the forest.", false);
 	    rooms.add(eastRoom);
 	    
-	    Room seRoom = new Room("South East", "The southeast room", false);
+	    Room seRoom = new Room("Roosevelt Tavern", "A fancy lounge. The smell of crab soup is in the air.", false);
 	    rooms.add(seRoom);
 	    
-	    Room southRoom = new Room("south", "The south room", false);
+	    Room southRoom = new Room("Acomac Inn", "You hear the roaring Susquehanna behind you as you stare at the brick exterior.", false);
 	    rooms.add(southRoom);
 	    
-	    Room swRoom = new Room("South West", "The soutwest room", false);
+	    Room swRoom = new Room("Elmwood Mansion", "In front of you stands a large pristine mansion", false);
 	    rooms.add(swRoom);
 	    
-	    Room westRoom = new Room("West", "The west room", false);
+	    Room westRoom = new Room("Seven Gates of Hell", "The horrors that can be found if you follow Toad Rd.", false);
 	    rooms.add(westRoom);
 	    
-	    Room nwRoom = new Room("Josh's House", "You arrive at Josh's house.", true);
+	    Room nwRoom = new Room("Josh's House", "Josh's house. A dog is heard barking inside.", true);
 	    rooms.add(nwRoom);
 	    
 	  //Set room exits for the starter room
@@ -111,6 +111,7 @@ public class Game {
 	  		eastRoom.roomInventory.addItem(bandage);
 	  		
 	        player = new Player(startRoom);
+	        player.setCurrentHealth(100);
 	        currentRoom = startRoom;
 	        
 	}
@@ -152,7 +153,7 @@ public class Game {
 		                        player.inventory.removeItem(keyItem);
 		                        nextRoom.setNeedsKey(false);
 		                    } else {
-		                        response = "You don't have the required key (" + keyName + ") to enter this room.";
+		                        response = currentRoom.getName() + ": You don't have the required key (" + keyName + ") to enter this room.";
 		                    }
 		                } else if (nextRoom != null && !nextRoom.getVisited()) {
 		                    player.moveTo(nextRoom);
@@ -167,15 +168,22 @@ public class Game {
 		                    response = "You cannot move that way.";
 		                }
 		                break;
+		            case "health":
+		                response = "Current Health: " + player.getCurrentHealth();
+		                break;
 		            case "location":
 		                currentRoom = player.getCurrentRoom();
 		                response = "Current Location: " + currentRoom.getName();
+		                break;
+		            case "description":
+		                currentRoom = player.getCurrentRoom();
+		                response = currentRoom.getDescription();
 		                break;
 		            case "search":
 		                if (currentRoom.roomInventory.getItems().isEmpty()) {
 		                    response = "You search the room but find nothing.";
 		                } else {
-		                    response = "You search the room and find the following items: " + currentRoom.roomInventory.getItemNames() +
+		                    response = "You search the area and find the following items: " + currentRoom.roomInventory.getItemNames() +
 		                               ". Do you want to take any of these items? If yes, type 'take' plus the item name.";
 		                }
 		                break;
