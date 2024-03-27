@@ -1,5 +1,6 @@
 package edu.ycp.cs320.tbag.model;
 
+
 public abstract class Item {
     private String name;
 	private boolean throwable;

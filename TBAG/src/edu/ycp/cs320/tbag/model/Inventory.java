@@ -40,7 +40,7 @@ class Consumable extends Item {
 }
 
 // Define the Inventory class--------------------------------------------------------------------------
-class Inventory {
+public class Inventory {
     private List<Item> items;
 
     // Constructor to initialize inventory and add initial items
