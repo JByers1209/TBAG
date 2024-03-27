@@ -1,7 +1,6 @@
 package edu.ycp.cs320.tbag.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,26 +8,32 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class LoginServlet extends HttpServlet {
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        // Retrieve username and password from the form
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
 
-        // Check if username is "admin" and password is "password"
-        boolean authenticationSucceeded = "admin".equals(username) && "password".equals(password);
+        // Retrieve username and password from the request parameters
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
 
-        if (authenticationSucceeded == true) {
-            // Authentication successful
-            // Redirect to a success page or perform other actions
-            response.sendRedirect("index.jsp");
+        // Check if username and password are valid
+        if (isValidLogin(username, password)) {
+            // If valid, redirect to the index page
+            resp.sendRedirect(req.getContextPath() + "/index.jsp");
         } else {
-            // Authentication failed
-            response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
-            out.println("<html><body>");
-            out.println("<h2>Authentication failed. Please try again.</h2>");
-            out.println("</body></html>");
+            // If not valid, forward back to the login page with an error message
+            req.setAttribute("errorMessage", "Invalid username or password");
+            req.getRequestDispatcher("/login.jsp").forward(req, resp);
         }
+    }
+
+
+    // Example method to check if username and password are valid (replace with your logic)
+    private boolean isValidLogin(String username, String password) {
+        // Example validation logic (replace with actual validation logic)
+        // This is just a simple example
+        return "admin".equals(username) && "password".equals(password);
     }
 }

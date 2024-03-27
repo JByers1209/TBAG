@@ -1,5 +1,4 @@
 package edu.ycp.cs320.tbag.model;
-
 import static org.junit.Assert.*;
 
 import java.util.List;
@@ -31,17 +30,29 @@ public class InventoryTest {
         assertEquals(initialSize - 1, inventory.getItems().size());
     }
     
+    @Test
     public void testGetItems() {
         List<Item> items = inventory.getItems();
         
         assertNotNull(items);
-        
         assertEquals(3, items.size()); 
-        
         assertTrue(items.get(0) instanceof KeyItem); 
         assertTrue(items.get(1) instanceof Weapon);  
         assertTrue(items.get(2) instanceof Consumable); 
     }
     
+    @Test
+    public void testGetItemNames() {
+        String expectedNames = "GreenKey, Sword, Bandages";
+        assertEquals(expectedNames, inventory.getItemNames());
+    }
+    
+    @Test
+    public void testGetItemByName() {
+        Item foundItem = inventory.getItemByName("Sword");
+        assertNotNull(foundItem);
+        assertEquals("Sword", foundItem.getName());
+    }
 }
+
 

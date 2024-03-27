@@ -2,10 +2,6 @@ body {
     background-color: var(--gray);
     color: white;
     font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center; /* Horizontal centering */
-    align-items: center; /* Vertical centering */
-    height: 100vh
 }
 
 :root {
@@ -23,25 +19,20 @@ body {
     align-items: center; /* Center items horizontally */
     margin-bottom: 20px; /* Adjust the margin between the logo and the button */
 }
+#authentication {
+    text-align: center; /* Center the content horizontally */
+    margin-top: 50px; /* Adjust the top margin as needed */
+}
 
 img {
+    max-width: 100%; /* Ensures the image doesn't exceed its container's width */
+    height: auto; /* Allows the image's height to adjust accordingly */
     margin-bottom: -80px; /* Adjust the margin between the two images */
 }
-.login{
-    display: flex;
-    flex-direction: column; /* Arrange items vertically */
-    align-items: center; /* Center items horizontally */
-    margin-bottom: 20px;
-    text-align: center;
-
-}
-#authentication{
-    display: flex;
-    flex-direction: column; /* Arrange items vertically */
-    align-items: center; /* Center items horizontally */
-    margin-bottom: 20px;
-    text-align: center;
-
+.logo-container2,
+.login {
+    text-align: center; /* Center the content horizontally */
+    margin-top: 50px; /* Adjust the top margin as needed */
 }
 
 

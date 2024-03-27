@@ -1,9 +1,6 @@
 package edu.ycp.cs320.tbag.model;
 
 import java.util.ArrayList;
-import edu.ycp.cs320.tbag.model.Player;
-import edu.ycp.cs320.tbag.model.Room;
-import edu.ycp.cs320.tbag.model.Inventory;
 
 public class Game {
 	
@@ -104,10 +101,12 @@ public class Game {
 	  	
 	  	//Create items for rooms/player
 	  		Item blue_key = new KeyItem("Blue Key", false);
+	  		Item sword = new Weapon("Sword", true, 10);
 	  
 	  	//Add items to rooms
 	  		nwRoom.setKeyName("Blue Key");
 	  		southRoom.roomInventory.addItem(blue_key);
+	  		nwRoom.roomInventory.addItem(sword);
 	  		
 	        player = new Player(startRoom);
 	        currentRoom = startRoom;
@@ -148,6 +147,8 @@ public class Game {
 		                        currentRoom = player.getCurrentRoom();
 		                        response = "You use the " + keyName + " to unlock the door.";
 		                        currentRoom.setVisited(true);
+		                        player.inventory.removeItem(keyItem);
+		                        nextRoom.setNeedsKey(false);
 		                    } else {
 		                        response = "You don't have the required key (" + keyName + ") to enter this room.";
 		                    }
