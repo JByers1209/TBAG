@@ -26,5 +26,39 @@ public class MultiplyNumbersAjaxServlet extends HttpServlet {
 
 	private void doRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// Get parameters
+		Double first = getDouble(req, "first");
+		Double second = getDouble(req, "second");
+		
+		// Check whether parameters are valid
+		if (first == null || second == null) {
+			badRequest("Bad parameters", resp);
+			return;
+		}
+		
+		// Use a controller to process the request
+		GameEngine controller = new GameEngine();
+		Double result = controller.multiply(first, second);
+		
+		// Send back a response
+		resp.setContentType("text/plain");
+		resp.getWriter().println(result.toString());
+	}
+
+	private Double getDouble(HttpServletRequest req, String name) {
+		String val = req.getParameter(name);
+		if (val == null) {
+			return null;
+		}
+		try {
+			return Double.parseDouble(val);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	private void badRequest(String message, HttpServletResponse resp) throws IOException {
+		resp.setContentType("text/plain");
+		resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		resp.getWriter().println(message);
 	}
 }

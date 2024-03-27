@@ -37,6 +37,12 @@ public class GameAjaxServlet extends HttpServlet {
 		}
 		
 		// Use a controller to process the request
+		GameEngine controller = new GameEngine();
+		Double result = controller.add(first, second, third);
+		
+		// Send back a response
+		resp.setContentType("text/plain");
+		resp.getWriter().println(result.toString());
 	}
 
 	private Double getDouble(HttpServletRequest req, String name) {
