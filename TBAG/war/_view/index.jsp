@@ -16,8 +16,6 @@
             <form function="IndexServlet" method="get">
                 <input type="submit" name="function" value="Play" class="submit">
             </form>
-        </div>
-        <div id ="login-form">
             <form function="IndexServlet" method="get">
                 <input type="submit" name="function" value="Login" class="submit">
             </form>

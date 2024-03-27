@@ -15,7 +15,8 @@ body {
     flex-direction: row; /* Stack elements horizontally */
     align-items: center; /* Center items vertically */
     justify-content: space-between; /* Space out the elements */
-    padding: 20px; /* Add padding to the wrapper */
+    padding: 10px; /* Add padding to the wrapper */
+    margin-top: -30px;
 }
 
 
@@ -29,6 +30,7 @@ body {
 #content-container {
     display: flex;
     align-items: center; /* Center items vertically */
+    margin-left: 100px;
 }
 
 #game-container {
