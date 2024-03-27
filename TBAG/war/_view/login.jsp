@@ -14,12 +14,31 @@
         </div>
     </div>
     <div id="authentication">
-        <form function="LoginServlet" method="get">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
+        <form id="loginForm" function="LoginServlet" method="get">
+            <input type="text" id="username" name="username" placeholder="Username" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
             <input type="submit" value="Login Now">
         </form>
+        <p id="error" style="color: red; display: none;">Incorrect username or password</p>
     </div>
-    
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+            
+            // Get username and password values
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            // Check if username and password are correct
+            if (username === "admin" && password === "password") {
+                // If correct, submit the form
+                this.submit();
+            } else {
+                // If incorrect, display error message
+                document.getElementById("error").style.display = "block";
+            }
+        });
+    </script>
 </body>
 </html>
