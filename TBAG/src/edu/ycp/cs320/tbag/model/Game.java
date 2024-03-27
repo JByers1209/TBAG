@@ -20,32 +20,31 @@ public class Game {
 	    
 	    // Create rooms and add them to the rooms ArrayList
 	    Room startRoom = new Room("Start", "You wake up in a strange place. The sky is cloudy and there is nobody else in sight."+
-	    		" You are all alone. Where will you go next?", false);
+	    		" You are all alone. Where will you go next?");
 	    rooms.add(startRoom);
-	    startRoom.setVisited(true);
 	    
-	    Room campusRoom = new Room("York College Campus", "You arrive at the york college campus. Screaming is heard in the distance.", false);
+	    Room campusRoom = new Room("York College Campus", "You arrive at the york college campus. Screaming is heard in the distance.");
 	    rooms.add(campusRoom);
 	    
-	    Room neRoom = new Room("North East", "The northeast room", false);
+	    Room neRoom = new Room("North East", "The northeast room");
 	    rooms.add(neRoom);
 	    
-	    Room eastRoom = new Room("East", "The east room", false);
+	    Room eastRoom = new Room("East", "The east room");
 	    rooms.add(eastRoom);
 	    
-	    Room seRoom = new Room("South East", "The southeast room", false);
+	    Room seRoom = new Room("South East", "The southeast room");
 	    rooms.add(seRoom);
 	    
-	    Room southRoom = new Room("south", "The south room", false);
+	    Room southRoom = new Room("south", "The south room");
 	    rooms.add(southRoom);
 	    
-	    Room swRoom = new Room("South West", "The soutwest room", false);
+	    Room swRoom = new Room("South West", "The soutwest room");
 	    rooms.add(swRoom);
 	    
-	    Room westRoom = new Room("West", "The west room", false);
+	    Room westRoom = new Room("West", "The west room");
 	    rooms.add(westRoom);
 	    
-	    Room nwRoom = new Room("Josh's House", "You arrive at Josh's house.", true);
+	    Room nwRoom = new Room("North West", "The northwest room");
 	    rooms.add(nwRoom);
 	    
 	  //Set room exits for the starter room
@@ -102,16 +101,8 @@ public class Game {
 	  		nwRoom.setExit("south", westRoom);
 	  		nwRoom.setExit("west", null);
 	  	
-	  	//Create items for rooms/player
-	  		Item blue_key = new KeyItem("Blue Key", false);
-	  
-	  	//Add items to rooms
-	  		nwRoom.setKeyName("Blue Key");
-	  		southRoom.roomInventory.addItem(blue_key);
-	  		
-	        player = new Player(startRoom);
+	        player = new Player(100, startRoom);
 	        currentRoom = startRoom;
-	        
 	}
 	
 	//Activates initial starting data
@@ -140,24 +131,13 @@ public class Game {
 		            case "west":
 		            case "east":
 		                Room nextRoom = currentRoom.getExit(input);
-		                if (nextRoom != null && nextRoom.getNeedsKey()) {
-		                    String keyName = nextRoom.getKeyName();
-		                    Item keyItem = player.inventory.getItemByName(keyName);
-		                    if (keyItem != null) {
-		                        player.moveTo(nextRoom);
-		                        currentRoom = player.getCurrentRoom();
-		                        response = "You use the " + keyName + " to unlock the door.";
-		                        currentRoom.setVisited(true);
-		                    } else {
-		                        response = "You don't have the required key (" + keyName + ") to enter this room.";
-		                    }
-		                } else if (nextRoom != null && !nextRoom.getVisited()) {
+		                if (nextRoom != null && nextRoom.getVisited() == false) {
 		                    player.moveTo(nextRoom);
 		                    currentRoom = player.getCurrentRoom();
 		                    response = "You move " + input + ". New Location: " + currentRoom.getName();
 		                    currentRoom.setVisited(true);
-		                } else if (nextRoom != null && nextRoom.getVisited()) {
-		                    player.moveTo(nextRoom);
+		                } else if(nextRoom != null && nextRoom.getVisited() == true) {
+		                	player.moveTo(nextRoom);
 		                    currentRoom = player.getCurrentRoom();
 		                    response = "You move " + input;
 		                } else {
@@ -168,35 +148,11 @@ public class Game {
 		                currentRoom = player.getCurrentRoom();
 		                response = "Current Location: " + currentRoom.getName();
 		                break;
-		            case "search":
-		                if (currentRoom.roomInventory.getItems().isEmpty()) {
-		                    response = "You search the room but find nothing.";
-		                } else {
-		                    response = "You search the room and find the following items: " + currentRoom.roomInventory.getItemNames() +
-		                               ". Do you want to take any of these items? If yes, type 'take' plus the item name.";
-		                }
-		                break;
-		            case "inventory":
-		            	if (player.inventory.getItems().isEmpty()) {
-		                    response = "Your inventory is empty :(";
-		                } else {
-		                    response = "Your inventory:\n" + player.inventory.getItemNames();
-		                }
+		            case "save game":
+		                response = "Game Saved.";
 		                break;
 		            default:
-		                if (input.startsWith("take ")) {
-		                    String itemName = input.substring(5); // Remove "take " from the input to get the item name
-		                    Item itemToTake = currentRoom.roomInventory.getItemByName(itemName);
-		                    if (itemToTake != null) {
-		                        player.inventory.addItem(itemToTake);
-		                        currentRoom.roomInventory.removeItem(itemToTake);
-		                        response = "You take the " + itemName + ".";
-		                    } else {
-		                        response = "There is no " + itemName + " in this room.";
-		                    }
-		                } else {
-		                    response = "Invalid command.";
-		                }
+		                response = "Invalid command.";
 		                break;
 		        }
 		    }
