@@ -4,33 +4,7 @@
     <meta charset="UTF-8">
     <title>Spooky York</title>
     <link rel="stylesheet" type="text/css" href="gameStyles.css">
-    <style>
-        /* CSS for the health bar */
-        .health-bar-container {
-            text-align: center;
-            margin-top: 20px; /* Adjust margin top as needed */
-        }
-        .health-text {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-        .health-bar {
-            width: 200px;
-            height: 30px;
-            border: 1px solid #333;
-            position: relative;
-            overflow: hidden;
-            display: inline-block; /* Ensure health bar and text stay in line */
-        }
-        .health-bar .bar {
-            height: 100%;
-            background-color: green;
-            position: absolute;
-            top: 0;
-            left: 0;
-            transition: width 0.3s ease;
-        }
-    </style>
+
 </head>
 <body>
     <div id="logo-container">
@@ -65,7 +39,7 @@
             <!-- pause button -->
             <div id="pause">
                 <form function="PauseServlet" method="get">
-                    <input type="submit" name="function" value="Pause" class="submit">
+                    <input type="submit" name="function" value="Pause" class="pause">
                 </form>
             </div>
         </div>
