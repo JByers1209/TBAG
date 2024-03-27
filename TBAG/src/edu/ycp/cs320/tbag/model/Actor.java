@@ -1,7 +1,5 @@
 package edu.ycp.cs320.tbag.model;
 
-import java.awt.ItemSelectable;
-
 public abstract class Actor {
 
 	
