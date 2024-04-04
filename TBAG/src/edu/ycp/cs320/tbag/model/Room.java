@@ -16,9 +16,18 @@ public class Room {
 		this.name = name;
 	    this.description = description;
 	    this.hasVisited = false;
-	    this.setNeedsKey(needsKey);
+	    this.needsKey = needsKey;
 	    exits = new HashMap<>();
 	}
+	
+	public Room(String name, String description) {
+		this.name = name;
+	    this.description = description;
+	    this.hasVisited = false;
+	    this.needsKey = false;
+	    exits = new HashMap<>();
+	}
+	
 
 	public String getName() {
 	    return name;
