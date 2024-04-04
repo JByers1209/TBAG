@@ -1,0 +1,5 @@
+Item Id | Room Id | Owner Id | Name | Short Description | Long Description | Type Id | Throwable | Damage | Effect
+1 | 1 | null | Sword | null | null | 1 | True | 15 | null
+2 | 6 | null | Bandage | A Bandage | null | 2 | True | null | Heal
+3 | 8 | null | Blue Key | null | null | 3 | False | null | null
+
