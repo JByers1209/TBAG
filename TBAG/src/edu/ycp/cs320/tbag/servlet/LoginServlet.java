@@ -18,16 +18,17 @@ public class LoginServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
-        // Check if username and password are valid (example check)
+        // Check if username and password are valid
         if (isValidLogin(username, password)) {
-            // If valid, redirect to a success page
+            // If valid, redirect to the index page
             resp.sendRedirect(req.getContextPath() + "/index.jsp");
-            System.out.println("Login Succesfull");
         } else {
-            // If not valid, redirect back to the login page with an error message
-            resp.sendRedirect(req.getContextPath() + "/login.jsp?error=1");
+            // If not valid, forward back to the login page with an error message
+            req.setAttribute("errorMessage", "Invalid username or password");
+            req.getRequestDispatcher("/login.jsp").forward(req, resp);
         }
     }
+
 
     // Example method to check if username and password are valid (replace with your logic)
     private boolean isValidLogin(String username, String password) {
