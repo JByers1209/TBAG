@@ -22,7 +22,8 @@ body {
 /* CSS for the health bar */
 .health-bar-container {
     text-align: center;
-    margin-top: 20px; /* Adjust margin top as needed */
+    margin-top: -300px; /* Adjust margin top as needed */
+	margin-left: -100;
 }
 .health-text {
     font-size: 18px;
@@ -97,19 +98,24 @@ body {
     justify-content: center; /* Center buttons horizontally */
     align-items: center; /* Center buttons vertically */
     background-color: black;
-    height: 200px;
+    height: 150px;
     position: relative;
 }
-#pause {
+.pause {
     position: absolute;
     top: calc(50% + 300px); /* Adjust based on button size */
-    transform: translate(-50%, -50%);
-    background-color: #511717;
-    border:none;
-    color:#fff;
+    transform: translate(-50%, -50%); 
+    background-color: #511717; 
+    border: none;
+    color: white;
     padding: 15px 32px;
     text-align: center;
+    text-decoration: none;
     font-size: 16px;
+    Right: 230px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 10px;
 }
 
 

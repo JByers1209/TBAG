@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Spooky York</title>
-    <link rel="stylesheet" type="text/css" href="gameStyles.css">
+    <link rel="stylesheet" type="text/css" href="gameStylesheet.css">
 
 </head>
 <body>
@@ -20,13 +20,6 @@
                     <input type="text" id="command-line" name="userInput" placeholder="Type your command...">
                 </form>
             </div>
-            <!-- HEALTH STATUS -->
-            <div class="health-bar-container">
-                <div class="health-text">Health Level</div>
-                <div class="health-bar">
-                    <div class="bar" style="width: 100%;"></div>
-                </div>
-            </div>
             <!-- arrow buttons -->
             <div id="buttons-container" style="display: none;">
                 <span id="button-span">
@@ -41,6 +34,13 @@
                 <form function="PauseServlet" method="get">
                     <input type="submit" name="function" value="Pause" class="pause">
                 </form>
+            </div>
+            <!-- HEALTH STATUS -->
+            <div class="health-bar-container">
+                <div class="health-text">Health Level</div>
+                <div class="health-bar">
+                    <div class="bar" style="width: 100%;"></div>
+                </div>
             </div>
         </div>
     </div>
