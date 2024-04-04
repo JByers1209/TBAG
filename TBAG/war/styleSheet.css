@@ -54,7 +54,7 @@ img {
     .submit:hover {
         background-color: #ff8080;
     }
-    
+
     .submit::-moz-focus-inner,
     .submit::-moz-focus-inner {
         border: 0;
@@ -80,4 +80,3 @@ img {
 #login-form button {
     margin-top: 10px;
 }
-

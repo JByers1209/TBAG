@@ -4,23 +4,30 @@
     <meta charset="UTF-8">
     <title>Spooky York</title>
     <link rel="stylesheet" type="text/css" href="gameStyles.css">
+
 </head>
 <body>
     <div id="logo-container">
         <img src="https://blog.flamingtext.com/blog/2024/03/13/flamingtext_com_1710299194_29928696.png" border="0" alt="Game title" title="title">
     </div>
     <div id="wrapper">
-
         <div id="content-container">
             <div id="game-container">
                 <div id="game-text">
- <!-- This is where the game text will appear -->
+                    <!-- This is where the game text will appear -->
                 </div>
-                <form id="game-form" action="game" method="post"> <!-- Form element added -->
-                    <input type="text" id="command-line" name="userInput" placeholder="Type your command..."> <!-- Name attribute added -->
+                <form id="game-form" action="game" method="post">
+                    <input type="text" id="command-line" name="userInput" placeholder="Type your command...">
                 </form>
             </div>
-<!--arrow buttons-->
+            <!-- HEALTH STATUS -->
+            <div class="health-bar-container">
+                <div class="health-text">Health Level</div>
+                <div class="health-bar">
+                    <div class="bar" style="width: 100%;"></div>
+                </div>
+            </div>
+            <!-- arrow buttons -->
             <div id="buttons-container" style="display: none;">
                 <span id="button-span">
                     <button id="button1" class="game-button" type="button"><</button>
@@ -29,8 +36,8 @@
                     <button id="button4" class="game-button" type="button">v</button>
                 </span>
             </div>
-<!--pause button-->
-            <div id ="pause">
+            <!-- pause button -->
+            <div id="pause">
                 <form function="PauseServlet" method="get">
                     <input type="submit" name="function" value="Pause" class="pause">
                 </form>
@@ -63,7 +70,7 @@
                 }
                 sendCommand(userInput);
                 commandLine.value = ""; // Clear input field
-});
+            });
 
             function sendCommand(userInput) {
                 var xhr = new XMLHttpRequest();
@@ -71,7 +78,7 @@
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState == 4 && xhr.status == 200) {
-                        gameText.innerHTML += "<p><strong> >  " + userInput + "</p>";
+                        gameText.innerHTML += "<p><strong> >  " + userInput + "</strong></p>";
                         gameText.innerHTML += "<p>" + xhr.responseText + "</p>";
                         gameText.scrollTop = gameText.scrollHeight;
                     }
@@ -93,6 +100,5 @@
             });
         });
     </script>
-    
 </body>
 </html>

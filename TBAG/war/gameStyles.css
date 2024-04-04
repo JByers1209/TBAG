@@ -19,6 +19,32 @@ body {
     margin-top: -30px;
 }
 
+/* CSS for the health bar */
+.health-bar-container {
+    text-align: center;
+    margin-top: 20px; /* Adjust margin top as needed */
+}
+.health-text {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+.health-bar {
+    width: 200px;
+    height: 30px;
+    border: 1px solid #333;
+    position: relative;
+    overflow: hidden;
+    display: inline-block; /* Ensure health bar and text stay in line */
+}
+.health-bar .bar {
+    height: 100%;
+    background-color: green;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: width 0.3s ease;
+}
+
 
 #logo-container {
     display: flex;
@@ -74,6 +100,18 @@ body {
     height: 200px;
     position: relative;
 }
+#pause {
+    position: absolute;
+    top: calc(50% + 300px); /* Adjust based on button size */
+    transform: translate(-50%, -50%);
+    background-color: #511717;
+    border:none;
+    color:#fff;
+    padding: 15px 32px;
+    text-align: center;
+    font-size: 16px;
+}
+
 
 #button1 {
     position: absolute;
@@ -115,33 +153,4 @@ body {
     transition: background-color 0.3s, color 0.3s;
     margin: 0 5px; /* Add margin between buttons */
     position: relative; /* Added */
-}
-.pause {
-    position: absolute;
-    top: calc(50% + 300px); /* Adjust based on button size */
-    transform: translate(-50%, -50%); 
-    background-color: #511717;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    transition-duration: 0.4s;
-    cursor: pointer;
-    border-radius: 10px;
-}
-
-.buttonsPause {
-    background-color: #511717; 
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    
-    transition-duration: 0.4s;
-    cursor: pointer;
-    border-radius: 10px;
 }

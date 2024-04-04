@@ -22,13 +22,13 @@
 
     <div id = "Resume">
         <form function="GameServlet" method="get">
-            <input type="submit" name="function" value="Resume" class="pause">
+            <input type="submit" name="function" value="Resume" class="submit">
         </form>
     </div>
     <!-- <input type="submit" name= "function" value="Restart Game" class="submit">  -->
-   <div id = Quit>
+   <div id = Quit-form>
     <form function="IndexServlet" method="get">
-        <input type="submit" name="function" value="Quit Game" class="pause">
+        <input type="submit" name="function" value="Quit Game" class="submit">
     </form>
    </div> 
 </body>
