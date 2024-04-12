@@ -1,4 +1,4 @@
-npackage edu.ycp.cs320.tbag.model;
+package edu.ycp.cs320.tbag.model;
 
 import java.util.ArrayList;
 
