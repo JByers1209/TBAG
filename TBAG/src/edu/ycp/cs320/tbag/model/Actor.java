@@ -12,6 +12,14 @@ public abstract class Actor {
 	private int level, roomID, xp, actorID;
 	
 	public Actor() {
+		inventory = new Inventory();
+		currentHealth = maxHealth;
+	}
+	
+	public Actor(Room room) {
+		location = room;
+		inventory = new Inventory();
+		currentHealth = maxHealth;
 		
 	}
 	
@@ -22,6 +30,7 @@ public abstract class Actor {
 		currentHealth = maxHealth;
 	}
 	
+
 		
 	public int getActorID() {
 		return actorID;

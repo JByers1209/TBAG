@@ -8,6 +8,10 @@ public class Player extends Actor {
 		super(maxHealth, room);
 	}
 	
+	public Player(Room room) {
+		super(room);
+	}
+	
 	public Player() {
 		super();
 	}
