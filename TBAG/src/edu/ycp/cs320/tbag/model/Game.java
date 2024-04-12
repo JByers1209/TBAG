@@ -110,8 +110,7 @@ public class Game {
 	  		nwRoom.roomInventory.addItem(sword);
 	  		eastRoom.roomInventory.addItem(bandage);
 	  		
-	        player = new Player(startRoom);
-	        player.setCurrentHealth(100);
+	        player = new Player(100, startRoom);
 	        currentRoom = startRoom;
 	        
 	}
@@ -144,13 +143,13 @@ public class Game {
 		                Room nextRoom = currentRoom.getExit(input);
 		                if (nextRoom != null && nextRoom.getNeedsKey()) {
 		                    String keyName = nextRoom.getKeyName();
-		                    Item keyItem = player.inventory.getItemByName(keyName);
+		                    Item keyItem = player.getInventory().getItemByName(keyName);
 		                    if (keyItem != null) {
 		                        player.moveTo(nextRoom);
 		                        currentRoom = player.getCurrentRoom();
 		                        response = "You use the " + keyName + " to unlock the door.";
 		                        currentRoom.setVisited(true);
-		                        player.inventory.removeItem(keyItem);
+		                        player.getInventory().removeItem(keyItem);
 		                        nextRoom.setNeedsKey(false);
 		                    } else {
 		                        response = currentRoom.getName() + ": You don't have the required key (" + keyName + ") to enter this room.";
@@ -188,10 +187,10 @@ public class Game {
 		                }
 		                break;
 		            case "inventory":
-		            	if (player.inventory.getItems().isEmpty()) {
+		            	if (player.getInventory().getItems().isEmpty()) {
 		                    response = "Your inventory is empty :(";
 		                } else {
-		                    response = "Your inventory:\n" + player.inventory.getItemNames();
+		                    response = "Your inventory:\n" + player.getInventory().getItemNames();
 		                }
 		                break;
 		            default:
@@ -199,7 +198,7 @@ public class Game {
 		                    String itemName = input.substring(5); // Remove "take " from the input to get the item name
 		                    Item itemToTake = currentRoom.roomInventory.getItemByName(itemName);
 		                    if (itemToTake != null) {
-		                        player.inventory.addItem(itemToTake);
+		                        player.getInventory().addItem(itemToTake);
 		                        currentRoom.roomInventory.removeItem(itemToTake);
 		                        response = "You take the " + itemName + ".";
 		                    } else {
