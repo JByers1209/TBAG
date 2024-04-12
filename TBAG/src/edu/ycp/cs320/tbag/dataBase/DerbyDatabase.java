@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.ycp.cs320.tbag.model.Actor;
+
 
 
 public class DerbyDatabase implements IDatabase {
@@ -105,6 +107,12 @@ public class DerbyDatabase implements IDatabase {
 		//db.loadInitialData();
 		
 		System.out.println("Success!");
+	}
+
+	@Override
+	public Actor findActorByID(int actorID) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

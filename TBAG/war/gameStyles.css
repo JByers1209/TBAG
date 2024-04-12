@@ -1,0 +1,156 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: var(--gray);
+    color: #fff;
+}
+
+:root {
+    --gray: #575859;
+}
+
+#wrapper {
+    display: flex;
+    flex-direction: row; /* Stack elements horizontally */
+    align-items: center; /* Center items vertically */
+    justify-content: space-between; /* Space out the elements */
+    padding: 10px; /* Add padding to the wrapper */
+    margin-top: -30px;
+}
+
+/* CSS for the health bar */
+.health-bar-container {
+    text-align: center;
+    margin-top: 20px; /* Adjust margin top as needed */
+}
+.health-text {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+.health-bar {
+    width: 200px;
+    height: 30px;
+    border: 1px solid #333;
+    position: relative;
+    overflow: hidden;
+    display: inline-block; /* Ensure health bar and text stay in line */
+}
+.health-bar .bar {
+    height: 100%;
+    background-color: green;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: width 0.3s ease;
+}
+
+
+#logo-container {
+    display: flex;
+    flex-direction: column; /* Arrange items vertically */
+    align-items: center; /* Center items horizontally */
+    margin-bottom: 0px; /* Adjust the margin between the logo and the button */
+}
+
+#content-container {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    margin-left: 100px;
+}
+
+#game-container {
+    position: relative;
+    background-color: #000;
+    width: 800px;
+    max-width: 800px;
+    height: 400px;
+    overflow: hidden;
+    border: 4px solid #fff;
+    padding: 10px;
+    margin-right: 100px; /* Adjust margin between the game container and buttons */
+    margin-left: 100px;
+}
+
+#game-text {
+    height: calc(100% - 40px);
+    overflow-y: auto;
+    margin-bottom: 10px;
+    max-height: 80vh;
+}
+
+#command-line {
+    width: calc(100% - 20px);
+    padding: 5px;
+    box-sizing: border-box;
+    border: none;
+    background-color: #000;
+    color: #fff;
+    outline: none;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+#buttons-container {
+    display: flex;
+    justify-content: center; /* Center buttons horizontally */
+    align-items: center; /* Center buttons vertically */
+    background-color: black;
+    height: 200px;
+    position: relative;
+}
+#pause {
+    position: absolute;
+    top: calc(50% + 300px); /* Adjust based on button size */
+    transform: translate(-50%, -50%);
+    background-color: #511717;
+    border:none;
+    color:#fff;
+    padding: 15px 32px;
+    text-align: center;
+    font-size: 16px;
+}
+
+
+#button1 {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#button2 {
+    position: absolute;
+    top: 50%;
+    left: calc(50% + 50px); /* Adjust based on button size */
+    transform: translate(-50%, -50%);
+}
+
+#button3 {
+    position: absolute;
+    top: calc(50% - 50px); /* Adjust based on button size */
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#button4 {
+    position: absolute;
+    top: calc(50% + 50px); /* Adjust based on button size */
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.game-button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background-color: #fff;
+    color: #000;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 0 5px; /* Add margin between buttons */
+    position: relative; /* Added */
+}

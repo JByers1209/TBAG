@@ -9,7 +9,11 @@ public abstract class Actor {
 	private Room location;
 	private Inventory inventory;
 	private int currentHealth, maxHealth;
-	private int level;
+	private int level, roomID, xp, actorID;
+	
+	public Actor() {
+		
+	}
 	
 	public Actor(int maxHealth, Room room) {
 		location = room;
@@ -17,6 +21,24 @@ public abstract class Actor {
 		this.maxHealth = maxHealth;
 		currentHealth = maxHealth;
 	}
+	
+		
+	public int getActorID() {
+		return actorID;
+	}
+
+	public void setActorID(int actorID) {
+		this.actorID = actorID;
+	}
+
+	public int getXP() {
+		return xp;
+	}
+	
+	public void setXP(int xp) {
+		this.xp = xp;
+	}
+	
 	
 	public void moveTo(Room room) {
 		this.location = room;
@@ -29,6 +51,7 @@ public abstract class Actor {
 	public void pickupItem(Item item) {
 		inventory.addItem(item);
 	}
+	
 	
 	public void dropItem(Item item) {
 		inventory.removeItem(item);
@@ -47,6 +70,14 @@ public abstract class Actor {
 	
 	public int getLevel() {
 		return level;
+	}
+	
+	public int getRoomID() {
+		return roomID;
+	}
+	
+	public void setRoomID(int ID) {
+		roomID = ID;
 	}
 	
 	public void setCurrentHealth(int health) {

@@ -1,11 +1,11 @@
 package edu.ycp.cs320.tbag.main;
 
-import java.util.List;
 import java.util.Scanner;
 
 import edu.ycp.cs320.tbag.dataBase.DatabaseProvider;
 import edu.ycp.cs320.tbag.dataBase.IDatabase;
 import edu.ycp.cs320.tbag.dataBase.InitDatabase;
+import edu.ycp.cs320.tbag.model.Actor;
 
 
 
@@ -17,12 +17,14 @@ public class TestDatabase {
 			// Create the default IDatabase instance
 			InitDatabase.init(keyboard);
 			
-			System.out.print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEF: ");
-			String lastName = keyboard.nextLine();
+			System.out.print("Enter Actor ID: ");
+			int actorID = Integer.parseInt(keyboard.nextLine());
 			
 			// get the DB instance and execute transaction
 			IDatabase db = DatabaseProvider.getInstance();
 			
+			Actor actor = db.findActorByID(actorID);
+			System.out.println(actor.toString());
 			
 	
 			}
