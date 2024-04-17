@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
 
 public class DerbyDatabase implements IDatabase {
@@ -28,24 +29,24 @@ public class DerbyDatabase implements IDatabase {
 	private static final int MAX_ATTEMPTS = 10;
 
 	@Override
-	public List<RoomConnection> findConnectionByRoomID(String roomId) {
-		return executeTransaction(new Transaction<List<RoomConnection>>() {
+	public List<Room> findConnectionByRoomID(String roomId, String move) {
+		return executeTransaction(new Transaction<List<Room>>() {
 			@Override
-			public List<Pair<Author, Book>> execute(Connection conn) throws SQLException {
+			public List<Room> execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
 				
 				try {
 					// retreive all attributes from both Books and Authors tables
 					stmt = conn.prepareStatement(
-							"select authors.*, books.* " +
+							"select Rooms.*, RoomConnections.* " +
 							"  from authors, books " +
 							" where authors.author_id = books.author_id " +
 							"   and books.title = ?"
 					);
-					stmt.setString(1, title);
+					stmt.setString(1, );
 					
-					List<Pair<Author, Book>> result = new ArrayList<Pair<Author,Book>>();
+					List<Room> result = new ArrayList<Room>();
 					
 					resultSet = stmt.executeQuery();
 					
@@ -57,20 +58,20 @@ public class DerbyDatabase implements IDatabase {
 						
 						// create new Author object
 						// retrieve attributes from resultSet starting with index 1
-						Author author = new Author();
-						loadAuthor(author, resultSet, 1);
+						Room room = new Room();
+						loadRoom(room), resultSet, 1);
 						
 						// create new Book object
 						// retrieve attributes from resultSet starting at index 4
 						Book book = new Book();
-						loadBook(book, resultSet, 4);
+						loadRoom(book, resultSet, 4);
 						
 						result.add(new Pair<Author, Book>(author, book));
 					}
 					
 					// check if the title was found
 					if (!found) {
-						System.out.println("<" + title + "> was not found in the books table");
+						System.out.println("<" + room + "> was not found in the books table");
 					}
 					
 					return result;
@@ -304,18 +305,26 @@ private static String getAuthorID(Connection conn, String firstName, String last
 		return conn;
 	}
 	
-	private void loadAuthor(Author author, ResultSet resultSet, int index) throws SQLException {
-		author.setAuthorId(resultSet.getInt(index++));
-		author.setLastname(resultSet.getString(index++));
-		author.setFirstname(resultSet.getString(index++));
+	private void loadRoom(Room room, ResultSet resultSet, int index) throws SQLException {
+		room.setRoomID(resultSet.getInt(index++));
+		room.setName(resultSet.getString(index++));
+		room.setLongDescription(resultSet.getString(index++));
+		room.setShortDescription(resultSet.getString(index++));
+		room.setVisited(resultSet.getBoolean(index++));
+		room.setNeedsKey(resultSet.getBoolean(index++));
+		room.setKeyName(resultSet.getString(index++));
 	}
 	
-	private void loadBook(Book book, ResultSet resultSet, int index) throws SQLException {
-		book.setBookId(resultSet.getInt(index++));
-		book.setAuthorId(resultSet.getInt(index++));
-		book.setTitle(resultSet.getString(index++));
-		book.setIsbn(resultSet.getString(index++));
-		book.setPublished(resultSet.getInt(index++));		
+	private void loadRoomConnection(RoomConnection roomConnection, ResultSet resultSet, int index) throws SQLException {
+		roomConnection.setRoomID(resultSet.getInt(index++));
+		roomConnection.setMove1(resultSet.getString(index++));
+		roomConnection.setDest1(resultSet.getString(index++));
+		roomConnection.setMove2(resultSet.getString(index++));
+		roomConnection.setDest2(resultSet.getString(index++));
+		roomConnection.setMove3(resultSet.getString(index++));
+		roomConnection.setDest3(resultSet.getString(index++));
+		roomConnection.setMove4(resultSet.getString(index++));
+		roomConnection.setDest4(resultSet.getString(index++));
 	}
 	
 	public void createTables() {
@@ -361,47 +370,54 @@ private static String getAuthorID(Connection conn, String firstName, String last
 		executeTransaction(new Transaction<Boolean>() {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
-				List<Author> authorList;
-				List<Book> bookList;
+				List<Room> roomList;
+				List<RoomConnection> connectionList;
 				
 				try {
-					authorList = InitialData.getAuthors();
-					bookList = InitialData.getBooks();
+					roomList = InitialData.getRooms();
+					connectionList = InitialData.getConnections();
 				} catch (IOException e) {
 					throw new SQLException("Couldn't read initial data", e);
 				}
 
-				PreparedStatement insertAuthor = null;
-				PreparedStatement insertBook   = null;
+				PreparedStatement insertRoom = null;
+				PreparedStatement insertConnection   = null;
 
 				try {
-					// populate authors table (do authors first, since author_id is foreign key in books table)
-					insertAuthor = conn.prepareStatement("insert into authors (lastname, firstname) values (?, ?)");
-					for (Author author : authorList) {
-//						insertAuthor.setInt(1, author.getAuthorId());	// auto-generated primary key, don't insert this
-						insertAuthor.setString(1, author.getLastname());
-						insertAuthor.setString(2, author.getFirstname());
-						insertAuthor.addBatch();
+					// populate rooms table (do authors first, since author_id is foreign key in books table)
+					insertRoom = conn.prepareStatement("insert into rooms (roomId, name, longDescription, shortDescription, hasVisited, needsKey, keyName) values (?, ?, ?, ?, ?, ?)");
+					for (Room room : roomList) {
+//						insertRoom.setInt(1, room.getRoomId());		// auto-generated primary key, don't insert this
+						insertRoom.setString(1, room.getName());
+						insertRoom.setString(2, room.getLongDescription());
+						insertRoom.setString(3, room.getShortDescription());
+						insertRoom.setBoolean(4, room.getVisited());
+						insertRoom.setBoolean(5, room.getNeedsKey());
+						insertRoom.setString(6, room.getKeyName());
+						insertRoom.addBatch();
 					}
-					insertAuthor.executeBatch();
+					insertRoom.executeBatch();
 					
-					// populate books table (do this after authors table,
-					// since author_id must exist in authors table before inserting book)
-					insertBook = conn.prepareStatement("insert into books (author_id, title, isbn, published) values (?, ?, ?, ?)");
-					for (Book book : bookList) {
-//						insertBook.setInt(1, book.getBookId());		// auto-generated primary key, don't insert this
-						insertBook.setInt(1, book.getAuthorId());
-						insertBook.setString(2, book.getTitle());
-						insertBook.setString(3, book.getIsbn());
-						insertBook.setInt(4,  book.getPublished());
-						insertBook.addBatch();
+					// populate connections table
+					insertConnection = conn.prepareStatement("insert into roomConnections (roomId, move1, dest1, move2, dest2, move3, dest3, move4, dest4) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					for (RoomConnection roomConnection : connectionList) {
+//						insertBook.setInt(1, roomConnections.getBookId());		// auto-generated primary key, don't insert this
+						insertConnection.setString(1, roomConnection.getMove1());
+						insertConnection.setString(2, roomConnection.getDest1());
+						insertConnection.setString(3, roomConnection.getMove2());
+						insertConnection.setString(4, roomConnection.getDest2());
+						insertConnection.setString(5, roomConnection.getMove3());
+						insertConnection.setString(6, roomConnection.getDest3());
+						insertConnection.setString(7, roomConnection.getMove4());
+						insertConnection.setString(8, roomConnection.getDest4());
+						insertConnection.addBatch();
 					}
-					insertBook.executeBatch();
+					insertConnection.executeBatch();
 					
 					return true;
 				} finally {
-					DBUtil.closeQuietly(insertBook);
-					DBUtil.closeQuietly(insertAuthor);
+					DBUtil.closeQuietly(insertRoom);
+					DBUtil.closeQuietly(insertConnection);
 				}
 			}
 		});
