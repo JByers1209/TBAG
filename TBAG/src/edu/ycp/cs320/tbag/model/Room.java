@@ -4,41 +4,50 @@ import java.util.HashMap;
 
 public class Room {
 	private String name;
-	private String description;
+	private String shortDescription;
+	private String longDescription;
 	private HashMap<String, Room> exits;
 	private boolean hasVisited;
 	private boolean needsKey;
 	private String keyName;
+	private int roomId;
 
 	Inventory roomInventory = new Inventory();
 	
-	public Room(String name, String description, boolean needsKey) {
-		this.name = name;
-	    this.description = description;
-	    this.hasVisited = false;
-	    this.needsKey = needsKey;
-	    exits = new HashMap<>();
+	public Room() {
+		
 	}
-	
-	public Room(String name, String description) {
-		this.name = name;
-	    this.description = description;
-	    this.hasVisited = false;
-	    this.needsKey = false;
-	    exits = new HashMap<>();
-	}
-	
 
+	public void setRoomID(int roomId) {
+		this.roomId = roomId;
+	}
+	
+	public int getRoomID() {
+		return roomId;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public String getName() {
 	    return name;
 	}
 
-	public String getDescription() {
-	    return description;
+	public String getShortDescription() {
+	    return shortDescription;
 	}
 
-	public void setDescription(String description) {
-	    this.description = description;
+	public void setShortDescription(String shortDescription) {
+	    this.shortDescription = shortDescription;
+	}
+	
+	public String getLongDescription() {
+	    return longDescription;
+	}
+
+	public void setLongDescription(String longDescription) {
+	    this.longDescription = longDescription;
 	}
 
 	public void setExit(String direction, Room neighbor) {
