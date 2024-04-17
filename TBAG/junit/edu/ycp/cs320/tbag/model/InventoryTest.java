@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:TBAG/junit/edu/ycp/cs320/tbag/model/InventoryTest.java
 package edu.ycp.cs320.tbag.model;
-========
-package edu.ycp.cs320.tbag.tests;
->>>>>>>> Ethan:TBAG/junit/edu/ycp/cs320/tbag/tests/InventoryTest.java
 import static org.junit.Assert.*;
 
 import java.util.List;

@@ -85,28 +85,6 @@ class Inventory {
 		}
 		return null;
 	}
-    
- // Method to return a string of item names separated by commas
-    public String getItemNames() {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < items.size(); i++) {
-            Item item = items.get(i);
-            result.append(item.getName());
-            if (i < items.size() - 1) {
-                result.append(", ");
-            }
-        }
-        return result.toString();
-    }
-    
-    public Item getItemByName(String name) {
-        for (Item item : items) {
-            if (item.getName().equalsIgnoreCase(name)) {
-                return item;
-            }
-        }
-        return null; // Item not found
-    }
 
 }
 

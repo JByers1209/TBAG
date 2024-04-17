@@ -3,8 +3,6 @@ package edu.ycp.cs320.tbag.model;
 
 
 public abstract class Actor {
-
-	
 	
 	private Room location;
 	private Inventory inventory;
