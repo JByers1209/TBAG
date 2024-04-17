@@ -1,3 +1,10 @@
-1 | 1 | Sword | null | null | 1 | True | 15 | null
-2 | 6 | Bandage | A Bandage | null | 2 | True | null | Heal
-3 | 8 | Blue Key | null | null | 3 | False | null | null
+ 1 | Sword |  a sharp silver sword  | 1 | True | 15 | none
+ 6 | Bandage | A Bandage | 2 | True | none | Heal
+ 8 | Blue Key | You find a blue skeleton key | 3 | False | none
+   | Lego miniFigure | a little blue ninja | 1 | True | 1| none
+   | Water Bottle | a 40oz hydroflask | 2 | True | 5 | Heal 
+   | Friendship bracelet | a colorful hand beaded bracelet | 1 | True | none | none
+   | Rock Salt | a large container of rock salt | 1 | False | 15 | none 
+   | Holy Water | crucified water in a jar | 1 | True | 10 | none 
+   | Book of Spells | a leather bound book with spells written inside | 1 | True | 5 | none 
+    
