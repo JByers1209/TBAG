@@ -17,7 +17,7 @@ import edu.ycp.cs320.tbag.model.RoomConnection;
 
 public class InitialData {
 
-	/*public static List<Actor> getActors() throws IOException {
+	public static List<Actor> getActors() throws IOException {
 		List<Actor> actorList = new ArrayList<Actor>();
 		ReadCSV readActors = new ReadCSV("Actors.csv");
 		try {
@@ -52,7 +52,7 @@ public class InitialData {
 		} finally {
 			readActors.close();
 		}
-	} */
+	}
 	
 	public static List<Room> getRooms() throws IOException {
 		List<Room> roomList = new ArrayList<Room>();
@@ -96,11 +96,15 @@ public class InitialData {
 				}
 				Iterator<String> i = tuple.iterator();
 				RoomConnection connection = new RoomConnection();
-				connection.setRoomID(roomId++);				
+				connection.setRoomID(roomId++);
 				connection.setMove1(i.next());
+				connection.setDest1(i.next());
 				connection.setMove2(i.next());
+				connection.setDest2(i.next());
 				connection.setMove3(i.next());
+				connection.setDest3(i.next());
 				connection.setMove4(i.next());
+				connection.setDest4(i.next());
 				connectionList.add(connection);
 				
 			}

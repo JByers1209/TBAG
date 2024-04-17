@@ -60,5 +60,42 @@ public class RoomConnection {
 		public String getMove4() {
 			return move4;
 		}	
+
+	//Dest 1
+		public void setDest1(String dest1) {
+			this.dest1 = dest1;
+		}
+				
+		public String getDest1() {
+			return dest1;
+		}
+
+	//Dest 2
+		public void setDest2(String dest2) {
+			this.dest2 = dest2;
+		}
+				
+		public String getDest2() {
+			return dest2;
+		}
+			
+	//Dest 3
+		public void setDest3(String dest3) {
+			this.dest3 = dest3;
+		}
+					
+		public String getDest3() {
+			return dest3;
+		}
+			
+	//Dest 4
+		public void setDest4(String dest4) {
+			this.dest4 = dest4;
+		}
+				
+		public String getDest4() {
+			return dest4;
+		}	
+
 }
 
