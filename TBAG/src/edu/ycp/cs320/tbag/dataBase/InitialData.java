@@ -67,11 +67,12 @@ public class InitialData {
 				}
 				Iterator<String> i = tuple.iterator();
 				Room room = new Room();
-				room.setRoomID(roomId++);				
+				room.setRoomID(roomId++);
+				room.setName(i.next());
 				room.setLongDescription(i.next());
 				room.setShortDescription(i.next());
-				room.setVisited(Boolean.parseBoolean(i.next()));
-				room.setNeedsKey(Boolean.parseBoolean(i.next()));
+				room.setVisited(i.next());
+				room.setNeedsKey(i.next());
 				room.setKeyName(i.next());
 				roomList.add(room);
 				
