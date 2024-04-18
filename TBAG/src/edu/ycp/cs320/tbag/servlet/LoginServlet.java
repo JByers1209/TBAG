@@ -23,20 +23,59 @@ public class LoginServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
        
+        //database connection??? 
+        //will need changed----------------------------------------------------------
+        String url = "jdbc:mysql://localhost:3306/your_database_name";
+        String dbUsername = "your_database_username";
+        String dbPassword = "your_database_password";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+// will need changed -----------------------------------------------------------------
         
-        
-
-        // Check if username and password are valid
-        if (isValidLogin(username, password)) {
-            // If valid, redirect to the index page
-            resp.sendRedirect(req.getContextPath() + "/index.jsp");
-        } else {
-            // If not valid, forward back to the login page with an error message
-            req.setAttribute("errorMessage", "Invalid username or password");
-            req.getRequestDispatcher("/login.jsp").forward(req, resp);
+        try { 
+        	//connect to db 
+        	
+        	//
+        	
+        	// SQl Query to retrieve user info 
+        	String sql = " SELECT password From users WHERE username = ? ";
+        	stmt = conn.prepareStatement(sql);
+        	stmt.setString(1, username); 
+        	rs = stmt.executeQuery();
+        	
+        	 // username found, check pass 
+            if (rs.next()) {
+            	String storedPass = rs.getString("password");
+            	
+            	if(password.equals(storedPass) ) {
+            		//pass matches redirect to index 
+            		resp.sendRedirect(req.getContextPath() + "/index.jsp");
+            	}
+            } 
+            else {
+                // If not valid, forward back to the login page with an error message
+                req.setAttribute("errorMessage", "Invalid username or password"); 
+            }
+          
         }
+        catch( SQLException | ClassNotFoundException e){
+        	e.printStackTrace();    	
+			resp.sendRedirect("login-error.html");      	
     }
-
+        finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (stmt != null)
+                    stmt.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+        }
+        }
+}
 
     // Example method to check if username and password are valid (replace with your logic)
     private boolean isValidLogin(String username, String password) {
