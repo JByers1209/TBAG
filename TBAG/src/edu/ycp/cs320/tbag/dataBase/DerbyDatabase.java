@@ -113,14 +113,19 @@ public class DerbyDatabase implements IDatabase {
 	                if (resultSet.next()) {
 	                    // If a room is found, create a Room object and populate its attributes
 	                    result = new Room();
-	                    result.setRoomID(resultSet.getInt("room_id"));
-	                    result.setName(resultSet.getString("room_name"));
-	                    result.setLongDescription(resultSet.getString("longDescription"));
-	                    result.setShortDescription(resultSet.getString("shortDescription"));
-	                    result.setVisited(resultSet.getString("hasVisited"));
-	                    result.setNeedsKey(resultSet.getString("needsKey"));
-	                    result.setKeyName(resultSet.getString("keyName"));
+	                    result.setRoomID(resultSet.getInt(1));
+	                    result.setName(resultSet.getString(2));
+	                    result.setLongDescription(resultSet.getString(3));
+	                    result.setShortDescription(resultSet.getString(4));
+	                    result.setVisited(resultSet.getString(5));
+	                    result.setNeedsKey(resultSet.getString(6));
+	                    result.setKeyName(resultSet.getString(7));
 	                    
+	                    // Log the retrieved room's attributes for debugging
+	                    System.out.println("Retrieved room attributes:");
+	                    System.out.println("Room ID: " + result.getRoomID());
+	                    System.out.println("Name: " + result.getName());
+	                    // Log other attributes similarly
 	                } else {
 	                    // No room found
 	                    System.out.println("Room with room_id " + room_id + " not found.");
@@ -135,6 +140,7 @@ public class DerbyDatabase implements IDatabase {
 	        }
 	    });
 	}
+
 
 	/*
 	public void insertNewBookWithAuthor(String firstname, String lastname, String title,

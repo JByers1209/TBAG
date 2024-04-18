@@ -39,8 +39,9 @@ public class DataBaseTest {
 		
 		Room one = db.findRoomByRoomID(1);
 		assertEquals(1, one.getRoomID());
-		/*assertEquals("Josh's House" , one.getName());
-		assertEquals(false, one.getVisited());
-		assertEquals("blue key", one.getKeyName());*/
+		assertEquals("Josh's House", one.getName());
+		assertEquals("false", one.getVisited());
+		assertEquals("blue key", one.getKeyName());
 	}
+	
 }
