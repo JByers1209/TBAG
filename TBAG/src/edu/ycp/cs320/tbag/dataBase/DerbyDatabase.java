@@ -1,4 +1,4 @@
-package edu.ycp.cs320.booksdb.persist;
+package edu.ycp.cs320.tbag.dataBase;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.ycp.cs320.tbag.model.Actor;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
 
@@ -28,6 +29,7 @@ public class DerbyDatabase implements IDatabase {
 
 	private static final int MAX_ATTEMPTS = 10;
 
+	/*
 	@Override
 	public List<Room> findConnectionByRoomID(String roomId, String move) {
 		return executeTransaction(new Transaction<List<Room>>() {
@@ -59,7 +61,7 @@ public class DerbyDatabase implements IDatabase {
 						// create new Author object
 						// retrieve attributes from resultSet starting with index 1
 						Room room = new Room();
-						loadRoom(room), resultSet, 1);
+						loadRoom(room, resultSet, 1);
 						
 						// create new Book object
 						// retrieve attributes from resultSet starting at index 4
@@ -82,8 +84,8 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
-	
-	public List<Pair<Author, Book>> findAuthorAndBookByAuthorLastName(String lastname) {
+	*/
+	/*public List<Pair<Author, Book>> findAuthorAndBookByAuthorLastName(String lastname) {
 		return executeTransaction(new Transaction<List<Pair<Author,Book>>>() {
 			@Override
 			public List<Pair<Author, Book>> execute(Connection conn) throws SQLException {
@@ -251,7 +253,8 @@ private static String getAuthorID(Connection conn, String firstName, String last
 
         return author_id;
     }
-
+	*/
+	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
 			return doExecuteTransaction(txn);
@@ -310,8 +313,8 @@ private static String getAuthorID(Connection conn, String firstName, String last
 		room.setName(resultSet.getString(index++));
 		room.setLongDescription(resultSet.getString(index++));
 		room.setShortDescription(resultSet.getString(index++));
-		room.setVisited(resultSet.getBoolean(index++));
-		room.setNeedsKey(resultSet.getBoolean(index++));
+		room.setVisited(resultSet.getString(index++));
+		room.setNeedsKey(resultSet.getString(index++));
 		room.setKeyName(resultSet.getString(index++));
 	}
 	
@@ -336,25 +339,34 @@ private static String getAuthorID(Connection conn, String firstName, String last
 				
 				try {
 					stmt1 = conn.prepareStatement(
-						"create table authors (" +
-						"	author_id integer primary key " +
+						"create table rooms (" +
+						"	room_id integer primary key " +
 						"		generated always as identity (start with 1, increment by 1), " +									
-						"	lastname varchar(40)," +
-						"	firstname varchar(40)" +
+						"	name varchar(90)," +
+						"	longDescription varchar(150)," +
+						"	shortDescription varchar(150)," +
+						"	hasVisited varchar(40)," +
+						"	needsKey varchar(40)," +
+						"	keyName varchar(40)" +
 						")"
-					);	
+					);
 					stmt1.executeUpdate();
 					
 					stmt2 = conn.prepareStatement(
-							"create table books (" +
-							"	book_id integer primary key " +
+						    "create table roomConnections (" +
+						    "	connection_id integer primary key " +
 							"		generated always as identity (start with 1, increment by 1), " +
-							"	author_id integer constraint author_id references authors, " +
-							"	title varchar(70)," +
-							"	isbn varchar(15)," +
-							"   published integer " +
-							")"
-					);
+							"	room_id integer constraint room_id references rooms, " +
+						    "    move1 varchar(40)," +
+						    "    dest1 varchar(40)," +
+						    "    move2 varchar(40)," +
+						    "    dest2 varchar(40)," +
+						    "    move3 varchar(40)," +
+						    "    dest3 varchar(40)," +
+						    "    move4 varchar(40)," +
+						    "    dest4 varchar(40)" +
+						    ")"
+						);
 					stmt2.executeUpdate();
 					
 					return true;
@@ -385,21 +397,21 @@ private static String getAuthorID(Connection conn, String firstName, String last
 
 				try {
 					// populate rooms table (do authors first, since author_id is foreign key in books table)
-					insertRoom = conn.prepareStatement("insert into rooms (roomId, name, longDescription, shortDescription, hasVisited, needsKey, keyName) values (?, ?, ?, ?, ?, ?)");
+					insertRoom = conn.prepareStatement("insert into rooms (name, longDescription, shortDescription, hasVisited, needsKey, keyName) values (?, ?, ?, ?, ?, ?)");
 					for (Room room : roomList) {
 //						insertRoom.setInt(1, room.getRoomId());		// auto-generated primary key, don't insert this
 						insertRoom.setString(1, room.getName());
 						insertRoom.setString(2, room.getLongDescription());
 						insertRoom.setString(3, room.getShortDescription());
-						insertRoom.setBoolean(4, room.getVisited());
-						insertRoom.setBoolean(5, room.getNeedsKey());
+						insertRoom.setString(4, room.getVisited());
+						insertRoom.setString(5, room.getNeedsKey());
 						insertRoom.setString(6, room.getKeyName());
 						insertRoom.addBatch();
 					}
 					insertRoom.executeBatch();
 					
 					// populate connections table
-					insertConnection = conn.prepareStatement("insert into roomConnections (roomId, move1, dest1, move2, dest2, move3, dest3, move4, dest4) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					insertConnection = conn.prepareStatement("insert into roomConnections (move1, dest1, move2, dest2, move3, dest3, move4, dest4) values (?, ?, ?, ?, ?, ?, ?, ?)");
 					for (RoomConnection roomConnection : connectionList) {
 //						insertBook.setInt(1, roomConnections.getBookId());		// auto-generated primary key, don't insert this
 						insertConnection.setString(1, roomConnection.getMove1());
@@ -433,5 +445,29 @@ private static String getAuthorID(Connection conn, String firstName, String last
 		db.loadInitialData();
 		
 		System.out.println("Success!");
+	}
+
+	@Override
+	public Actor findActorByID(int actorID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Room findCurrentLocationByActorID(int actorId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int findConnectionByRoomIDandDirection(String roomId, String move) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void updateCurrentRoomByRoomAndActorID(int newRoomId, int actorId) {
+		// TODO Auto-generated method stub
+		
 	}
 }

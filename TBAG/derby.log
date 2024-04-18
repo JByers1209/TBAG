@@ -1,11 +1,11 @@
 ----------------------------------------------------------------
-Fri Apr 12 11:21:12 EDT 2024:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-018e-d2e5-ffa9-0000068b75b8 
-on database directory C:\Users\ethan\OneDrive\Documents\GitHub\TBAG\TBAG\test.db with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-Loaded from file:/C:/Users/ethan/OneDrive/Documents/CS320/eclipseWorkspace/CS320_Derby/lib/derby.jar
+Wed Apr 17 20:24:35 EDT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-018e-ee97-48b6-00000dbd3760 
+on database directory C:\Users\josmb\git\TBAG\TBAG\test.db with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/C:/cs320-spring2024/CS320_Derby/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_301-b09
-user.dir=C:\Users\ethan\OneDrive\Documents\GitHub\TBAG\TBAG
+user.dir=C:\Users\josmb\git\TBAG\TBAG
 os.name=Windows 10
 os.arch=amd64
 os.version=10.0

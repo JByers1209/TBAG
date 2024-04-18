@@ -7,8 +7,8 @@ public class Room {
 	private String shortDescription;
 	private String longDescription;
 	private HashMap<String, Room> exits;
-	private boolean hasVisited;
-	private boolean needsKey;
+	private String hasVisited;
+	private String needsKey;
 	private String keyName;
 	private int roomId;
 
@@ -58,11 +58,11 @@ public class Room {
 	    return exits.get(direction);
 	}
 	
-	public void setVisited(boolean hasVisited) {
+	public void setVisited(String hasVisited) {
 		this.hasVisited = hasVisited;
 	}
 	
-	public boolean getVisited() {
+	public String getVisited() {
 		return hasVisited;
 	}
 
@@ -74,11 +74,11 @@ public class Room {
 	    return exitString.substring(0, exitString.length() - 2); // Remove the last comma and space
 	}
 
-	public boolean getNeedsKey() {
+	public String getNeedsKey() {
 		return needsKey;
 	}
 
-	public void setNeedsKey(boolean needsKey) {
+	public void setNeedsKey(String needsKey) {
 		this.needsKey = needsKey;
 	}
 

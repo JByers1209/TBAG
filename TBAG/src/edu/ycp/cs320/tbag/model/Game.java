@@ -9,7 +9,6 @@ public class Game {
 	boolean canMove = true;
 	Room currentRoom;
 	Player player;
-	ArrayList<Room> rooms;
 
 	public void setup() {
 	    
