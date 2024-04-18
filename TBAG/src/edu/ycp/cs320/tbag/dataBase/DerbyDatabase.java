@@ -29,117 +29,114 @@ public class DerbyDatabase implements IDatabase {
 
 	private static final int MAX_ATTEMPTS = 10;
 
-	/*
-	@Override
-	public List<Room> findConnectionByRoomID(String roomId, String move) {
-		return executeTransaction(new Transaction<List<Room>>() {
-			@Override
-			public List<Room> execute(Connection conn) throws SQLException {
-				PreparedStatement stmt = null;
-				ResultSet resultSet = null;
-				
-				try {
-					// retreive all attributes from both Books and Authors tables
-					stmt = conn.prepareStatement(
-							"select Rooms.*, RoomConnections.* " +
-							"  from authors, books " +
-							" where authors.author_id = books.author_id " +
-							"   and books.title = ?"
-					);
-					stmt.setString(1, );
-					
-					List<Room> result = new ArrayList<Room>();
-					
-					resultSet = stmt.executeQuery();
-					
-					// for testing that a result was returned
-					Boolean found = false;
-					
-					while (resultSet.next()) {
-						found = true;
-						
-						// create new Author object
-						// retrieve attributes from resultSet starting with index 1
-						Room room = new Room();
-						loadRoom(room, resultSet, 1);
-						
-						// create new Book object
-						// retrieve attributes from resultSet starting at index 4
-						Book book = new Book();
-						loadRoom(book, resultSet, 4);
-						
-						result.add(new Pair<Author, Book>(author, book));
-					}
-					
-					// check if the title was found
-					if (!found) {
-						System.out.println("<" + room + "> was not found in the books table");
-					}
-					
-					return result;
-				} finally {
-					DBUtil.closeQuietly(resultSet);
-					DBUtil.closeQuietly(stmt);
-				}
-			}
-		});
-	}
-	*/
-	/*public List<Pair<Author, Book>> findAuthorAndBookByAuthorLastName(String lastname) {
-		return executeTransaction(new Transaction<List<Pair<Author,Book>>>() {
-			@Override
-			public List<Pair<Author, Book>> execute(Connection conn) throws SQLException {
-				PreparedStatement stmt = null;
-				ResultSet resultSet = null;
-				
-				try {
-					// retreive all attributes from both Books and Authors tables
-					stmt = conn.prepareStatement(
-							"select authors.*, books.* "
-							+ "  from authors, books "
-							+ "  where authors.author_id = books.author_id and "
-							+ "        authors.lastname = ? "
-							+ "  order by title ASC"
-					);
-					stmt.setString(1, lastname);
-					
-					List<Pair<Author, Book>> result = new ArrayList<Pair<Author,Book>>();
-					
-					resultSet = stmt.executeQuery();
-					
-					// for testing that a result was returned
-					Boolean found = false;
-					
-					while (resultSet.next()) {
-						found = true;
-						
-						// create new Author object
-						// retrieve attributes from resultSet starting with index 1
-						Author author = new Author();
-						loadAuthor(author, resultSet, 1);
-						
-						// create new Book object
-						// retrieve attributes from resultSet starting at index 4
-						Book book = new Book();
-						loadBook(book, resultSet, 4);
-						
-						result.add(new Pair<Author, Book>(author, book));
-					}
-					
-					// check if the title was found
-					if (!found) {
-						System.out.println("<" + lastname + "> was not found in the authors table");
-					}
-					
-					return result;
-				} finally {
-					DBUtil.closeQuietly(resultSet);
-					DBUtil.closeQuietly(stmt);
-				}
-			}
-		});
-	}
 	
+	@Override
+	public int findConnectionByRoomIDandDirection(int roomId, String move) {
+	    return executeTransaction(new Transaction<Integer>() {
+	        @Override
+	        public Integer execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
+	            int destinationId = 0; // Default value if no connection found or 'none' is returned
+	            
+	            try {
+	                // Construct the SQL query to fetch the destination based on room ID and direction
+	                String query = "";
+	                switch (move.toLowerCase()) {
+	                    case "north":
+	                        query = "SELECT dest1 FROM RoomConnections WHERE room_id = ?";
+	                        break;
+	                    case "west":
+	                        query = "SELECT dest2 FROM RoomConnections WHERE room_id = ?";
+	                        break;
+	                    case "east":
+	                        query = "SELECT dest3 FROM RoomConnections WHERE room_id = ?";
+	                        break;
+	                    case "south":
+	                        query = "SELECT dest4 FROM RoomConnections WHERE room_id = ?";
+	                        break;
+	                    default:
+	                        // Invalid direction
+	                        System.out.println("Invalid direction: " + move);
+	                        return destinationId;
+	                }
+	                
+	                stmt = conn.prepareStatement(query);
+	                stmt.setInt(1, roomId);
+	                
+	                resultSet = stmt.executeQuery();
+	                
+	                if (resultSet.next()) {
+	                    // If a connection is found, retrieve the destination string
+	                    String destString = resultSet.getString(1);
+	                    // Transform string to integer, if 'none' return 0
+	                    if (!destString.equals("none")) {
+	                        destinationId = Integer.parseInt(destString);
+	                    }
+	                } else {
+	                    System.out.println("No connection found for room " + roomId + " and direction " + move);
+	                }
+	            } catch (NumberFormatException e) {
+	                // Handle parsing error
+	                System.out.println("Error parsing destination ID.");
+	            } finally {
+	                // Close resources
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	            
+	            return destinationId;
+	        }
+	    });
+	}
+
+
+	
+	public Room findRoomByRoomID(int room_id) {
+	    return executeTransaction(new Transaction<Room>() {
+	        @Override
+	        public Room execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
+	            Room result = null;
+
+	            try {
+	                // Construct the SQL query to retrieve the room based on room_id
+	                stmt = conn.prepareStatement(
+	                        "SELECT * FROM rooms WHERE room_id = ?"
+	                );
+	                stmt.setInt(1, room_id);
+
+	                resultSet = stmt.executeQuery();
+
+	                // Check if the result set contains any rows
+	                if (resultSet.next()) {
+	                    // If a room is found, create a Room object and populate its attributes
+	                    result = new Room();
+	                    result.setRoomID(resultSet.getInt("room_id"));
+	                    result.setName(resultSet.getString("room_name"));
+	                    result.setLongDescription(resultSet.getString("longDescription"));
+	                    result.setShortDescription(resultSet.getString("shortDescription"));
+	                    result.setVisited(resultSet.getString("hasVisited"));
+	                    result.setNeedsKey(resultSet.getString("needsKey"));
+	                    result.setKeyName(resultSet.getString("keyName"));
+	                    
+	                } else {
+	                    // No room found
+	                    System.out.println("Room with room_id " + room_id + " not found.");
+	                }
+	            } finally {
+	                // Close resources
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+
+	            return result;
+	        }
+	    });
+	}
+
+	/*
 	public void insertNewBookWithAuthor(String firstname, String lastname, String title,
             String isbn, int published) {
         executeTransaction(new Transaction<List<Pair<Author,Book>>>() {
@@ -321,13 +318,13 @@ private static String getAuthorID(Connection conn, String firstName, String last
 	private void loadRoomConnection(RoomConnection roomConnection, ResultSet resultSet, int index) throws SQLException {
 		roomConnection.setRoomID(resultSet.getInt(index++));
 		roomConnection.setMove1(resultSet.getString(index++));
-		roomConnection.setDest1(resultSet.getString(index++));
+		roomConnection.setDest1(resultSet.getInt(index++));
 		roomConnection.setMove2(resultSet.getString(index++));
-		roomConnection.setDest2(resultSet.getString(index++));
+		roomConnection.setDest2(resultSet.getInt(index++));
 		roomConnection.setMove3(resultSet.getString(index++));
-		roomConnection.setDest3(resultSet.getString(index++));
+		roomConnection.setDest3(resultSet.getInt(index++));
 		roomConnection.setMove4(resultSet.getString(index++));
-		roomConnection.setDest4(resultSet.getString(index++));
+		roomConnection.setDest4(resultSet.getInt(index++));
 	}
 	
 	public void createTables() {
@@ -356,15 +353,15 @@ private static String getAuthorID(Connection conn, String firstName, String last
 						    "create table roomConnections (" +
 						    "	connection_id integer primary key " +
 							"		generated always as identity (start with 1, increment by 1), " +
-							"	room_id integer constraint room_id references rooms, " +
+							"	 room_id integer constraint room_id references rooms, " +
 						    "    move1 varchar(40)," +
-						    "    dest1 varchar(40)," +
+						    "    dest1 integer," +
 						    "    move2 varchar(40)," +
-						    "    dest2 varchar(40)," +
+						    "    dest2 integer," +
 						    "    move3 varchar(40)," +
-						    "    dest3 varchar(40)," +
+						    "    dest3 integer," +
 						    "    move4 varchar(40)," +
-						    "    dest4 varchar(40)" +
+						    "    dest4 integer" +
 						    ")"
 						);
 					stmt2.executeUpdate();
@@ -393,6 +390,7 @@ private static String getAuthorID(Connection conn, String firstName, String last
 				}
 
 				PreparedStatement insertRoom = null;
+				
 				PreparedStatement insertConnection   = null;
 
 				try {
@@ -411,17 +409,18 @@ private static String getAuthorID(Connection conn, String firstName, String last
 					insertRoom.executeBatch();
 					
 					// populate connections table
-					insertConnection = conn.prepareStatement("insert into roomConnections (move1, dest1, move2, dest2, move3, dest3, move4, dest4) values (?, ?, ?, ?, ?, ?, ?, ?)");
+					insertConnection = conn.prepareStatement("insert into roomConnections (room_id, move1, dest1, move2, dest2, move3, dest3, move4, dest4) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					for (RoomConnection roomConnection : connectionList) {
 //						insertBook.setInt(1, roomConnections.getBookId());		// auto-generated primary key, don't insert this
-						insertConnection.setString(1, roomConnection.getMove1());
-						insertConnection.setString(2, roomConnection.getDest1());
-						insertConnection.setString(3, roomConnection.getMove2());
-						insertConnection.setString(4, roomConnection.getDest2());
-						insertConnection.setString(5, roomConnection.getMove3());
-						insertConnection.setString(6, roomConnection.getDest3());
-						insertConnection.setString(7, roomConnection.getMove4());
-						insertConnection.setString(8, roomConnection.getDest4());
+						insertConnection.setInt(1, roomConnection.getRoomID());
+						insertConnection.setString(2, roomConnection.getMove1());
+						insertConnection.setInt(3, roomConnection.getDest1());
+						insertConnection.setString(4, roomConnection.getMove2());
+						insertConnection.setInt(5, roomConnection.getDest2());
+						insertConnection.setString(6, roomConnection.getMove3());
+						insertConnection.setInt(7, roomConnection.getDest3());
+						insertConnection.setString(8, roomConnection.getMove4());
+						insertConnection.setInt(9, roomConnection.getDest4());
 						insertConnection.addBatch();
 					}
 					insertConnection.executeBatch();
@@ -460,14 +459,9 @@ private static String getAuthorID(Connection conn, String firstName, String last
 	}
 
 	@Override
-	public int findConnectionByRoomIDandDirection(String roomId, String move) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public void updateCurrentRoomByRoomAndActorID(int newRoomId, int actorId) {
 		// TODO Auto-generated method stub
 		
 	}
+
 }
