@@ -282,4 +282,9 @@ public class DerbyDatabase implements IDatabase {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public Object findUserByUserID(int i, String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
