@@ -125,6 +125,8 @@ public class DerbyDatabase implements IDatabase {
 	                    System.out.println("Retrieved room attributes:");
 	                    System.out.println("Room ID: " + result.getRoomID());
 	                    System.out.println("Name: " + result.getName());
+	                    System.out.println("Has Visited: " + result.getVisited());
+	                    System.out.println("Needs Key: " + result.getNeedsKey());
 	                    // Log other attributes similarly
 	                } else {
 	                    // No room found
@@ -137,6 +139,48 @@ public class DerbyDatabase implements IDatabase {
 	            }
 
 	            return result;
+	        }
+	    });
+	}
+	
+	public void updateRoomByRoomID(Room room) {
+	    executeTransaction(new Transaction<Void>() {
+	        @Override
+	        public Void execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+
+	            try {
+	                // Construct the SQL query to update the room in the rooms table
+	                stmt = conn.prepareStatement(
+	                        "UPDATE rooms " +
+	                        "SET name = ?, longDescription = ?, shortDescription = ?, " +
+	                        "hasVisited = ?, needsKey = ?, keyName = ? " +
+	                        "WHERE room_id = ?"
+	                );
+
+	                // Set parameters for the update query based on the Room object
+	                stmt.setString(1, room.getName());
+	                stmt.setString(2, room.getLongDescription());
+	                stmt.setString(3, room.getShortDescription());
+	                stmt.setString(4, room.getVisited());
+	                stmt.setString(5, room.getNeedsKey());
+	                stmt.setString(6, room.getKeyName());
+	                stmt.setInt(7, room.getRoomID());
+
+	                // Execute the update query
+	                int rowsUpdated = stmt.executeUpdate();
+
+	                if (rowsUpdated > 0) {
+	                    System.out.println("Room with room_id " + room.getRoomID() + " updated successfully.");
+	                } else {
+	                    System.out.println("Room with room_id " + room.getRoomID() + " not found or not updated.");
+	                }
+	            } finally {
+	                // Close resources
+	                DBUtil.closeQuietly(stmt);
+	            }
+
+	            return null;
 	        }
 	    });
 	}
@@ -462,12 +506,6 @@ private static String getAuthorID(Connection conn, String firstName, String last
 	public Room findCurrentLocationByActorID(int actorId) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void updateCurrentRoomByRoomAndActorID(int newRoomId, int actorId) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

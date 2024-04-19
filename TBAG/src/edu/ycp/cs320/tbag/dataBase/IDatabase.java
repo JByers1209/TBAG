@@ -11,7 +11,6 @@ public interface IDatabase {
 	public Room findCurrentLocationByActorID(int actorId);
 	public Room findRoomByRoomID(int room_id);
 	public int findConnectionByRoomIDandDirection(int roomId, String move);
-	public void updateNeedsKeyByRoomID(int room_id);
-	public void updateHasVisitedByRoomID(int room_id);
+	public void updateRoomByRoomID(Room room);
 	
 }

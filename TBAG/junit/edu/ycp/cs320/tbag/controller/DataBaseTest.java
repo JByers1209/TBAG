@@ -21,6 +21,8 @@ public class DataBaseTest {
 	@Test
 	public void testFindConnectionByRoomIDandDirection() {
 		
+		System.out.println("Find Connection Test");
+		
 		//Tests room1
 		assertEquals(0, db.findConnectionByRoomIDandDirection(1, "north"));
 		assertEquals(4, db.findConnectionByRoomIDandDirection(1, "south"));
@@ -37,11 +39,44 @@ public class DataBaseTest {
 	@Test
 	public void testFindRoomByRoomID() {
 		
+		System.out.println("Find Room Test");
+		//Tests room1
 		Room one = db.findRoomByRoomID(1);
 		assertEquals(1, one.getRoomID());
 		assertEquals("Josh's House", one.getName());
 		assertEquals("false", one.getVisited());
+		assertEquals("true", one.getNeedsKey());
 		assertEquals("blue key", one.getKeyName());
+		
+		//Tests room2
+		Room two = db.findRoomByRoomID(2);
+		assertEquals(2, two.getRoomID());
+		assertEquals("York college campus", two.getName());
+		assertEquals("false", two.getVisited());
+		assertEquals("none", two.getKeyName());
+	}
+	
+	
+	@Test
+	public void testUpdateRoomByRoomID() {
+		
+		System.out.println("Update Room Test");
+		Room room = db.findRoomByRoomID(1);
+		assertEquals("false", room.getVisited());
+		assertEquals("true", room.getNeedsKey());
+		
+		room.setVisited("true");
+		room.setNeedsKey("false");
+		db.updateRoomByRoomID(room);
+		
+		room = db.findRoomByRoomID(1);
+		assertEquals("true", room.getVisited());
+		assertEquals("false", room.getNeedsKey());
+		
+		//Sets database back to default
+		room.setVisited("false");
+		room.setNeedsKey("true");
+		db.updateRoomByRoomID(room);
 	}
 	
 }
