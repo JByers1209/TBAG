@@ -101,13 +101,13 @@ public class InitialData {
 				RoomConnection connection = new RoomConnection();
 				connection.setRoomID(roomId++);
 				connection.setMove1(i.next());
-				connection.setDest1(i.next());
+				connection.setDest1(Integer.parseInt(i.next()));
 				connection.setMove2(i.next());
-				connection.setDest2(i.next());
+				connection.setDest2(Integer.parseInt(i.next()));
 				connection.setMove3(i.next());
-				connection.setDest3(i.next());
+				connection.setDest3(Integer.parseInt(i.next()));
 				connection.setMove4(i.next());
-				connection.setDest4(i.next());
+				connection.setDest4(Integer.parseInt(i.next()));
 				connectionList.add(connection);
 				
 			}

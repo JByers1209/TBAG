@@ -19,15 +19,15 @@ public class Game {
 	  		Item blue_key = new KeyItem("Blue Key", false);
 	  		Item sword = new Weapon("Sword", true, 10);
 	  		Item bandage = new Consumable("Bandage", true, "Health");
-	  
+	  /*
 	  	//Add items to rooms
 	  		nwRoom.setKeyName("Blue Key");
 	  		southRoom.roomInventory.addItem(blue_key);
 	  		nwRoom.roomInventory.addItem(sword);
-	  		eastRoom.roomInventory.addItem(bandage);
+	  		eastRoom.roomInventory.addItem(bandage);*/
 	  		
 	        player = new Player(100, startRoom);
-	        currentRoom = startRoom;
+	        currentRoom = ;
 	        
 	}
 	
