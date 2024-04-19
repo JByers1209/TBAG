@@ -2,6 +2,8 @@ package edu.ycp.cs320.tbag.model;
 
 import java.util.ArrayList;
 
+import edu.ycp.cs320.tbag.dataBase.DerbyDatabase;
+
 public class Game {
 	
 	String response;
@@ -10,24 +12,18 @@ public class Game {
 	Room currentRoom;
 	Player player;
 
+	DerbyDatabase db = new DerbyDatabase();
+	
 	public void setup() {
-	    
-	    
 	  
 	  	
 	  	//Create items for rooms/player
 	  		Item blue_key = new KeyItem("Blue Key", false);
 	  		Item sword = new Weapon("Sword", true, 10);
 	  		Item bandage = new Consumable("Bandage", true, "Health");
-	  /*
-	  	//Add items to rooms
-	  		nwRoom.setKeyName("Blue Key");
-	  		southRoom.roomInventory.addItem(blue_key);
-	  		nwRoom.roomInventory.addItem(sword);
-	  		eastRoom.roomInventory.addItem(bandage);*/
 	  		
-	        player = new Player(100, startRoom);
-	        currentRoom = ;
+	        player = new Player(100, 5);
+	        currentRoom = db.findRoomByRoomID(5);
 	        
 	}
 	
@@ -37,7 +33,7 @@ public class Game {
 				return "Game has already started";
 			}else {
 				setup();
-				String startingText = currentRoom.getDescription();
+				String startingText = currentRoom.getLongDescription();
 				hasStarted = true;
 				return startingText;
 			}
@@ -56,29 +52,31 @@ public class Game {
 		            case "south":
 		            case "west":
 		            case "east":
-		                Room nextRoom = currentRoom.getExit(input);
-		                if (nextRoom != null && nextRoom.getNeedsKey()) {
+		                int nextRoom_id = db.findConnectionByRoomIDandDirection(currentRoom.getRoomID(), input);
+		                Room nextRoom = db.findRoomByRoomID(nextRoom_id);
+		                /*if (nextRoom != null && nextRoom.getNeedsKey()) {
 		                    String keyName = nextRoom.getKeyName();
 		                    Item keyItem = player.getInventory().getItemByName(keyName);
 		                    if (keyItem != null) {
+		                if (nextRoom_id != 0) {
 		                        player.moveTo(nextRoom);
-		                        currentRoom = player.getCurrentRoom();
+		                        currentRoom = nextRoom;
 		                        response = "You use the " + keyName + " to unlock the door.";
-		                        currentRoom.setVisited(true);
+		                        currentRoom.setVisited("true");
 		                        player.getInventory().removeItem(keyItem);
-		                        nextRoom.setNeedsKey(false);
+		                        nextRoom.setNeedsKey("false");
 		                    } else {
 		                        response = currentRoom.getName() + ": You don't have the required key (" + keyName + ") to enter this room.";
-		                    }
-		                } else if (nextRoom != null && !nextRoom.getVisited()) {
+		                    }*/
+		                if (nextRoom_id != 0) {
 		                    player.moveTo(nextRoom);
 		                    currentRoom = player.getCurrentRoom();
 		                    response = "You move " + input + ". New Location: " + currentRoom.getName();
-		                    currentRoom.setVisited(true);
-		                } else if (nextRoom != null && nextRoom.getVisited()) {
+		                    //currentRoom.setVisited(true);
+		                /*} else if (nextRoom_id != 0 && nextRoom.getVisited()) {
 		                    player.moveTo(nextRoom);
 		                    currentRoom = player.getCurrentRoom();
-		                    response = "You move " + input;
+		                    response = "You move " + input;*/
 		                } else {
 		                    response = "You cannot move that way.";
 		                }
@@ -90,9 +88,9 @@ public class Game {
 		                currentRoom = player.getCurrentRoom();
 		                response = "Current Location: " + currentRoom.getName();
 		                break;
-		            case "description":
+		            case "short description":
 		                currentRoom = player.getCurrentRoom();
-		                response = currentRoom.getDescription();
+		                response = currentRoom.getShortDescription();
 		                break;
 		            case "search":
 		                if (currentRoom.roomInventory.getItems().isEmpty()) {

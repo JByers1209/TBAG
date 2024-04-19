@@ -14,13 +14,6 @@ public abstract class Actor {
 		currentHealth = maxHealth;
 	}
 	
-	public Actor(Room room) {
-		location = room;
-		inventory = new Inventory();
-		currentHealth = maxHealth;
-		
-	}
-	
 	public Actor(int maxHealth, Room room) {
 		location = room;
 		inventory = new Inventory();
@@ -28,6 +21,11 @@ public abstract class Actor {
 		currentHealth = maxHealth;
 	}
 	
+	public Actor(int maxHealth, int room_id) {
+		inventory = new Inventory();
+		this.maxHealth = maxHealth;
+		currentHealth = maxHealth;
+	}
 
 		
 	public int getActorID() {
