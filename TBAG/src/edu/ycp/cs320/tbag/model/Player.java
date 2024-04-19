@@ -4,20 +4,19 @@ public class Player extends Actor {
 	
 	
 	
-	public Player(Room room) {
-		super(room);
+	public Player(int maxHealth, Room room) {
+		super(maxHealth, room);
+	}
+	
+	public Player(int maxHealth, int room_id) {
+		super(maxHealth, room_id);
+	}
+	
+	public Player() {
+		super();
 	}
 
-	private int xp;
-	
-	public int getXP() {
-		return xp;
-	}
-	
-	public void setXP(int xp) {
-		this.xp = xp;
-	}
-	
+
 	
 
 }
