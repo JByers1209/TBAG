@@ -20,10 +20,5 @@
 			<type>1</type>
 			<location>C:/Users/foxyf/Downloads/RoomConnections.csv</location>
 		</link>
-		<link>
-			<name>Rooms.csv</name>
-			<type>1</type>
-			<location>C:/Users/foxyf/Downloads/Rooms.csv</location>
-		</link>
 	</linkedResources>
 </projectDescription>
