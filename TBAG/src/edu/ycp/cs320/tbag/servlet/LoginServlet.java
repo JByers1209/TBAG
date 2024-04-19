@@ -59,7 +59,7 @@ public class LoginServlet extends HttpServlet {
             }
           
         }
-        catch( SQLException | ClassNotFoundException e){
+        catch( SQLException e){
         	e.printStackTrace();    	
 			resp.sendRedirect("login-error.html");      	
     }

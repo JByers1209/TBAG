@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jetty.server.Authentication.User;
+
 import edu.ycp.cs320.tbag.dataBase.ReadCSV;
 import edu.ycp.cs320.tbag.model.Actor;
 import edu.ycp.cs320.tbag.model.NPC;
@@ -115,5 +117,31 @@ public class InitialData {
 		}
 	}
 	
+	public static List<User> getUser() throws IOException {
+		List<User> userList = new ArrayList<User>();
+		ReadCSV readUser = new ReadCSV("users.csv");
+		try {
+		// auto-generated primary key for room connections table
+			Integer userId = 1;
+			while (true) {
+				List<String> tuple = readUser.next();
+				if (tuple == null) {
+					break;
+				}
+			Iterator<String> i = tuple.iterator();
+			User user = new User()
+			user.setUserID(userId++);
+			user.setUser(i.next());
+			user.setPassword(i.next());
+			userList.add(user);
+			
+		}
+		return userList;
+	} finally {
+		readUser.close();
+	}
 }
+
+}
+
 
