@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jetty.server.Authentication.User;
 
 import edu.ycp.cs320.tbag.dataBase.ReadCSV;
 import edu.ycp.cs320.tbag.model.Actor;
@@ -14,6 +13,7 @@ import edu.ycp.cs320.tbag.model.NPC;
 import edu.ycp.cs320.tbag.model.Player;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
+import edu.ycp.cs320.tbag.model.User;
 
 
 
@@ -129,9 +129,9 @@ public class InitialData {
 					break;
 				}
 			Iterator<String> i = tuple.iterator();
-			User user = new User()
+			User user = new User();
 			user.setUserID(userId++);
-			user.setUser(i.next());
+			user.setUsername(i.next(), null);
 			user.setPassword(i.next());
 			userList.add(user);
 			

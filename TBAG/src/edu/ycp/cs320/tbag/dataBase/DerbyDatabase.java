@@ -10,11 +10,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jetty.server.Authentication.User;
 
 import edu.ycp.cs320.tbag.model.Actor;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
+import edu.ycp.cs320.tbag.model.User;
+
 
 public class DerbyDatabase implements IDatabase {
 	static {
@@ -110,7 +111,7 @@ public class DerbyDatabase implements IDatabase {
 	
 	private void loadUser(User user, ResultSet resultSet, int index) throws SQLException {
 		user.setUserID(resultSet.getInt(index++));
-		user.setUser(resultSet.getString(index++));
+		user.setUsername(resultSet.getString(index++), null);
 		user.setPassword(resultSet.getString(index++));	
 	}
 	
@@ -180,6 +181,7 @@ public class DerbyDatabase implements IDatabase {
 			public Boolean execute(Connection conn) throws SQLException {
 				List<Room> roomList;
 				List<RoomConnection> connectionList;
+				List<User> userList;
 				
 				try {
 					roomList = InitialData.getRooms();
@@ -222,13 +224,14 @@ public class DerbyDatabase implements IDatabase {
 						insertConnection.setString(8, roomConnection.getDest4());
 						insertConnection.addBatch();
 					}
+	
 					insertConnection.executeBatch();
 					
 					insertUser = conn.prepareStatement("insert into users (username, password) values (?, ?)");
 					for (User user : userList) {
 //						insertRoom.setInt(1, room.getRoomId());		// auto-generated primary key, don't insert this
-						insertUser.setString(1, user.getusername());
-						insertUser.setString(2, user.getpassword());
+						insertUser.setString(1, user.getUsername());
+						insertUser.setString(2, user.getPassword());
 						
 					}
 					insertRoom.executeBatch();

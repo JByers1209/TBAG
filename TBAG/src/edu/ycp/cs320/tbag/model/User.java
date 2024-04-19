@@ -19,21 +19,27 @@ public class User {
 		this.userId = userId;
 	}
 	
-	//username
-		public void setMove1(String username) {
-			this.username = username;
-		}
+//	//username
+//		public void setUsername(String username) {
+//			this.username = username;
+//		}
 		
-		public String getusername() {
+		public String getUsername() {
 			return username;
 		}
 
 	// password
-		public void setpassword(String password) {
+		public void setPassword(String password) {
 			this.password = password;
 		}
 		
-		public String getpassword() {
+		public String getPassword() {
 			return password;
 		}
+
+		public void setUsername(String string, String username) {
+			this.username = username;
+
+		}	
+
 }

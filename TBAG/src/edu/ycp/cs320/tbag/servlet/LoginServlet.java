@@ -25,9 +25,9 @@ public class LoginServlet extends HttpServlet {
        
         //database connection??? 
         //will need changed----------------------------------------------------------
-        String url = "jdbc:mysql://localhost:3306/your_database_name";
-        String dbUsername = "your_database_username";
-        String dbPassword = "your_database_password";
+//        String url = "jdbc:mysql://localhost:3306/your_database_name";
+//        String dbUsername = "your_database_username";
+//        String dbPassword = "your_database_password";
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
