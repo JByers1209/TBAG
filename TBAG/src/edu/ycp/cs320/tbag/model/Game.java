@@ -23,8 +23,8 @@ public class Game {
 	  		Item bandage = new Consumable("Bandage", true, "Health");
 	  		
 	        player = new Player(100, 5);
-	        currentRoom = db.findRoomByRoomID(5);
 	        
+	        currentRoom = db.findRoomByRoomID(5);
 	}
 	
 	//Activates initial starting data
@@ -54,29 +54,32 @@ public class Game {
 		            case "east":
 		                int nextRoom_id = db.findConnectionByRoomIDandDirection(currentRoom.getRoomID(), input);
 		                Room nextRoom = db.findRoomByRoomID(nextRoom_id);
-		                /*if (nextRoom != null && nextRoom.getNeedsKey()) {
+		                if (nextRoom_id != 0 && nextRoom.getNeedsKey().equals("true") && !nextRoom.getKeyName().equals("none")) {
 		                    String keyName = nextRoom.getKeyName();
 		                    Item keyItem = player.getInventory().getItemByName(keyName);
 		                    if (keyItem != null) {
-		                if (nextRoom_id != 0) {
 		                        player.moveTo(nextRoom);
-		                        currentRoom = nextRoom;
+		                        currentRoom = player.getCurrentRoom();
 		                        response = "You use the " + keyName + " to unlock the door.";
 		                        currentRoom.setVisited("true");
+		                        db.updateRoomByRoomID(currentRoom);
 		                        player.getInventory().removeItem(keyItem);
 		                        nextRoom.setNeedsKey("false");
+		                        db.updateRoomByRoomID(nextRoom);
 		                    } else {
-		                        response = currentRoom.getName() + ": You don't have the required key (" + keyName + ") to enter this room.";
-		                    }*/
-		                if (nextRoom_id != 0) {
-		                    player.moveTo(nextRoom);
+		                        response = "You don't have the required key (" + keyName + ") to enter this room.";
+		                    }
+		                }else if (nextRoom_id != 0) {
+		                	player.moveTo(nextRoom);
 		                    currentRoom = player.getCurrentRoom();
-		                    response = "You move " + input + ". New Location: " + currentRoom.getName();
-		                    //currentRoom.setVisited(true);
-		                /*} else if (nextRoom_id != 0 && nextRoom.getVisited()) {
-		                    player.moveTo(nextRoom);
-		                    currentRoom = player.getCurrentRoom();
-		                    response = "You move " + input;*/
+		                    
+		                	if(nextRoom.getVisited().equals("false")) {
+		                    	response = "You move " + input + ". New Location: " + currentRoom.getName() + ". \n" + currentRoom.getLongDescription();
+		                    	currentRoom.setVisited("true");
+		                    	db.updateRoomByRoomID(currentRoom);
+		                	} else if (nextRoom.getVisited().equals("true")) {	
+		                		response = "You move " + input + ". " + currentRoom.getName();
+		                	}
 		                } else {
 		                    response = "You cannot move that way.";
 		                }
@@ -92,12 +95,16 @@ public class Game {
 		                currentRoom = player.getCurrentRoom();
 		                response = currentRoom.getShortDescription();
 		                break;
+		            case "long description":
+		                currentRoom = player.getCurrentRoom();
+		                response = currentRoom.getLongDescription();
+		                break;
 		            case "search":
 		                if (currentRoom.roomInventory.getItems().isEmpty()) {
 		                    response = "You search the room but find nothing.";
 		                } else {
 		                    response = "You search the area and find the following items: " + currentRoom.roomInventory.getItemNames() +
-		                               ". Do you want to take any of these items? If yes, type 'take' plus the item name.";
+		                               ".";
 		                }
 		                break;
 		            case "inventory":
