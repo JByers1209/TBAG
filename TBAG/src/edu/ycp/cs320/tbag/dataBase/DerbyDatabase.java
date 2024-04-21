@@ -91,8 +91,6 @@ public class DerbyDatabase implements IDatabase {
 	        }
 	    });
 	}
-
-
 	
 	public Room findRoomByRoomID(int room_id) {
 	    return executeTransaction(new Transaction<Room>() {
