@@ -10,12 +10,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import edu.ycp.cs320.tbag.model.Actor;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
-import edu.ycp.cs320.tbag.model.User;
-
+import edu.ycp.cs320.tbag.model.NPC;
+import edu.ycp.cs320.tbag.model.Player;
 
 public class DerbyDatabase implements IDatabase {
 	static {
@@ -33,8 +32,6 @@ public class DerbyDatabase implements IDatabase {
 	private static final int MAX_ATTEMPTS = 10;
 
 	
-//<<<<<<< HEAD
-//=======
 	@Override
 	public int findConnectionByRoomIDandDirection(int roomId, String move) {
 	    return executeTransaction(new Transaction<Integer>() {
@@ -94,8 +91,6 @@ public class DerbyDatabase implements IDatabase {
 	        }
 	    });
 	}
-
-
 	
 	public Room findRoomByRoomID(int room_id) {
 	    return executeTransaction(new Transaction<Room>() {
@@ -190,123 +185,213 @@ public class DerbyDatabase implements IDatabase {
 	    });
 	}
 
-
-	/*
-	public void insertNewBookWithAuthor(String firstname, String lastname, String title,
-            String isbn, int published) {
-        executeTransaction(new Transaction<List<Pair<Author,Book>>>() {
-            @Override
-            public List<Pair<Author, Book>> execute(Connection conn) throws SQLException {
-                PreparedStatement stmt = null;
-                PreparedStatement stmt2 = null;
-                ResultSet resultSet = null;
-
-                try {
-
-                    boolean authorInDatabase;
-                    String author_id;
-
-                    author_id = getAuthorID(conn, firstname, lastname);
-                    if (author_id.equals("")) {
-                        authorInDatabase = false;
-                    }else {
-                        authorInDatabase = true;
-                    }
-
-                    if(authorInDatabase == false) {
-                        System.out.println("Adding Author to database...");
-                        stmt = conn.prepareStatement(
-                                "insert into authors (firstname, lastname) "
-                                        + " values (?, ?)"
-
-                                );
-
-                        stmt.setString(1, firstname);
-                        stmt.setString(2, lastname);
-                        stmt.executeUpdate();
-
-                        author_id = getAuthorID(conn, firstname, lastname);
-
-                    }
-// add book to database
-                    stmt2 = conn.prepareStatement(
-                            "insert into books (author_id, title, isbn, published) "
-                            + " values (?, ?, ?, ?)"
-
-                    );
-
-                    stmt2.setString(1, author_id);
-                    stmt2.setString(2, title);
-                    stmt2.setString(3, isbn);
-                    stmt2.setInt(4, published);
-
-
-                    stmt2.executeUpdate();
-
-                    return null;
-
-                } finally {
-                    DBUtil.closeQuietly(resultSet);
-                    DBUtil.closeQuietly(stmt);
-                }
-            }
-        });//end transaction
-
-    }//end insert new author
 	
+	@Override
+	public Actor findActorByRoomID(int roomID) {
+		return executeTransaction(new Transaction<Actor>() {
+		@Override
+		public Actor execute(Connection conn) throws SQLException {
+			Actor actor;
+			PreparedStatement stmt = null;
+			ResultSet resultSet = null;
+			
+			int actorID = getActorIDbyRoomID(conn, roomID);
+			
+			if(actorID == 1) {
+				actor = new Player();
+			}else {
+				actor = new NPC();
+			}
+			
+			try {
+				stmt = conn.prepareStatement("select * "+ 
+			                                 "from actors " +
+					                         "where actors.room_id = ?");
+				
+				stmt.setInt(1, roomID);	
+				resultSet = stmt.executeQuery();
+				Boolean found = false;
+				while (resultSet.next()) {
+					found = true;
+					loadActor(actor, resultSet, 1);
+				}
+				
+				// check if the ID was found
+				if (!found) {
+					System.out.println("<" + roomID + "> was not found in the actors table");
+					return null;
+				}
+				
+			}finally {
+				DBUtil.closeQuietly(resultSet);
+				DBUtil.closeQuietly(stmt);
+			}
+			
+		
+			return actor;
+		}
+		
+	});
+		
+	}//end findActorByRoomID
+	
+	
+	private static int getActorIDbyRoomID(Connection conn, int roomID) throws SQLException {
+		int actorID = -1;
+		PreparedStatement stmt;
+		ResultSet resultSet;
+		
+		// get actor id query
+		 stmt = conn.prepareStatement(
+				"select actors.actor_id "
+				+ "from actors "
+				+ "where actors.room_id = ?"
+		);
+					
+		
+		// substitute the roomID entered by the user for the placeholder in the query
+		stmt.setInt(1, roomID);
+		// execute the query
+		resultSet = stmt.executeQuery();
 
-private static String getAuthorID(Connection conn, String firstName, String lastName) throws SQLException {
-        String author_id = "";
-        PreparedStatement stmt;
-        ResultSet resultSet;
+		// get the precise schema of the tuples returned as the result of the query
+		ResultSetMetaData resultSchema = stmt.getMetaData();
 
-        // get author id query
-         stmt = conn.prepareStatement(
-                "select authors.author_id"
-                + "  from authors"
-                + "  where authors.lastname = ?"
-                + "and authors.firstname = ?"
-        );
-
-
-        // substitute the lastName entered by the user for the placeholder in the query
-        stmt.setString(1, lastName);
-        stmt.setString(2, firstName);
-        // execute the query
-        resultSet = stmt.executeQuery();
-
-        // get the precise schema of the tuples returned as the result of the query
-        ResultSetMetaData resultSchema = stmt.getMetaData();
-
-        // iterate through the returned tuples, printing each one
-        // count # of rows returned
-        int rowsReturned = 0;
-
-        while (resultSet.next()) {
-            for (int i = 1; i <= resultSchema.getColumnCount(); i++) {
-                Object obj = resultSet.getObject(i);
-                author_id = obj.toString();
-                if (i > 1) {
-                    System.out.print(",");
-                }
-                System.out.print("Retrieved author id: "+ author_id);
-            }
-            System.out.println();
-
-            // count # of rows returned
-            rowsReturned++;
-        }
-
-        // indicate if the query returned nothing
-        if (rowsReturned == 0) {
-            System.out.println("No Author ID in database");
-        }
-
-
-        return author_id;
-    }
-	*/
-//>>>>>>> master
+		// iterate through the returned tuples, printing each one
+		// count # of rows returned
+		int rowsReturned = 0;
+		
+		while (resultSet.next()) {
+			for (int i = 1; i <= resultSchema.getColumnCount(); i++) {
+				Object obj = resultSet.getObject(i);
+				actorID = Integer.parseInt(obj.toString());
+				if (i > 1) {
+					System.out.print(",");
+				}
+				System.out.print("Retrieved actor id: "+ actorID);
+			}
+			System.out.println();
+			
+			// count # of rows returned
+			rowsReturned++;
+		}
+		
+		// indicate if the query returned nothing
+		if (rowsReturned == 0) {
+			System.out.println("No Actor ID");
+		}
+		
+		
+		return actorID;
+	}
+	
+	@Override
+	public Actor findActorByID(int actorID) {
+		return executeTransaction(new Transaction<Actor>() {
+		@Override
+		public Actor execute(Connection conn) throws SQLException {
+			Actor actor;
+			PreparedStatement stmt = null;
+			ResultSet resultSet = null;
+			
+			if(actorID == 1) {
+				actor = new Player();
+			}else {
+				actor = new NPC();
+			}
+			
+			try {
+				stmt = conn.prepareStatement("select * "+ 
+			                                 "from actors " +
+					                         "where actors.actor_id = ?");
+				
+				stmt.setInt(1, actorID);
+				
+				resultSet = stmt.executeQuery();
+				
+				Boolean found = false;
+				while (resultSet.next()) {
+					found = true;
+					loadActor(actor, resultSet, 1);
+				}
+				
+				// check if the ID was found
+				if (!found) {
+					System.out.println("<" + actorID + "> was not found in the actors table");
+				}
+				
+			}finally {
+				DBUtil.closeQuietly(resultSet);
+				DBUtil.closeQuietly(stmt);
+			}
+			
+		
+			return actor;
+		}
+		
+	});
+		
+	}//end findActorByID
+	
+	@Override
+	public void updateActor(int actorID, Actor actor) {
+		executeTransaction(new Transaction<Object>() {
+			@Override
+			public Object execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					
+					boolean actorInDatabase;
+				
+					if (findActorByID(actorID) == null) {
+						actorInDatabase = false;
+					}else {
+						actorInDatabase = true;
+					}
+					
+					if(actorInDatabase == false) {
+						System.out.println("No actor in database with id of " + actorID);
+						return null;
+						
+					}
+					
+					
+					// update actor in database
+					stmt = conn.prepareStatement(
+							"update actors "
+						  + "set room_id = ?, "
+						  + "name = ?, "
+						  + "level = ?, "					
+						  + "xp = ?, "
+						  + "current_health = ?, "	
+						  + "max_health = ? "
+						  + "where actor_id = ? "
+						  
+					);
+					
+					
+					stmt.setInt(1, actor.getRoomID());
+					stmt.setString(2, actor.getName());
+					stmt.setInt(3, actor.getLevel());
+					stmt.setInt(4, actor.getXP());
+					stmt.setInt(5, actor.getCurrentHealth());
+					stmt.setInt(6, actor.getMaxHealth());
+					stmt.setInt(7, actorID);
+				
+					stmt.executeUpdate();
+					
+					return null;
+				
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});//end transaction
+		
+	}//end updateActor
 	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
@@ -374,19 +459,23 @@ private static String getAuthorID(Connection conn, String firstName, String last
 	private void loadRoomConnection(RoomConnection roomConnection, ResultSet resultSet, int index) throws SQLException {
 		roomConnection.setRoomID(resultSet.getInt(index++));
 		roomConnection.setMove1(resultSet.getString(index++));
-		roomConnection.setDest1(resultSet.getString(index++));
+		roomConnection.setDest1(resultSet.getInt(index++));
 		roomConnection.setMove2(resultSet.getString(index++));
-		roomConnection.setDest2(resultSet.getString(index++));
+		roomConnection.setDest2(resultSet.getInt(index++));
 		roomConnection.setMove3(resultSet.getString(index++));
-		roomConnection.setDest3(resultSet.getString(index++));
+		roomConnection.setDest3(resultSet.getInt(index++));
 		roomConnection.setMove4(resultSet.getString(index++));
-		roomConnection.setDest4(resultSet.getString(index++));
+		roomConnection.setDest4(resultSet.getInt(index++));
 	}
 	
-	private void loadUser(User user, ResultSet resultSet, int index) throws SQLException {
-		user.setUserID(resultSet.getInt(index++));
-		user.setUsername(resultSet.getString(index++), null);
-		user.setPassword(resultSet.getString(index++));	
+	private void loadActor(Actor actor, ResultSet resultSet, int index) throws SQLException {
+		actor.setActorID(resultSet.getInt(index++));
+		actor.setRoomID(resultSet.getInt(index++));
+		actor.setName(resultSet.getString(index++));
+		actor.setLevel(resultSet.getInt(index++));
+		actor.setXP(resultSet.getInt(index++));
+		actor.setCurrentHealth(resultSet.getInt(index++));
+		actor.setMaxHealth(resultSet.getInt(index++));
 	}
 	
 	public void createTables() {
@@ -416,34 +505,37 @@ private static String getAuthorID(Connection conn, String firstName, String last
 						    "create table roomConnections (" +
 						    "	connection_id integer primary key " +
 							"		generated always as identity (start with 1, increment by 1), " +
-							"	room_id integer constraint room_id references rooms, " +
+							"	 room_id integer constraint room_id references rooms, " +
 						    "    move1 varchar(40)," +
-						    "    dest1 varchar(40)," +
+						    "    dest1 integer," +
 						    "    move2 varchar(40)," +
-						    "    dest2 varchar(40)," +
+						    "    dest2 integer," +
 						    "    move3 varchar(40)," +
-						    "    dest3 varchar(40)," +
+						    "    dest3 integer," +
 						    "    move4 varchar(40)," +
-						    "    dest4 varchar(40)" +
+						    "    dest4 integer" +
 						    ")"
 						);
 					stmt2.executeUpdate();
 					
 					stmt3 = conn.prepareStatement(
-							"create table users (" +
-							"	user_id integer primary key " +
-							"		generated always as identity (start with 1, increment by 1), " +									
-							"	user varchar(90)," +
-							"	username varchar(150)," +
-							"	password varchar(150)," +
-							")"
-						);
+						"create table actors (" +
+						"	actor_id integer primary key " +
+						"		generated always as identity (start with 1, increment by 1), " +									
+						"	room_id integer," +
+						"   name varchar(40)," +
+						"	level integer," +
+						"   xp integer," +
+						"   current_health integer," + 
+						"   max_health integer" + 
+						")"
+					);
+					stmt3.executeUpdate();
 					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt1);
 					DBUtil.closeQuietly(stmt2);
-					DBUtil.closeQuietly(stmt3);
 				}
 			}
 		});
@@ -451,24 +543,25 @@ private static String getAuthorID(Connection conn, String firstName, String last
 	
 	public void loadInitialData() {
 		executeTransaction(new Transaction<Boolean>() {
-			@SuppressWarnings("null")
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 				List<Room> roomList;
 				List<RoomConnection> connectionList;
-				List<User> userList = null;
+				List<Actor> actorList;
 				
 				try {
 					roomList = InitialData.getRooms();
 					connectionList = InitialData.getConnections();
+					actorList = InitialData.getActors();
 				} catch (IOException e) {
 					throw new SQLException("Couldn't read initial data", e);
 				}
 
 				PreparedStatement insertRoom = null;
+				
 				PreparedStatement insertConnection   = null;
-				PreparedStatement insertUser   = null;
-
+				
+				PreparedStatement insertActor = null;
 
 				try {
 					// populate rooms table (do authors first, since author_id is foreign key in books table)
@@ -486,36 +579,40 @@ private static String getAuthorID(Connection conn, String firstName, String last
 					insertRoom.executeBatch();
 					
 					// populate connections table
-					insertConnection = conn.prepareStatement("insert into roomConnections (move1, dest1, move2, dest2, move3, dest3, move4, dest4) values (?, ?, ?, ?, ?, ?, ?, ?)");
+					insertConnection = conn.prepareStatement("insert into roomConnections (room_id, move1, dest1, move2, dest2, move3, dest3, move4, dest4) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					for (RoomConnection roomConnection : connectionList) {
 //						insertBook.setInt(1, roomConnections.getBookId());		// auto-generated primary key, don't insert this
-						insertConnection.setString(1, roomConnection.getMove1());
-						insertConnection.setString(2, roomConnection.getDest1());
-						insertConnection.setString(3, roomConnection.getMove2());
-						insertConnection.setString(4, roomConnection.getDest2());
-						insertConnection.setString(5, roomConnection.getMove3());
-						insertConnection.setString(6, roomConnection.getDest3());
-						insertConnection.setString(7, roomConnection.getMove4());
-						insertConnection.setString(8, roomConnection.getDest4());
+						insertConnection.setInt(1, roomConnection.getRoomID());
+						insertConnection.setString(2, roomConnection.getMove1());
+						insertConnection.setInt(3, roomConnection.getDest1());
+						insertConnection.setString(4, roomConnection.getMove2());
+						insertConnection.setInt(5, roomConnection.getDest2());
+						insertConnection.setString(6, roomConnection.getMove3());
+						insertConnection.setInt(7, roomConnection.getDest3());
+						insertConnection.setString(8, roomConnection.getMove4());
+						insertConnection.setInt(9, roomConnection.getDest4());
 						insertConnection.addBatch();
 					}
-	
 					insertConnection.executeBatch();
 					
-					insertUser = conn.prepareStatement("insert into users (username, password) values (?, ?)");
-					for (User user : userList) {
-						insertUser.setString(1, user.getUsername());
-						insertUser.setString(2, user.getPassword());
-						
+					// populate actors table
+					insertActor = conn.prepareStatement("insert into actors (room_id, name, level, xp, current_health, max_health) values (?, ?, ?, ? ,?, ?)");
+					for (Actor actor : actorList) {
+//						insertAuthor.setInt(1, actor.getActorID());
+						insertActor.setInt(1, actor.getRoomID());
+						insertActor.setString(2, actor.getName());
+						insertActor.setInt(3, actor.getLevel());
+						insertActor.setInt(4, actor.getXP());
+						insertActor.setInt(5, actor.getCurrentHealth());
+						insertActor.setInt(6, actor.getMaxHealth());
+						insertActor.addBatch();
 					}
-					insertRoom.executeBatch();
+					insertActor.executeBatch();
 					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(insertRoom);
 					DBUtil.closeQuietly(insertConnection);
-					DBUtil.closeQuietly(insertUser);
-
 				}
 			}
 		});
@@ -534,34 +631,9 @@ private static String getAuthorID(Connection conn, String firstName, String last
 	}
 
 	@Override
-	public Actor findActorByID(int actorID) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Room findCurrentLocationByActorID(int actorId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-//<<<<<<< HEAD
-	@Override
-	public int findConnectionByRoomIDandDirection(String roomId, String move) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void updateCurrentRoomByRoomAndActorID(int newRoomId, int actorId) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public Object findUserByUserID(int i, String string) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-//=======
-//>>>>>>> master
 }

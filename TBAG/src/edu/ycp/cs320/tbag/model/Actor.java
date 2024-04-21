@@ -3,15 +3,26 @@ package edu.ycp.cs320.tbag.model;
 
 
 public abstract class Actor {
+
+	
 	
 	private Room location;
 	private Inventory inventory;
 	private int currentHealth, maxHealth;
 	private int level, roomID, xp, actorID;
+	private String name;
 	
 	public Actor() {
 		inventory = new Inventory();
 		currentHealth = maxHealth;
+	}
+
+	
+	public Actor(Room room) {
+		location = room;
+		inventory = new Inventory();
+		currentHealth = maxHealth;
+		
 	}
 	
 	public Actor(int maxHealth, Room room) {
@@ -21,13 +32,24 @@ public abstract class Actor {
 		currentHealth = maxHealth;
 	}
 	
-	public Actor(int maxHealth, int room_id) {
-		inventory = new Inventory();
-		this.maxHealth = maxHealth;
-		currentHealth = maxHealth;
+    public Actor(int actorID, int roomID, String name, int level, int xp, int maxHealth, int currentHealth) {
+    	this.actorID = actorID;
+    	this.roomID = roomID;
+    	this.name = name;
+    	this.level = level;
+    	this.xp = xp;
+    	this.maxHealth = maxHealth;
+    	this.currentHealth = currentHealth;
+    }
+		
+	public String getName() {
+		return name;
 	}
 
-		
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public int getActorID() {
 		return actorID;
 	}
@@ -86,7 +108,7 @@ public abstract class Actor {
 	}
 	
 	public void setCurrentHealth(int health) {
-		if(health > maxHealth) {
+		if(health > maxHealth && maxHealth != 0) {
 			currentHealth = maxHealth;
 		}else {
 			currentHealth = health;
@@ -118,5 +140,18 @@ public abstract class Actor {
     		}
     	}
     	return false;
+    }
+    
+    public String toString() {
+    	String str = "";
+    	str += "actorID: " + actorID + "\n";
+    	str += "name: " + name + "\n";
+    	str += "roomID: " + roomID + "\n";
+    	str += "level: " + level + "\n";
+    	str += "xp: " + xp + "\n";
+    	str += "current_health: " + currentHealth + "\n";
+    	str += "max_health: " + maxHealth + "\n";
+		return str;
+    	
     }
 }
