@@ -636,4 +636,9 @@ public class DerbyDatabase implements IDatabase {
 		return null;
 	}
 
+	public Object findUserByUserID(int i, String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

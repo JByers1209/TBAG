@@ -19,10 +19,10 @@ public class User {
 		this.userId = userId;
 	}
 	
-//	//username
-//		public void setUsername(String username) {
-//			this.username = username;
-//		}
+	//username
+		public void setUsername(String username) {
+			this.username = username;
+		}
 		
 		public String getUsername() {
 			return username;
@@ -37,9 +37,5 @@ public class User {
 			return password;
 		}
 
-		public void setUsername(String string, String username) {
-			this.username = username;
-
-		}	
-
+		
 }

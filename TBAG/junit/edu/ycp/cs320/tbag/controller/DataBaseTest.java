@@ -80,13 +80,13 @@ public class DataBaseTest {
 	}
 	
 	@Test 
-	public void testfindUserByUserID) {
+	public void testfindUserByUserID() {
 		
 		System.out.println("Find User Test");
 		
 		assertEquals(0, db.findUserByUserID(1, "admin"));
-		assertEquals(0, db.findUserByUserID(1, "admin"));
-		assertEquals(0, db.findUserByUserID(1, "admin"));
+		assertEquals(4, db.findUserByUserID(1, "admin"));
+		assertEquals(2, db.findUserByUserID(1, "admin"));
 	}
 		
 	

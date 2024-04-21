@@ -12,6 +12,7 @@ import edu.ycp.cs320.tbag.model.NPC;
 import edu.ycp.cs320.tbag.model.Player;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
+import edu.ycp.cs320.tbag.model.User;
 
 
 
@@ -76,7 +77,30 @@ public class InitialData {
 			readConnections.close();
 		}
 	}
-	
+	public static List<User> getUser() throws IOException {
+		List<User> userList = new ArrayList<User>();
+		ReadCSV readUser = new ReadCSV("users.csv");
+		try {
+		// auto-generated primary key for room connections table
+			Integer userId = 1;
+			while (true) {
+				List<String> tuple = readUser.next();
+				if (tuple == null) {
+					break;
+				}
+			Iterator<String> i = tuple.iterator();
+			User user = new User()
+			user.setUserID(userId++);
+			user.setUsername(i.next());
+			user.setPassword(i.next());
+			userList.add(user);
+			
+		}
+		return userList;
+	} finally {
+		readUser.close();
+	}
+}
 	public static List<Actor> getActors() throws IOException {
 	    List<Actor> actorList = new ArrayList<Actor>();
 	    ReadCSV readActors = new ReadCSV("Actors.csv");

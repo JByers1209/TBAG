@@ -42,10 +42,9 @@ public class GameServlet extends HttpServlet {
 		 HttpSession session = req.getSession(false);
 		 
     	 if (session != null && session.getAttribute("username") != null) {
-    		 resp.sendRedirect("/_view/login.jsp");
+    		 resp.sendRedirect("/_view/game.jsp");
          } else {
-             // User is not logged in, redirect t
-        // Extract user input from request'
+        	 resp.sendRedirect("/_view/login.jsp");
         	 
 		String function = req.getParameter("function");
     
@@ -59,4 +58,3 @@ public class GameServlet extends HttpServlet {
     }
   }
 }
-
