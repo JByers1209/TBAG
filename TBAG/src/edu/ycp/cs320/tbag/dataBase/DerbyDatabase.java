@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.ycp.cs320.tbag.model.Actor;
+import edu.ycp.cs320.tbag.model.Item;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
 import edu.ycp.cs320.tbag.model.NPC;
@@ -478,6 +479,18 @@ public class DerbyDatabase implements IDatabase {
 		actor.setMaxHealth(resultSet.getInt(index++));
 	}
 	
+	private void loadItems(Item item, ResultSet resultSet, int index) throws SQLException {
+		item.setItemID(resultSet.getInt(index++));
+		item.setType(resultSet.getInt(index++));
+		item.setName(resultSet.getString(index++));
+		item.setDescription(resultSet.getString(index++));
+		item.setThrowable(resultSet.getString(index++));
+		item.setDamage(resultSet.getInt(index++));
+		item.setEffect(resultSet.getString(index++));
+		item.setRoomID(resultSet.getInt(index++));
+		item.setOwnerID(resultSet.getInt(index++));
+		}
+	
 	public void createTables() {
 		executeTransaction(new Transaction<Boolean>() {
 			@Override
@@ -485,6 +498,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt1 = null;
 				PreparedStatement stmt2 = null;
 				PreparedStatement stmt3 = null;
+				PreparedStatement stmt4 = null;
 				
 				try {
 					stmt1 = conn.prepareStatement(
@@ -532,10 +546,28 @@ public class DerbyDatabase implements IDatabase {
 					);
 					stmt3.executeUpdate();
 					
+					stmt4 = conn.prepareStatement(
+							"create table items (" +
+							"	item_id integer primary key " +
+							"		generated always as identity (start with 1, increment by 1), " +									
+							"	type integer," +
+							"   name varchar(40)," +
+							"	description varchar(100)," +
+							"   throwable varchar(40)," +
+							"   damage integer," + 
+							"   effect varchar(40)," + 
+							"   room_id integer," + 
+							"   owner_id integer" + 
+							")"
+						);
+						stmt4.executeUpdate();
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt1);
 					DBUtil.closeQuietly(stmt2);
+					DBUtil.closeQuietly(stmt3);
+					DBUtil.closeQuietly(stmt4);
 				}
 			}
 		});
@@ -548,21 +580,22 @@ public class DerbyDatabase implements IDatabase {
 				List<Room> roomList;
 				List<RoomConnection> connectionList;
 				List<Actor> actorList;
+				List<Item> itemList;
 				
 				try {
 					roomList = InitialData.getRooms();
 					connectionList = InitialData.getConnections();
 					actorList = InitialData.getActors();
+					itemList = InitialData.getItems();
 				} catch (IOException e) {
 					throw new SQLException("Couldn't read initial data", e);
 				}
 
 				PreparedStatement insertRoom = null;
-				
 				PreparedStatement insertConnection   = null;
-				
 				PreparedStatement insertActor = null;
-
+				PreparedStatement insertItem = null;
+				
 				try {
 					// populate rooms table (do authors first, since author_id is foreign key in books table)
 					insertRoom = conn.prepareStatement("insert into rooms (name, longDescription, shortDescription, hasVisited, needsKey, keyName) values (?, ?, ?, ?, ?, ?)");
@@ -609,10 +642,28 @@ public class DerbyDatabase implements IDatabase {
 					}
 					insertActor.executeBatch();
 					
+					//insert items table
+					insertItem = conn.prepareStatement("insert into items (type, name, description, throwable, damage, effect, room_id, owner_id) values (?, ?, ?, ?, ?, ?, ?, ?)");
+					for (Item item : itemList) {
+//						insertItem.setInt(1, item.getItemID());		// auto-generated primary key, don't insert this
+						insertItem.setInt(1, item.getType());
+						insertItem.setString(2, item.getName());
+						insertItem.setString(3, item.getDescription());
+						insertItem.setString(4, item.getThrowable());
+						insertItem.setInt(5, item.getDamage());
+						insertItem.setString(6, item.getEffect());
+						insertItem.setInt(7, item.getRoomID());
+						insertItem.setInt(8, item.getOwnerID());
+						insertItem.addBatch();
+					}
+					insertItem.executeBatch();
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(insertRoom);
 					DBUtil.closeQuietly(insertConnection);
+					DBUtil.closeQuietly(insertActor);
+					DBUtil.closeQuietly(insertItem);
 				}
 			}
 		});
