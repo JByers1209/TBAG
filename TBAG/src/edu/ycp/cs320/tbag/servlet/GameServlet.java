@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import edu.ycp.cs320.tbag.controller.GameEngine;
 
@@ -18,11 +19,12 @@ public class GameServlet extends HttpServlet {
         super.init();
         gameEngine = new GameEngine(); // Initialize GameEngine
     }
-
+ 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        // Extract user input from request
+   
+        	 
         String userInput = req.getParameter("userInput");
 
         // Process user input using GameEngine
@@ -37,7 +39,14 @@ public class GameServlet extends HttpServlet {
     
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
+		 HttpSession session = req.getSession(false);
+		 
+    	 if (session != null && session.getAttribute("username") != null) {
+    		 resp.sendRedirect("/_view/login.jsp");
+         } else {
+             // User is not logged in, redirect t
+        // Extract user input from request'
+        	 
 		String function = req.getParameter("function");
     
     if ("Resume".equals(function)) {
@@ -48,5 +57,6 @@ public class GameServlet extends HttpServlet {
     	req.getRequestDispatcher("/_view/pause.jsp").forward(req, resp);
     	}
     }
+  }
 }
 

@@ -451,11 +451,12 @@ private static String getAuthorID(Connection conn, String firstName, String last
 	
 	public void loadInitialData() {
 		executeTransaction(new Transaction<Boolean>() {
+			@SuppressWarnings("null")
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 				List<Room> roomList;
 				List<RoomConnection> connectionList;
-				List<User> userList;
+				List<User> userList = null;
 				
 				try {
 					roomList = InitialData.getRooms();

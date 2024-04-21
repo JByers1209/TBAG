@@ -79,4 +79,16 @@ public class DataBaseTest {
 		db.updateRoomByRoomID(room);
 	}
 	
+	@Test 
+	public void testfindUserByUserID) {
+		
+		System.out.println("Find User Test");
+		
+		assertEquals(0, db.findUserByUserID(1, "admin"));
+		assertEquals(0, db.findUserByUserID(1, "admin"));
+		assertEquals(0, db.findUserByUserID(1, "admin"));
+	}
+
+		
+	
 }
