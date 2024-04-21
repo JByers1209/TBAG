@@ -2,7 +2,6 @@ package edu.ycp.cs320.tbag.dataBase;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,31 +18,37 @@ public class InitialData {
 		List<Actor> actorList = new ArrayList<Actor>();
 		ReadCSV readActors = new ReadCSV("Actors.csv");
 		try {
+			int actorID = 1;
 			while (true) {
 				List<String> tuple = readActors.next();
 				if (tuple == null) {
 					break;
 				}
 				Iterator<String> i = tuple.iterator();
-				int actorID = Integer.parseInt(i.next());
+			
 				if(actorID == 1) {
 					Player actor = new Player();
 					actor.setActorID(actorID);
 					actor.setRoomID(Integer.parseInt(i.next()));
+					actor.setName(i.next());
 					actor.setLevel(Integer.parseInt(i.next()));
 					actor.setXP(Integer.parseInt(i.next()));
 					actor.setCurrentHealth(Integer.parseInt(i.next()));
+					actor.setMaxHealth(Integer.parseInt(i.next()));
 					actorList.add(actor);
 					
 				}else {
 					NPC actor = new NPC();
 					actor.setActorID(actorID);
 					actor.setRoomID(Integer.parseInt(i.next()));
+					actor.setName(i.next());
 					actor.setLevel(Integer.parseInt(i.next()));
 					actor.setXP(Integer.parseInt(i.next()));
 					actor.setCurrentHealth(Integer.parseInt(i.next()));
+					actor.setMaxHealth(Integer.parseInt(i.next()));
 					actorList.add(actor);
 				}
+				actorID++;
 				
 			}
 			return actorList;

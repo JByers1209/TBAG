@@ -8,5 +8,9 @@ public interface IDatabase {
 	
 	
 	public Actor findActorByID(int actorID);
+	
+	public Actor findActorByRoomID(int roomID);
+	
+	public void updateActor(int actorID, Actor actor);
 
 }
