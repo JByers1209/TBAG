@@ -13,6 +13,7 @@ import java.util.List;
 import edu.ycp.cs320.tbag.model.Actor;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
+import edu.ycp.cs320.tbag.model.User;
 import edu.ycp.cs320.tbag.model.NPC;
 import edu.ycp.cs320.tbag.model.Player;
 
@@ -477,6 +478,12 @@ public class DerbyDatabase implements IDatabase {
 		actor.setCurrentHealth(resultSet.getInt(index++));
 		actor.setMaxHealth(resultSet.getInt(index++));
 	}
+	private void loadUser(User user, ResultSet resultSet, int index) throws SQLException {
+		user.setUserID(resultSet.getInt(index++));
+		user.setUsername(resultSet.getString(index++));
+		user.setPassword(resultSet.getString(index++));	
+	}
+	
 	
 	public void createTables() {
 		executeTransaction(new Transaction<Boolean>() {
@@ -485,6 +492,8 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt1 = null;
 				PreparedStatement stmt2 = null;
 				PreparedStatement stmt3 = null;
+				PreparedStatement stmt4 = null;
+
 				
 				try {
 					stmt1 = conn.prepareStatement(
@@ -532,10 +541,24 @@ public class DerbyDatabase implements IDatabase {
 					);
 					stmt3.executeUpdate();
 					
+					stmt4 = conn.prepareStatement(
+							"create table users (" +
+							"	user_id integer primary key " +
+							"		generated always as identity (start with 1, increment by 1), " +									
+							"	user varchar(90)," +
+							"	username varchar(150)," +
+							"	password varchar(150)," +
+							")"
+						);
+					stmt4.executeUpdate();
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt1);
 					DBUtil.closeQuietly(stmt2);
+					DBUtil.closeQuietly(stmt3);
+					DBUtil.closeQuietly(stmt4);
+
 				}
 			}
 		});
@@ -543,6 +566,8 @@ public class DerbyDatabase implements IDatabase {
 	
 	public void loadInitialData() {
 		executeTransaction(new Transaction<Boolean>() {
+			private User[] userList;
+
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 				List<Room> roomList;
@@ -562,6 +587,8 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement insertConnection   = null;
 				
 				PreparedStatement insertActor = null;
+				
+				PreparedStatement insertUser   = null;
 
 				try {
 					// populate rooms table (do authors first, since author_id is foreign key in books table)
@@ -609,6 +636,13 @@ public class DerbyDatabase implements IDatabase {
 					}
 					insertActor.executeBatch();
 					
+					insertUser = conn.prepareStatement("insert into users (username, password) values (?, ?)");
+					for (User user : userList) {
+						insertUser.setString(1, user.getUsername());
+						insertUser.setString(2, user.getPassword());
+						
+					}
+					insertUser.executeBatch();
 					return true;
 				} finally {
 					DBUtil.closeQuietly(insertRoom);

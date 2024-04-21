@@ -85,8 +85,8 @@ public class DataBaseTest {
 		System.out.println("Find User Test");
 		
 		assertEquals(0, db.findUserByUserID(1, "admin"));
-		assertEquals(4, db.findUserByUserID(1, "admin"));
-		assertEquals(2, db.findUserByUserID(1, "admin"));
+		assertEquals(4, db.findUserByUserID(1, "kdealva"));
+		assertEquals(2, db.findUserByUserID(1, "jbeyers"));
 	}
 		
 	

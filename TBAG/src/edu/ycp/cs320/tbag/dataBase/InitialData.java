@@ -89,7 +89,7 @@ public class InitialData {
 					break;
 				}
 			Iterator<String> i = tuple.iterator();
-			User user = new User()
+			User user = new User();
 			user.setUserID(userId++);
 			user.setUsername(i.next());
 			user.setPassword(i.next());
