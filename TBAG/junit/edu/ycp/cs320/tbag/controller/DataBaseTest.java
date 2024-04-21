@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import edu.ycp.cs320.tbag.dataBase.DerbyDatabase;
 import edu.ycp.cs320.tbag.model.Room;
+import edu.ycp.cs320.tbag.model.Actor;
 
 public class DataBaseTest {
 	private DerbyDatabase db;
@@ -77,6 +78,19 @@ public class DataBaseTest {
 		room.setVisited("false");
 		room.setNeedsKey("true");
 		db.updateRoomByRoomID(room);
+	}
+	
+	@Test
+	public void testFindActorByID() {
+		
+		System.out.println("Find Actor Test");
+		Actor player = db.findActorByID(1);
+		assertEquals(5, player.getRoomID());
+		assertEquals("player", player.getName());
+		assertEquals(5, player.getLevel());
+		assertEquals(1000, player.getXP());
+		assertEquals(80, player.getCurrentHealth());
+		assertEquals(100, player.getMaxHealth());
 	}
 	
 }
