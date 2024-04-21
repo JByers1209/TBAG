@@ -16,43 +16,6 @@ import edu.ycp.cs320.tbag.model.RoomConnection;
 
 
 public class InitialData {
-
-	public static List<Actor> getActors() throws IOException {
-		List<Actor> actorList = new ArrayList<Actor>();
-		ReadCSV readActors = new ReadCSV("Actors.csv");
-		try {
-			while (true) {
-				List<String> tuple = readActors.next();
-				if (tuple == null) {
-					break;
-				}
-				Iterator<String> i = tuple.iterator();
-				int actorID = Integer.parseInt(i.next());
-				if(actorID == 1) {
-					Player actor = new Player();
-					actor.setActorID(actorID++);
-					actor.setRoomID(Integer.parseInt(i.next()));
-					actor.setLevel(Integer.parseInt(i.next()));
-					actor.setXP(Integer.parseInt(i.next()));
-					actor.setCurrentHealth(Integer.parseInt(i.next()));
-					actorList.add(actor);
-					
-				}else {
-					NPC actor = new NPC();
-					actor.setActorID(actorID++);
-					actor.setRoomID(Integer.parseInt(i.next()));
-					actor.setLevel(Integer.parseInt(i.next()));
-					actor.setXP(Integer.parseInt(i.next()));
-					actor.setCurrentHealth(Integer.parseInt(i.next()));
-					actorList.add(actor);
-				}
-				
-			}
-			return actorList;
-		} finally {
-			readActors.close();
-		}
-	}
 	
 	public static List<Room> getRooms() throws IOException {
 		List<Room> roomList = new ArrayList<Room>();
@@ -112,6 +75,43 @@ public class InitialData {
 			return connectionList;
 		} finally {
 			readConnections.close();
+		}
+	}
+	
+	public static List<Actor> getActors() throws IOException {
+		List<Actor> actorList = new ArrayList<Actor>();
+		ReadCSV readActors = new ReadCSV("Actors.csv");
+		try {
+			while (true) {
+				List<String> tuple = readActors.next();
+				if (tuple == null) {
+					break;
+				}
+				Iterator<String> i = tuple.iterator();
+				int actorID = Integer.parseInt(i.next());
+				if(actorID == 1) {
+					Player actor = new Player();
+					actor.setActorID(actorID++);
+					actor.setRoomID(Integer.parseInt(i.next()));
+					actor.setLevel(Integer.parseInt(i.next()));
+					actor.setXP(Integer.parseInt(i.next()));
+					actor.setCurrentHealth(Integer.parseInt(i.next()));
+					actorList.add(actor);
+					
+				}else {
+					NPC actor = new NPC();
+					actor.setActorID(actorID++);
+					actor.setRoomID(Integer.parseInt(i.next()));
+					actor.setLevel(Integer.parseInt(i.next()));
+					actor.setXP(Integer.parseInt(i.next()));
+					actor.setCurrentHealth(Integer.parseInt(i.next()));
+					actorList.add(actor);
+				}
+				
+			}
+			return actorList;
+		} finally {
+			readActors.close();
 		}
 	}
 	
