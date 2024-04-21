@@ -46,7 +46,6 @@ public class InitialData {
 		}
 	}
 	
-	
 	public static List<RoomConnection> getConnections() throws IOException {
 		List<RoomConnection> connectionList = new ArrayList<RoomConnection>();
 		ReadCSV readConnections = new ReadCSV("RoomConnections.csv");
@@ -114,6 +113,4 @@ public class InitialData {
 			readActors.close();
 		}
 	}
-	
 }
-
