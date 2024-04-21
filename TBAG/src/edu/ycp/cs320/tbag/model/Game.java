@@ -15,15 +15,7 @@ public class Game {
 	DerbyDatabase db = new DerbyDatabase();
 	
 	public void setup() {
-	  
-	  	
-	  	//Create items for rooms/player
-	  		Item blue_key = new KeyItem("Blue Key", false);
-	  		Item sword = new Weapon("Sword", true, 10);
-	  		Item bandage = new Consumable("Bandage", true, "Health");
-	  		
-	        player = new Player(100, 5);
-	        
+	        player = new Player();
 	        currentRoom = db.findRoomByRoomID(5);
 	}
 	
@@ -67,7 +59,7 @@ public class Game {
 		                        nextRoom.setNeedsKey("false");
 		                        db.updateRoomByRoomID(nextRoom);
 		                    } else {
-		                        response = "You don't have the required key (" + keyName + ") to enter this room.";
+		                        response = "The following location is locked.";
 		                    }
 		                }else if (nextRoom_id != 0) {
 		                	player.moveTo(nextRoom);
@@ -85,11 +77,11 @@ public class Game {
 		                }
 		                break;
 		            case "health":
-		                response = "Current Health: " + player.getCurrentHealth();
+		                response = "Health: " + player.getCurrentHealth();
 		                break;
 		            case "location":
 		                currentRoom = player.getCurrentRoom();
-		                response = "Current Location: " + currentRoom.getName();
+		                response = "Location: " + currentRoom.getName();
 		                break;
 		            case "short description":
 		                currentRoom = player.getCurrentRoom();
