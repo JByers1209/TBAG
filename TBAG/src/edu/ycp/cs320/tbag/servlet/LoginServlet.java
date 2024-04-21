@@ -22,8 +22,24 @@ public class LoginServlet extends HttpServlet {
         // Retrieve username and password 
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-       
-        //database connection??? 
+        
+        //authentication//////
+        // Authenticate user (e.g., check credentials against a database)
+        boolean isAuthenticated = authenticate(username, password);
+
+        if (isAuthenticated) {
+            // Create a session and store user information
+            HttpSession session = req.getSession();
+            session.setAttribute("username", username);
+
+            // Redirect user to the home page or some other protected resource
+            resp.sendRedirect("/home");
+        } else {
+            // Invalid credentials, redirect back to login page with an error message
+            resp.sendRedirect("/login?error=1");
+        }
+    
+		//database connection??? 
         //will need changed----------------------------------------------------------
 //        String url = "jdbc:mysql://localhost:3306/your_database_name";
 //        String dbUsername = "your_database_username";
@@ -77,10 +93,18 @@ public class LoginServlet extends HttpServlet {
         }
 }
 
-    // Example method to check if username and password are valid (replace with your logic)
-    private boolean isValidLogin(String username, String password) {
-        // Example validation logic (replace with actual validation logic)
-        // This is just a simple example
-        return "admin".equals(username) && "password".equals(password);
-    }
+    private boolean authenticate(String username, String password) {
+		// TODO Auto-generated method stub
+    	
+    	
+		return false;
+	}
+ 
+//
+//	// Example method to check if username and password are valid (replace with your logic)
+//    private boolean isValidLogin(String username, String password) {
+//        // Example validation logic (replace with actual validation logic)
+//        // This is just a simple example
+//        return "admin".equals(username) && "password".equals(password);
+//    }
 }

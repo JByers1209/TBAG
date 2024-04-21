@@ -88,7 +88,6 @@ public class DataBaseTest {
 		assertEquals(0, db.findUserByUserID(1, "admin"));
 		assertEquals(0, db.findUserByUserID(1, "admin"));
 	}
-
 		
 	
 }
