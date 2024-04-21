@@ -10,9 +10,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import edu.ycp.cs320.tbag.model.Actor;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
+import edu.ycp.cs320.tbag.model.User;
+
 
 public class DerbyDatabase implements IDatabase {
 	static {
@@ -30,6 +33,8 @@ public class DerbyDatabase implements IDatabase {
 	private static final int MAX_ATTEMPTS = 10;
 
 	
+//<<<<<<< HEAD
+//=======
 	@Override
 	public int findConnectionByRoomIDandDirection(int roomId, String move) {
 	    return executeTransaction(new Transaction<Integer>() {
@@ -301,6 +306,7 @@ private static String getAuthorID(Connection conn, String firstName, String last
         return author_id;
     }
 	*/
+//>>>>>>> master
 	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
@@ -368,13 +374,19 @@ private static String getAuthorID(Connection conn, String firstName, String last
 	private void loadRoomConnection(RoomConnection roomConnection, ResultSet resultSet, int index) throws SQLException {
 		roomConnection.setRoomID(resultSet.getInt(index++));
 		roomConnection.setMove1(resultSet.getString(index++));
-		roomConnection.setDest1(resultSet.getInt(index++));
+		roomConnection.setDest1(resultSet.getString(index++));
 		roomConnection.setMove2(resultSet.getString(index++));
-		roomConnection.setDest2(resultSet.getInt(index++));
+		roomConnection.setDest2(resultSet.getString(index++));
 		roomConnection.setMove3(resultSet.getString(index++));
-		roomConnection.setDest3(resultSet.getInt(index++));
+		roomConnection.setDest3(resultSet.getString(index++));
 		roomConnection.setMove4(resultSet.getString(index++));
-		roomConnection.setDest4(resultSet.getInt(index++));
+		roomConnection.setDest4(resultSet.getString(index++));
+	}
+	
+	private void loadUser(User user, ResultSet resultSet, int index) throws SQLException {
+		user.setUserID(resultSet.getInt(index++));
+		user.setUsername(resultSet.getString(index++), null);
+		user.setPassword(resultSet.getString(index++));	
 	}
 	
 	public void createTables() {
@@ -383,6 +395,7 @@ private static String getAuthorID(Connection conn, String firstName, String last
 			public Boolean execute(Connection conn) throws SQLException {
 				PreparedStatement stmt1 = null;
 				PreparedStatement stmt2 = null;
+				PreparedStatement stmt3 = null;
 				
 				try {
 					stmt1 = conn.prepareStatement(
@@ -403,23 +416,34 @@ private static String getAuthorID(Connection conn, String firstName, String last
 						    "create table roomConnections (" +
 						    "	connection_id integer primary key " +
 							"		generated always as identity (start with 1, increment by 1), " +
-							"	 room_id integer constraint room_id references rooms, " +
+							"	room_id integer constraint room_id references rooms, " +
 						    "    move1 varchar(40)," +
-						    "    dest1 integer," +
+						    "    dest1 varchar(40)," +
 						    "    move2 varchar(40)," +
-						    "    dest2 integer," +
+						    "    dest2 varchar(40)," +
 						    "    move3 varchar(40)," +
-						    "    dest3 integer," +
+						    "    dest3 varchar(40)," +
 						    "    move4 varchar(40)," +
-						    "    dest4 integer" +
+						    "    dest4 varchar(40)" +
 						    ")"
 						);
 					stmt2.executeUpdate();
+					
+					stmt3 = conn.prepareStatement(
+							"create table users (" +
+							"	user_id integer primary key " +
+							"		generated always as identity (start with 1, increment by 1), " +									
+							"	user varchar(90)," +
+							"	username varchar(150)," +
+							"	password varchar(150)," +
+							")"
+						);
 					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt1);
 					DBUtil.closeQuietly(stmt2);
+					DBUtil.closeQuietly(stmt3);
 				}
 			}
 		});
@@ -431,6 +455,7 @@ private static String getAuthorID(Connection conn, String firstName, String last
 			public Boolean execute(Connection conn) throws SQLException {
 				List<Room> roomList;
 				List<RoomConnection> connectionList;
+				List<User> userList;
 				
 				try {
 					roomList = InitialData.getRooms();
@@ -440,8 +465,9 @@ private static String getAuthorID(Connection conn, String firstName, String last
 				}
 
 				PreparedStatement insertRoom = null;
-				
 				PreparedStatement insertConnection   = null;
+				PreparedStatement insertUser   = null;
+
 
 				try {
 					// populate rooms table (do authors first, since author_id is foreign key in books table)
@@ -459,26 +485,36 @@ private static String getAuthorID(Connection conn, String firstName, String last
 					insertRoom.executeBatch();
 					
 					// populate connections table
-					insertConnection = conn.prepareStatement("insert into roomConnections (room_id, move1, dest1, move2, dest2, move3, dest3, move4, dest4) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					insertConnection = conn.prepareStatement("insert into roomConnections (move1, dest1, move2, dest2, move3, dest3, move4, dest4) values (?, ?, ?, ?, ?, ?, ?, ?)");
 					for (RoomConnection roomConnection : connectionList) {
 //						insertBook.setInt(1, roomConnections.getBookId());		// auto-generated primary key, don't insert this
-						insertConnection.setInt(1, roomConnection.getRoomID());
-						insertConnection.setString(2, roomConnection.getMove1());
-						insertConnection.setInt(3, roomConnection.getDest1());
-						insertConnection.setString(4, roomConnection.getMove2());
-						insertConnection.setInt(5, roomConnection.getDest2());
-						insertConnection.setString(6, roomConnection.getMove3());
-						insertConnection.setInt(7, roomConnection.getDest3());
-						insertConnection.setString(8, roomConnection.getMove4());
-						insertConnection.setInt(9, roomConnection.getDest4());
+						insertConnection.setString(1, roomConnection.getMove1());
+						insertConnection.setString(2, roomConnection.getDest1());
+						insertConnection.setString(3, roomConnection.getMove2());
+						insertConnection.setString(4, roomConnection.getDest2());
+						insertConnection.setString(5, roomConnection.getMove3());
+						insertConnection.setString(6, roomConnection.getDest3());
+						insertConnection.setString(7, roomConnection.getMove4());
+						insertConnection.setString(8, roomConnection.getDest4());
 						insertConnection.addBatch();
 					}
+	
 					insertConnection.executeBatch();
+					
+					insertUser = conn.prepareStatement("insert into users (username, password) values (?, ?)");
+					for (User user : userList) {
+						insertUser.setString(1, user.getUsername());
+						insertUser.setString(2, user.getPassword());
+						
+					}
+					insertRoom.executeBatch();
 					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(insertRoom);
 					DBUtil.closeQuietly(insertConnection);
+					DBUtil.closeQuietly(insertUser);
+
 				}
 			}
 		});
@@ -508,4 +544,23 @@ private static String getAuthorID(Connection conn, String firstName, String last
 		return null;
 	}
 
+//<<<<<<< HEAD
+	@Override
+	public int findConnectionByRoomIDandDirection(String roomId, String move) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void updateCurrentRoomByRoomAndActorID(int newRoomId, int actorId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Object findUserByUserID(int i, String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+//=======
+//>>>>>>> master
 }
