@@ -13,5 +13,6 @@ public interface IDatabase {
 	public void updateRoomByRoomID(Room room);
 	public Actor findActorByRoomID(int roomID);
 	public void updateActor(int actorID, Actor actor);
+	public Actor findActorByID(int actorID);
 	
 }

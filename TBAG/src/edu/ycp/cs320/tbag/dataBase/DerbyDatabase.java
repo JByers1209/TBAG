@@ -288,6 +288,54 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	@Override
+	public Actor findActorByID(int actorID) {
+		return executeTransaction(new Transaction<Actor>() {
+		@Override
+		public Actor execute(Connection conn) throws SQLException {
+			Actor actor;
+			PreparedStatement stmt = null;
+			ResultSet resultSet = null;
+			
+			if(actorID == 1) {
+				actor = new Player();
+			}else {
+				actor = new NPC();
+			}
+			
+			try {
+				stmt = conn.prepareStatement("select * "+ 
+			                                 "from actors " +
+					                         "where actors.actor_id = ?");
+				
+				stmt.setInt(1, actorID);
+				
+				resultSet = stmt.executeQuery();
+				
+				Boolean found = false;
+				while (resultSet.next()) {
+					found = true;
+					loadActor(actor, resultSet, 1);
+				}
+				
+				// check if the ID was found
+				if (!found) {
+					System.out.println("<" + actorID + "> was not found in the actors table");
+				}
+				
+			}finally {
+				DBUtil.closeQuietly(resultSet);
+				DBUtil.closeQuietly(stmt);
+			}
+			
+		
+			return actor;
+		}
+		
+	});
+		
+	}//end findActorByID
+	
+	@Override
 	public void updateActor(int actorID, Actor actor) {
 		executeTransaction(new Transaction<Object>() {
 			@Override
