@@ -68,16 +68,20 @@ public class Game {
 			                    }
 		                   }
 		                }else if (nextRoom_id != 0) {
-		                	player.moveTo(nextRoom);
+		                    player.moveTo(nextRoom);
 		                    currentRoom = player.getCurrentRoom();
+		                    if (nextRoom.getVisited().equals("false")) {
+		                            response = "You move " + input + ". New Location: " + currentRoom.getName() + ". " + currentRoom.getLongDescription();
+		                            currentRoom.setVisited("true");
+		                            db.updateRoomByRoom(currentRoom);
+		                        } else if (nextRoom.getVisited().equals("true")) {
+		                            response = "You move " + input + " to " + currentRoom.getName() + ". " + currentRoom.getShortDescription();
+		                        }
+		                    if (db.findActorByRoomID(currentRoom.getRoomID()) != null) {
+		                        Actor actor = db.findActorByRoomID(currentRoom.getRoomID());
+		                        response += " A " + actor.getName() + " stands in front of you! You can either fight or run.";
+		                    } 
 		                    
-		                	if(nextRoom.getVisited().equals("false")) {
-		                    	response = "You move " + input + ". New Location: " + currentRoom.getName() + ". " + currentRoom.getLongDescription();
-		                    	currentRoom.setVisited("true");
-		                    	db.updateRoomByRoom(currentRoom);
-		                	} else if (nextRoom.getVisited().equals("true")) {	
-		                		response = "You move " + input + " to " + currentRoom.getName() + ". " + currentRoom.getShortDescription();
-		                	}
 		                } else {
 		                    response = "You cannot move that way.";
 		                }
