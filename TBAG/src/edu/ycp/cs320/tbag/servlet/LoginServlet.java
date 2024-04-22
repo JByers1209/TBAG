@@ -6,6 +6,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.sql.*;
+
 
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -14,26 +19,52 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // Retrieve username and password from the request parameters
+        // Retrieve username and password 
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
-        // Check if username and password are valid
-        if (isValidLogin(username, password)) {
-            // If valid, redirect to the index page
-            resp.sendRedirect(req.getContextPath() + "/index.jsp");
+        // Authenticate user 
+        boolean isAuthenticated = authenticate(username, password);
+
+        if (isAuthenticated) {
+            // Create a session and store user information
+            HttpSession session = req.getSession();
+            session.setAttribute("username", username);
+
+            // Redirect user to the home page or some other protected resource
+            resp.sendRedirect(req.getContextPath() + "/game.jsp");
         } else {
-            // If not valid, forward back to the login page with an error message
-            req.setAttribute("errorMessage", "Invalid username or password");
-            req.getRequestDispatcher("/login.jsp").forward(req, resp);
+            // Invalid credentials, redirect back to login page with an error message
+            resp.sendRedirect(req.getContextPath() + "/login?error=1");
         }
     }
 
+    private boolean authenticate(String username, String password) {
+        // Establish database connection
+        String url = "jdbc:mysql://localhost:3306/your_database_name";
+        String dbUsername = "your_database_username";
+        String dbPassword = "your_database_password";
 
-    // Example method to check if username and password are valid (replace with your logic)
-    private boolean isValidLogin(String username, String password) {
-        // Example validation logic (replace with actual validation logic)
-        // This is just a simple example
-        return "admin".equals(username) && "password".equals(password);
+        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword);
+             PreparedStatement stmt = conn.prepareStatement("SELECT password FROM users WHERE username = ?");
+        ) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String storedPass = rs.getString("password");
+                // Compare passwords using equals() method
+                if (storedPass.equals(password)) {
+                    return true;
+                }
+            
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle database connection or query errors
+        }
+
+        // Return false if authentication fails
+        return false;
     }
 }

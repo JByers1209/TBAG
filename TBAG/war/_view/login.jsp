@@ -6,6 +6,7 @@
     <title>Spooky York</title>
     <link rel="stylesheet" type="text/css" href="styleSheet.css">
 </head>
+
 <body>
     <div class="container">
         <div class= "logo-container">
@@ -21,24 +22,27 @@
         </form>
         <p id="error" style="color: red; display: none;">Incorrect username or password</p>
     </div>
+</body>
+</html>
 
-    <script>
+
+
+
+    <!-- <script>
         document.getElementById("loginForm").addEventListener("submit", function(event) {
             event.preventDefault(); // Prevent the form from submitting normally
             
-            // Get username and password values
-            var username = document.getElementById("username").value;
-            var password = document.getElementById("password").value;
+            // // Get username and password values
+            // var username = document.getElementById("username").value;
+            // var password = document.getElementById("password").value;
 
-            // Check if username and password are correct
-            if (username === "admin" && password === "password") {
-                // If correct, submit the form
-                this.submit();
-            } else {
-                // If incorrect, display error message
-                document.getElementById("error").style.display = "block";
-            }
+            // // Check if username and password are correct
+            // if (username === "admin" && password === "password") {
+            //     // If correct, submit the form
+            //     this.submit();
+            // } else {
+            //     // If incorrect, display error message
+            //     document.getElementById("error").style.display = "block";
+            // }
         });
-    </script>
-</body>
-</html>
+    </script> -->
