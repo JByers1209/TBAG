@@ -32,7 +32,7 @@ public abstract class Actor {
 		currentHealth = maxHealth;
 	}
 	
-    public Actor(int actorID, int roomID, String name, int level, int xp, int maxHealth, int currentHealth) {
+    public Actor(int actorID, int roomID, String name, int level, int xp, int currentHealth, int maxHealth) {
     	this.actorID = actorID;
     	this.roomID = roomID;
     	this.name = name;

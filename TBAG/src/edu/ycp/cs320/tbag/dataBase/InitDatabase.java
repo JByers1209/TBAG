@@ -15,4 +15,8 @@ public class InitDatabase {
 			throw new IllegalArgumentException("Invalid choice: " + which);
 		}
 	}
+	
+	public static void init() {
+		DatabaseProvider.setInstance(new DerbyDatabase());
+	}
 }
