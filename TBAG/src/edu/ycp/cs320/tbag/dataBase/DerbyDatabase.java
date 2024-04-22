@@ -11,9 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.ycp.cs320.tbag.model.Actor;
+import edu.ycp.cs320.tbag.model.Consumable;
+import edu.ycp.cs320.tbag.model.Item;
+import edu.ycp.cs320.tbag.model.KeyItem;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
-import edu.ycp.cs320.tbag.model.User;
+import edu.ycp.cs320.tbag.model.Weapon;
 import edu.ycp.cs320.tbag.model.NPC;
 import edu.ycp.cs320.tbag.model.Player;
 
@@ -144,6 +147,7 @@ public class DerbyDatabase implements IDatabase {
 	    });
 	}
 	
+	
 	public void updateRoomByRoomID(Room room) {
 	    executeTransaction(new Transaction<Void>() {
 	        @Override
@@ -185,7 +189,6 @@ public class DerbyDatabase implements IDatabase {
 	        }
 	    });
 	}
-
 	
 	@Override
 	public Actor findActorByRoomID(int roomID) {
@@ -236,7 +239,6 @@ public class DerbyDatabase implements IDatabase {
 		
 	}//end findActorByRoomID
 	
-	
 	private static int getActorIDbyRoomID(Connection conn, int roomID) throws SQLException {
 		int actorID = -1;
 		PreparedStatement stmt;
@@ -281,7 +283,6 @@ public class DerbyDatabase implements IDatabase {
 		if (rowsReturned == 0) {
 			System.out.println("No Actor ID");
 		}
-		
 		
 		return actorID;
 	}
@@ -394,6 +395,191 @@ public class DerbyDatabase implements IDatabase {
 		
 	}//end updateActor
 	
+	public List<Item> findItemsByRoomID(int roomID) {
+	    return executeTransaction(new Transaction<List<Item>>() {
+	        @Override
+	        public List<Item> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
+
+	            try {
+	                stmt = conn.prepareStatement(
+	                        "SELECT * FROM items WHERE room_id = ?"
+	                );
+	                stmt.setInt(1, roomID);
+
+	                List<Item> result = new ArrayList<>();
+
+	                resultSet = stmt.executeQuery();
+
+	                while (resultSet.next()) {
+	                    Item item = null;
+	                    int itemType = resultSet.getInt("type");
+	                    switch (itemType) {
+	                        case 1:
+	                            item = new Weapon();
+	                            break;
+	                        case 2:
+	                            item = new Consumable();
+	                            break;
+	                        case 3:
+	                            item = new KeyItem();
+	                            break;
+	                        default:
+	                            // Handle unknown item types or create a generic Item object
+	                            break;
+	                    }
+	                    // Load common attributes
+	                    loadItems(item, resultSet, 1);
+	                    result.add(item);
+	                }
+
+	                return result;
+	            } finally {
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+	}
+
+	public List<Item> findItemsByOwnerID(int ownerID) {
+	    return executeTransaction(new Transaction<List<Item>>() {
+	        @Override
+	        public List<Item> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
+
+	            try {
+	                stmt = conn.prepareStatement(
+	                        "SELECT * FROM items WHERE owner_id = ?"
+	                );
+	                stmt.setInt(1, ownerID);
+
+	                List<Item> result = new ArrayList<>();
+
+	                resultSet = stmt.executeQuery();
+
+	                while (resultSet.next()) {
+	                    Item item = null;
+	                    int itemType = resultSet.getInt("type");
+	                    switch (itemType) {
+	                        case 1:
+	                            item = new Weapon();
+	                            break;
+	                        case 2:
+	                            item = new Consumable();
+	                            break;
+	                        case 3:
+	                            item = new KeyItem();
+	                            break;
+	                        default:
+	                            // Handle unknown item types or create a generic Item object
+	                            break;
+	                    }
+	                    // Load common attributes
+	                    loadItems(item, resultSet, 1);
+	                    result.add(item);
+	                }
+
+	                return result;
+	            } finally {
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+	}
+	
+	public List<Item> findItemsByNameAndRoomID(String name, int roomID) {
+	    return executeTransaction(new Transaction<List<Item>>() {
+	        @Override
+	        public List<Item> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
+
+	            try {
+	                stmt = conn.prepareStatement(
+	                        "SELECT * FROM items WHERE name = ? AND room_id = ?"
+	                );
+	                stmt.setString(1, name);
+	                stmt.setInt(2, roomID);
+
+	                List<Item> result = new ArrayList<>();
+
+	                resultSet = stmt.executeQuery();
+
+	                while (resultSet.next()) {
+	                    Item item = null;
+	                    int itemType = resultSet.getInt("type");
+	                    switch (itemType) {
+	                        case 1:
+	                            item = new Weapon();
+	                            break;
+	                        case 2:
+	                            item = new Consumable();
+	                            break;
+	                        case 3:
+	                            item = new KeyItem();
+	                            break;
+	                        default:
+	                            // Handle unknown item types or create a generic Item object
+	                            break;
+	                    }
+	                    // Load common attributes
+	                    loadItems(item, resultSet, 1);
+	                    result.add(item);
+	                }
+
+	                return result;
+	            } finally {
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+	}
+
+	
+	@Override
+	public void updateItem(int itemID, int roomID, int ownerID) {
+	    executeTransaction(new Transaction<Void>() {
+	        @Override
+	        public Void execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+
+	            try {
+	                // Construct the SQL query to update the item in the items table
+	                stmt = conn.prepareStatement(
+	                        "UPDATE items " +
+	                        "SET room_id = ?, owner_id = ? " +
+	                        "WHERE item_id = ?"
+	                );
+
+	                // Set parameters for the update query based on the item ID, room ID, and owner ID
+	                stmt.setInt(1, roomID);
+	                stmt.setInt(2, ownerID);
+	                stmt.setInt(3, itemID);
+
+	                // Execute the update query
+	                int rowsUpdated = stmt.executeUpdate();
+
+	                if (rowsUpdated > 0) {
+	                    System.out.println("Item with item_id " + itemID + " updated successfully.");
+	                } else {
+	                    System.out.println("Item with item_id " + itemID + " not found or not updated.");
+	                }
+	            } finally {
+	                // Close resources
+	                DBUtil.closeQuietly(stmt);
+	            }
+
+	            return null;
+	        }
+	    });
+	}
+
+	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
 			return doExecuteTransaction(txn);
@@ -478,12 +664,18 @@ public class DerbyDatabase implements IDatabase {
 		actor.setCurrentHealth(resultSet.getInt(index++));
 		actor.setMaxHealth(resultSet.getInt(index++));
 	}
-	private void loadUser(User user, ResultSet resultSet, int index) throws SQLException {
-		user.setUserID(resultSet.getInt(index++));
-		user.setUsername(resultSet.getString(index++));
-		user.setPassword(resultSet.getString(index++));	
-	}
 	
+	private void loadItems(Item item, ResultSet resultSet, int index) throws SQLException {
+		item.setItemID(resultSet.getInt(index++));
+		item.setType(resultSet.getInt(index++));
+		item.setName(resultSet.getString(index++));
+		item.setDescription(resultSet.getString(index++));
+		item.setThrowable(resultSet.getString(index++));
+		item.setDamage(resultSet.getInt(index++));
+		item.setEffect(resultSet.getString(index++));
+		item.setRoomID(resultSet.getInt(index++));
+		item.setOwnerID(resultSet.getInt(index++));
+		}
 	
 	public void createTables() {
 		executeTransaction(new Transaction<Boolean>() {
@@ -493,7 +685,6 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt2 = null;
 				PreparedStatement stmt3 = null;
 				PreparedStatement stmt4 = null;
-
 				
 				try {
 					stmt1 = conn.prepareStatement(
@@ -542,15 +733,20 @@ public class DerbyDatabase implements IDatabase {
 					stmt3.executeUpdate();
 					
 					stmt4 = conn.prepareStatement(
-							"create table users (" +
-							"	user_id integer primary key " +
+							"create table items (" +
+							"	item_id integer primary key " +
 							"		generated always as identity (start with 1, increment by 1), " +									
-							"	user varchar(90)," +
-							"	username varchar(150)," +
-							"	password varchar(150)," +
+							"	type integer," +
+							"   name varchar(40)," +
+							"	description varchar(100)," +
+							"   throwable varchar(40)," +
+							"   damage integer," + 
+							"   effect varchar(40)," + 
+							"   room_id integer," + 
+							"   owner_id integer" + 
 							")"
 						);
-					stmt4.executeUpdate();
+						stmt4.executeUpdate();
 					
 					return true;
 				} finally {
@@ -558,7 +754,6 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmt2);
 					DBUtil.closeQuietly(stmt3);
 					DBUtil.closeQuietly(stmt4);
-
 				}
 			}
 		});
@@ -566,30 +761,27 @@ public class DerbyDatabase implements IDatabase {
 	
 	public void loadInitialData() {
 		executeTransaction(new Transaction<Boolean>() {
-			private User[] userList;
-
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 				List<Room> roomList;
 				List<RoomConnection> connectionList;
 				List<Actor> actorList;
+				List<Item> itemList;
 				
 				try {
 					roomList = InitialData.getRooms();
 					connectionList = InitialData.getConnections();
 					actorList = InitialData.getActors();
+					itemList = InitialData.getItems();
 				} catch (IOException e) {
 					throw new SQLException("Couldn't read initial data", e);
 				}
 
 				PreparedStatement insertRoom = null;
-				
 				PreparedStatement insertConnection   = null;
-				
 				PreparedStatement insertActor = null;
+				PreparedStatement insertItem = null;
 				
-				PreparedStatement insertUser   = null;
-
 				try {
 					// populate rooms table (do authors first, since author_id is foreign key in books table)
 					insertRoom = conn.prepareStatement("insert into rooms (name, longDescription, shortDescription, hasVisited, needsKey, keyName) values (?, ?, ?, ?, ?, ?)");
@@ -636,17 +828,28 @@ public class DerbyDatabase implements IDatabase {
 					}
 					insertActor.executeBatch();
 					
-					insertUser = conn.prepareStatement("insert into users (username, password) values (?, ?)");
-					for (User user : userList) {
-						insertUser.setString(1, user.getUsername());
-						insertUser.setString(2, user.getPassword());
-						
+					//insert items table
+					insertItem = conn.prepareStatement("insert into items (type, name, description, throwable, damage, effect, room_id, owner_id) values (?, ?, ?, ?, ?, ?, ?, ?)");
+					for (Item item : itemList) {
+//						insertItem.setInt(1, item.getItemID());		// auto-generated primary key, don't insert this
+						insertItem.setInt(1, item.getType());
+						insertItem.setString(2, item.getName());
+						insertItem.setString(3, item.getDescription());
+						insertItem.setString(4, item.getThrowable());
+						insertItem.setInt(5, item.getDamage());
+						insertItem.setString(6, item.getEffect());
+						insertItem.setInt(7, item.getRoomID());
+						insertItem.setInt(8, item.getOwnerID());
+						insertItem.addBatch();
 					}
-					insertUser.executeBatch();
+					insertItem.executeBatch();
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(insertRoom);
 					DBUtil.closeQuietly(insertConnection);
+					DBUtil.closeQuietly(insertActor);
+					DBUtil.closeQuietly(insertItem);
 				}
 			}
 		});
@@ -666,11 +869,6 @@ public class DerbyDatabase implements IDatabase {
 
 	@Override
 	public Room findCurrentLocationByActorID(int actorId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object findUserByUserID(int i, String string) {
 		// TODO Auto-generated method stub
 		return null;
 	}

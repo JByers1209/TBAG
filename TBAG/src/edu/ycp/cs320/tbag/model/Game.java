@@ -1,6 +1,7 @@
 package edu.ycp.cs320.tbag.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.ycp.cs320.tbag.dataBase.DerbyDatabase;
 
@@ -11,6 +12,7 @@ public class Game {
 	boolean canMove = true;
 	Room currentRoom;
 	Player player;
+	List<Item> items = null;
 
 	DerbyDatabase db = new DerbyDatabase();
 	
@@ -48,29 +50,31 @@ public class Game {
 		                Room nextRoom = db.findRoomByRoomID(nextRoom_id);
 		                if (nextRoom_id != 0 && nextRoom.getNeedsKey().equals("true") && !nextRoom.getKeyName().equals("none")) {
 		                    String keyName = nextRoom.getKeyName();
-		                    Item keyItem = player.getInventory().getItemByName(keyName);
-		                    if (keyItem != null) {
-		                        player.moveTo(nextRoom);
-		                        currentRoom = player.getCurrentRoom();
-		                        response = "You use the " + keyName + " to unlock the door.";
-		                        currentRoom.setVisited("true");
-		                        db.updateRoomByRoomID(currentRoom);
-		                        player.getInventory().removeItem(keyItem);
-		                        nextRoom.setNeedsKey("false");
-		                        db.updateRoomByRoomID(nextRoom);
-		                    } else {
-		                        response = "The following location is locked.";
-		                    }
+		                   items = db.findItemsByOwnerID(1);
+		                   for(int i=0; i<items.size(); i++) {
+		                	   if (items.get(0).getName() == keyName) {
+			                        player.moveTo(nextRoom);
+			                        currentRoom = player.getCurrentRoom();
+			                        response = "You use the " + keyName + " to unlock the door.";
+			                        currentRoom.setVisited("true");
+			                        db.updateRoomByRoomID(currentRoom);
+			                        db.updateItem(items.get(0).getItemID(), currentRoom.getRoomID(), 0);
+			                        nextRoom.setNeedsKey("false");
+			                        db.updateRoomByRoomID(nextRoom);
+			                    } else {
+			                        response = "The following location is locked.";
+			                    }
+		                   }
 		                }else if (nextRoom_id != 0) {
 		                	player.moveTo(nextRoom);
 		                    currentRoom = player.getCurrentRoom();
 		                    
 		                	if(nextRoom.getVisited().equals("false")) {
-		                    	response = "You move " + input + ". New Location: " + currentRoom.getName() + ". \n" + currentRoom.getLongDescription();
+		                    	response = "You move " + input + ". New Location: " + currentRoom.getName() + ". " + currentRoom.getLongDescription();
 		                    	currentRoom.setVisited("true");
 		                    	db.updateRoomByRoomID(currentRoom);
 		                	} else if (nextRoom.getVisited().equals("true")) {	
-		                		response = "You move " + input + ". " + currentRoom.getName();
+		                		response = "You move " + input + " to " + currentRoom.getName() + ". " + currentRoom.getShortDescription();
 		                	}
 		                } else {
 		                    response = "You cannot move that way.";
@@ -92,27 +96,35 @@ public class Game {
 		                response = currentRoom.getLongDescription();
 		                break;
 		            case "search":
-		                if (currentRoom.roomInventory.getItems().isEmpty()) {
+		            	items = db.findItemsByRoomID(currentRoom.getRoomID());
+		            	String name = items.get(0).getName();
+		                if (items.size() == 0) {
 		                    response = "You search the room but find nothing.";
 		                } else {
-		                    response = "You search the area and find the following items: " + currentRoom.roomInventory.getItemNames() +
-		                               ".";
+		                    response = "You search the area and find the following items: " + name + "." ;
 		                }
 		                break;
 		            case "inventory":
-		            	if (player.getInventory().getItems().isEmpty()) {
+		            	items = db.findItemsByOwnerID(1);
+		            	if (items.size() == 0) {
 		                    response = "Your inventory is empty :(";
 		                } else {
-		                    response = "Your inventory:\n" + player.getInventory().getItemNames();
+		                    response = "Your inventory:\n";
+		                    for(int i = 0; i< items.size(); i++) {
+		                    	response += items.get(i).getName();
+		                    	if(i < items.size()-1) {
+		                    		response += ", ";
+		                    	}
+		                    }
+		                    response += ".";
 		                }
 		                break;
 		            default:
 		                if (input.startsWith("take ")) {
 		                    String itemName = input.substring(5); // Remove "take " from the input to get the item name
-		                    Item itemToTake = currentRoom.roomInventory.getItemByName(itemName);
-		                    if (itemToTake != null) {
-		                        player.getInventory().addItem(itemToTake);
-		                        currentRoom.roomInventory.removeItem(itemToTake);
+		                    List<Item> itemToTake = db.findItemsByNameAndRoomID(itemName, currentRoom.getRoomID());
+		                    if (itemToTake.size() != 0) {
+		                    	db.updateItem(itemToTake.get(0).getItemID(), currentRoom.getRoomID(), 1);
 		                        response = "You take the " + itemName + ".";
 		                    } else {
 		                        response = "There is no " + itemName + " in this room.";
@@ -122,6 +134,7 @@ public class Game {
 		                }
 		                break;
 		        }
+		        items = null;
 		    }
 		    return response;
 		}

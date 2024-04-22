@@ -8,11 +8,14 @@ import java.util.List;
 
 import edu.ycp.cs320.tbag.dataBase.ReadCSV;
 import edu.ycp.cs320.tbag.model.Actor;
+import edu.ycp.cs320.tbag.model.Consumable;
+import edu.ycp.cs320.tbag.model.Item;
+import edu.ycp.cs320.tbag.model.KeyItem;
 import edu.ycp.cs320.tbag.model.NPC;
 import edu.ycp.cs320.tbag.model.Player;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
-import edu.ycp.cs320.tbag.model.User;
+import edu.ycp.cs320.tbag.model.Weapon;
 
 
 
@@ -77,30 +80,7 @@ public class InitialData {
 			readConnections.close();
 		}
 	}
-	public static List<User> getUser() throws IOException {
-		List<User> userList = new ArrayList<User>();
-		ReadCSV readUser = new ReadCSV("users.csv");
-		try {
-		// auto-generated primary key for room connections table
-			Integer userId = 1;
-			while (true) {
-				List<String> tuple = readUser.next();
-				if (tuple == null) {
-					break;
-				}
-			Iterator<String> i = tuple.iterator();
-			User user = new User();
-			user.setUserID(userId++);
-			user.setUsername(i.next());
-			user.setPassword(i.next());
-			userList.add(user);
-			
-		}
-		return userList;
-	} finally {
-		readUser.close();
-	}
-}
+	
 	public static List<Actor> getActors() throws IOException {
 	    List<Actor> actorList = new ArrayList<Actor>();
 	    ReadCSV readActors = new ReadCSV("Actors.csv");
@@ -140,5 +120,55 @@ public class InitialData {
 	        readActors.close();
 	    }
 	}
+	
+	public static List<Item> getItems() throws IOException {
+	    List<Item> itemList = new ArrayList<Item>();
+	    ReadCSV readItems = new ReadCSV("Items.csv");
+	    try {
+	        // auto-generated primary key for rooms table
+	        Integer itemId = 1;
+	        while (true) {
+	            List<String> tuple = readItems.next();
+	            if (tuple == null) {
+	                break;
+	            }
+	            Iterator<String> i = tuple.iterator();
+	            
+	            // Parse item type from the second element of the tuple
+	            int itemType = Integer.parseInt(i.next());
+
+	            Item item;
+	            switch (itemType) {
+	                case 1:
+	                    item = new Weapon();
+	                    break;
+	                case 2:
+	                    item = new Consumable();
+	                    break;
+	                case 3:
+	                    item = new KeyItem();
+	                    break;
+	                default:
+	                    throw new IllegalArgumentException("Invalid item type: " + itemType);
+	            }
+
+	            // Set item properties
+	            item.setItemID(itemId++);
+	            item.setType(itemType);
+	            item.setName(i.next());
+	            item.setDescription(i.next());
+	            item.setThrowable(i.next());
+	            item.setDamage(Integer.parseInt(i.next()));
+	            item.setEffect(i.next());
+	            item.setRoomID(Integer.parseInt(i.next()));
+	            item.setOwnerID(Integer.parseInt(i.next()));
+	            itemList.add(item);
+	        }
+	        return itemList;
+	    } finally {
+	        readItems.close();
+	    }
+	}
+
 
 }
