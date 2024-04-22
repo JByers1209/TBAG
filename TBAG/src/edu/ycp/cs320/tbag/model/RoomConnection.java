@@ -4,13 +4,13 @@ public class RoomConnection {
 
 	private int roomId;
 	private String move1;
-	private String dest1;
+	private int dest1;
 	private String move2;
-	private String dest2;
+	private int dest2;
 	private String move3;
-	private String dest3;
+	private int dest3;
 	private String move4;
-	private String dest4;
+	private int dest4;
 	
 	
 
@@ -62,38 +62,38 @@ public class RoomConnection {
 		}	
 
 	//Dest 1
-		public void setDest1(String string) {
-			this.dest1 = string;
+		public void setDest1(int dest1) {
+			this.dest1 = dest1;
 		}
 				
-		public String getDest1() {
+		public int getDest1() {
 			return dest1;
 		}
 
 	//Dest 2
-		public void setDest2(String string) {
-			this.dest2 = string;
+		public void setDest2(int dest2) {
+			this.dest2 = dest2;
 		}
 				
-		public String getDest2() {
+		public int getDest2() {
 			return dest2;
 		}
 			
 	//Dest 3
-		public void setDest3(String string) {
-			this.dest3 = string;
+		public void setDest3(int dest3) {
+			this.dest3 = dest3;
 		}
 					
-		public String getDest3() {
+		public int getDest3() {
 			return dest3;
 		}
 			
 	//Dest 4
-		public void setDest4(String string) {
-			this.dest4 = string;
+		public void setDest4(int dest4) {
+			this.dest4 = dest4;
 		}
 				
-		public String getDest4() {
+		public int getDest4() {
 			return dest4;
 		}	
 

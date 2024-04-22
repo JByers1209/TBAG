@@ -118,11 +118,10 @@ public class DataBaseTest {
 	public void testUpdateItem() {
 		List<Item> items;
 		
-		
 		//Checks that Actor 3 has a Knife.
 		items = db.findItemsByOwnerID(3);
         assertEquals(1, items.size());
-        assertEquals("Knife", items.get(0).getName());
+        assertEquals("knife", items.get(0).getName());
         
         //Checks that Actor 1 has no item.
         items = db.findItemsByOwnerID(1);
