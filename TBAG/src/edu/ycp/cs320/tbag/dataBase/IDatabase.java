@@ -18,5 +18,5 @@ public interface IDatabase {
 	public List<Item> findItemsByRoomID(int roomID);
 	public List<Item> findItemsByOwnerID(int ownerID);
 	public List<Item> findItemsByNameAndRoomID(String name, int room_id);
-	void updateItem(int itemID, int roomID, int ownerID);
+	public void updateItem(int itemID, int roomID, int ownerID);
 }
