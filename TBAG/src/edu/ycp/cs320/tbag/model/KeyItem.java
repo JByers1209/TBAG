@@ -4,4 +4,8 @@ public class KeyItem extends Item {
     
     public KeyItem() {
     }
+
+	public KeyItem(String string, boolean b) {
+		
+	}
 }

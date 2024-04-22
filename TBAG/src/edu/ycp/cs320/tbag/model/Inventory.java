@@ -42,5 +42,10 @@ public class Inventory {
 		return null;
 	}
 
+	public void initializeItems() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
 
