@@ -11,9 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.ycp.cs320.tbag.model.Actor;
+import edu.ycp.cs320.tbag.model.Consumable;
 import edu.ycp.cs320.tbag.model.Item;
+import edu.ycp.cs320.tbag.model.KeyItem;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
+import edu.ycp.cs320.tbag.model.Weapon;
 import edu.ycp.cs320.tbag.model.NPC;
 import edu.ycp.cs320.tbag.model.Player;
 
@@ -144,6 +147,7 @@ public class DerbyDatabase implements IDatabase {
 	    });
 	}
 	
+	
 	public void updateRoomByRoomID(Room room) {
 	    executeTransaction(new Transaction<Void>() {
 	        @Override
@@ -185,7 +189,6 @@ public class DerbyDatabase implements IDatabase {
 	        }
 	    });
 	}
-
 	
 	@Override
 	public Actor findActorByRoomID(int roomID) {
@@ -236,7 +239,6 @@ public class DerbyDatabase implements IDatabase {
 		
 	}//end findActorByRoomID
 	
-	
 	private static int getActorIDbyRoomID(Connection conn, int roomID) throws SQLException {
 		int actorID = -1;
 		PreparedStatement stmt;
@@ -281,7 +283,6 @@ public class DerbyDatabase implements IDatabase {
 		if (rowsReturned == 0) {
 			System.out.println("No Actor ID");
 		}
-		
 		
 		return actorID;
 	}
@@ -393,6 +394,191 @@ public class DerbyDatabase implements IDatabase {
 		});//end transaction
 		
 	}//end updateActor
+	
+	public List<Item> findItemsByRoomID(int roomID) {
+	    return executeTransaction(new Transaction<List<Item>>() {
+	        @Override
+	        public List<Item> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
+
+	            try {
+	                stmt = conn.prepareStatement(
+	                        "SELECT * FROM items WHERE room_id = ?"
+	                );
+	                stmt.setInt(1, roomID);
+
+	                List<Item> result = new ArrayList<>();
+
+	                resultSet = stmt.executeQuery();
+
+	                while (resultSet.next()) {
+	                    Item item = null;
+	                    int itemType = resultSet.getInt("type");
+	                    switch (itemType) {
+	                        case 1:
+	                            item = new Weapon();
+	                            break;
+	                        case 2:
+	                            item = new Consumable();
+	                            break;
+	                        case 3:
+	                            item = new KeyItem();
+	                            break;
+	                        default:
+	                            // Handle unknown item types or create a generic Item object
+	                            break;
+	                    }
+	                    // Load common attributes
+	                    loadItems(item, resultSet, 1);
+	                    result.add(item);
+	                }
+
+	                return result;
+	            } finally {
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+	}
+
+	public List<Item> findItemsByOwnerID(int ownerID) {
+	    return executeTransaction(new Transaction<List<Item>>() {
+	        @Override
+	        public List<Item> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
+
+	            try {
+	                stmt = conn.prepareStatement(
+	                        "SELECT * FROM items WHERE owner_id = ?"
+	                );
+	                stmt.setInt(1, ownerID);
+
+	                List<Item> result = new ArrayList<>();
+
+	                resultSet = stmt.executeQuery();
+
+	                while (resultSet.next()) {
+	                    Item item = null;
+	                    int itemType = resultSet.getInt("type");
+	                    switch (itemType) {
+	                        case 1:
+	                            item = new Weapon();
+	                            break;
+	                        case 2:
+	                            item = new Consumable();
+	                            break;
+	                        case 3:
+	                            item = new KeyItem();
+	                            break;
+	                        default:
+	                            // Handle unknown item types or create a generic Item object
+	                            break;
+	                    }
+	                    // Load common attributes
+	                    loadItems(item, resultSet, 1);
+	                    result.add(item);
+	                }
+
+	                return result;
+	            } finally {
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+	}
+	
+	public List<Item> findItemsByNameAndRoomID(String name, int roomID) {
+	    return executeTransaction(new Transaction<List<Item>>() {
+	        @Override
+	        public List<Item> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
+
+	            try {
+	                stmt = conn.prepareStatement(
+	                        "SELECT * FROM items WHERE name = ? AND room_id = ?"
+	                );
+	                stmt.setString(1, name);
+	                stmt.setInt(2, roomID);
+
+	                List<Item> result = new ArrayList<>();
+
+	                resultSet = stmt.executeQuery();
+
+	                while (resultSet.next()) {
+	                    Item item = null;
+	                    int itemType = resultSet.getInt("type");
+	                    switch (itemType) {
+	                        case 1:
+	                            item = new Weapon();
+	                            break;
+	                        case 2:
+	                            item = new Consumable();
+	                            break;
+	                        case 3:
+	                            item = new KeyItem();
+	                            break;
+	                        default:
+	                            // Handle unknown item types or create a generic Item object
+	                            break;
+	                    }
+	                    // Load common attributes
+	                    loadItems(item, resultSet, 1);
+	                    result.add(item);
+	                }
+
+	                return result;
+	            } finally {
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+	}
+
+	
+	@Override
+	public void updateItem(int itemID, int roomID, int ownerID) {
+	    executeTransaction(new Transaction<Void>() {
+	        @Override
+	        public Void execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+
+	            try {
+	                // Construct the SQL query to update the item in the items table
+	                stmt = conn.prepareStatement(
+	                        "UPDATE items " +
+	                        "SET room_id = ?, owner_id = ? " +
+	                        "WHERE item_id = ?"
+	                );
+
+	                // Set parameters for the update query based on the item ID, room ID, and owner ID
+	                stmt.setInt(1, roomID);
+	                stmt.setInt(2, ownerID);
+	                stmt.setInt(3, itemID);
+
+	                // Execute the update query
+	                int rowsUpdated = stmt.executeUpdate();
+
+	                if (rowsUpdated > 0) {
+	                    System.out.println("Item with item_id " + itemID + " updated successfully.");
+	                } else {
+	                    System.out.println("Item with item_id " + itemID + " not found or not updated.");
+	                }
+	            } finally {
+	                // Close resources
+	                DBUtil.closeQuietly(stmt);
+	            }
+
+	            return null;
+	        }
+	    });
+	}
+
 	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
