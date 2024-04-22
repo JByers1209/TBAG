@@ -61,7 +61,7 @@ public class DataBaseTest {
 	
 	
 	@Test
-	public void testUpdateRoomByRoomID() {
+	public void testUpdateRoomByRoom() {
 		
 		System.out.println("Update Room Test");
 		Room room = db.findRoomByRoomID(1);
@@ -70,7 +70,7 @@ public class DataBaseTest {
 		
 		room.setVisited("true");
 		room.setNeedsKey("false");
-		db.updateRoomByRoomID(room);
+		db.updateRoomByRoom(room);
 		
 		room = db.findRoomByRoomID(1);
 		assertEquals("true", room.getVisited());
@@ -79,7 +79,7 @@ public class DataBaseTest {
 		//Sets database back to default
 		room.setVisited("false");
 		room.setNeedsKey("true");
-		db.updateRoomByRoomID(room);
+		db.updateRoomByRoom(room);
 	}
 	
 	@Test

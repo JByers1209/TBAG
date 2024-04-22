@@ -13,7 +13,7 @@ public class Game {
 	Room currentRoom;
 	Player player;
 	List<Item> items = null;
-
+	
 	DerbyDatabase db = new DerbyDatabase();
 	
 	public void setup() {
@@ -28,6 +28,8 @@ public class Game {
 			}else {
 				setup();
 				String startingText = currentRoom.getLongDescription();
+				currentRoom.setVisited("true");
+				db.updateRoomByRoom(currentRoom);
 				hasStarted = true;
 				return startingText;
 			}
@@ -49,18 +51,18 @@ public class Game {
 		                int nextRoom_id = db.findConnectionByRoomIDandDirection(currentRoom.getRoomID(), input);
 		                Room nextRoom = db.findRoomByRoomID(nextRoom_id);
 		                if (nextRoom_id != 0 && nextRoom.getNeedsKey().equals("true") && !nextRoom.getKeyName().equals("none")) {
-		                    String keyName = nextRoom.getKeyName();
+		                   String keyName = nextRoom.getKeyName();
 		                   items = db.findItemsByOwnerID(1);
 		                   for(int i=0; i<items.size(); i++) {
-		                	   if (items.get(0).getName() == keyName) {
+		                	   if (items.get(i).getName().equals(keyName)) {
 			                        player.moveTo(nextRoom);
 			                        currentRoom = player.getCurrentRoom();
-			                        response = "You use the " + keyName + " to unlock the door.";
+			                        response = "You use the " + keyName + " to unlock the door. " + currentRoom.getLongDescription();
 			                        currentRoom.setVisited("true");
-			                        db.updateRoomByRoomID(currentRoom);
-			                        db.updateItem(items.get(0).getItemID(), currentRoom.getRoomID(), 0);
+			                        db.updateRoomByRoom(currentRoom);
+			                        db.updateItem(items.get(i).getItemID(), currentRoom.getRoomID(), i);
 			                        nextRoom.setNeedsKey("false");
-			                        db.updateRoomByRoomID(nextRoom);
+			                        db.updateRoomByRoom(nextRoom);
 			                    } else {
 			                        response = "The following location is locked.";
 			                    }
@@ -72,7 +74,7 @@ public class Game {
 		                	if(nextRoom.getVisited().equals("false")) {
 		                    	response = "You move " + input + ". New Location: " + currentRoom.getName() + ". " + currentRoom.getLongDescription();
 		                    	currentRoom.setVisited("true");
-		                    	db.updateRoomByRoomID(currentRoom);
+		                    	db.updateRoomByRoom(currentRoom);
 		                	} else if (nextRoom.getVisited().equals("true")) {	
 		                		response = "You move " + input + " to " + currentRoom.getName() + ". " + currentRoom.getShortDescription();
 		                	}

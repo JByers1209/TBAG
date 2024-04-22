@@ -148,7 +148,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	
-	public void updateRoomByRoomID(Room room) {
+	public void updateRoomByRoom(Room room) {
 	    executeTransaction(new Transaction<Void>() {
 	        @Override
 	        public Void execute(Connection conn) throws SQLException {
@@ -578,7 +578,6 @@ public class DerbyDatabase implements IDatabase {
 	        }
 	    });
 	}
-
 	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
@@ -869,6 +868,12 @@ public class DerbyDatabase implements IDatabase {
 
 	@Override
 	public Room findCurrentLocationByActorID(int actorId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Item> findItemsByRoom(int roomID) {
 		// TODO Auto-generated method stub
 		return null;
 	}
