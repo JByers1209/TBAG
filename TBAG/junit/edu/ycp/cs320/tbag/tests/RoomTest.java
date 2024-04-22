@@ -1,9 +1,11 @@
-package edu.ycp.cs320.tbag.model;
+package edu.ycp.cs320.tbag.tests;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import edu.ycp.cs320.tbag.model.Room;
 
 public class RoomTest {
 	Room room1, room2;
