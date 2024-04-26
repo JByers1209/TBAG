@@ -426,12 +426,17 @@ public class DerbyDatabase implements IDatabase {
 	                            item = new KeyItem();
 	                            break;
 	                        default:
-	                            // Handle unknown item types or create a generic Item object
-	                            break;
+	                            // If item type is not recognized, return null
+	                            return null;
 	                    }
 	                    // Load common attributes
 	                    loadItems(item, resultSet, 1);
 	                    result.add(item);
+	                }
+
+	                if (result.isEmpty()) {
+	                    // Return null if no items were found
+	                    return null;
 	                }
 
 	                return result;
@@ -442,6 +447,7 @@ public class DerbyDatabase implements IDatabase {
 	        }
 	    });
 	}
+
 
 	public List<Item> findItemsByOwnerID(int ownerID) {
 	    return executeTransaction(new Transaction<List<Item>>() {

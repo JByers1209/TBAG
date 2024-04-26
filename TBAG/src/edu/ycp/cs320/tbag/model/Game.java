@@ -104,10 +104,10 @@ public class Game {
 		            case "search":
 		            	items = db.findItemsByRoomID(currentRoom.getRoomID());
 		            	String name = items.get(0).getName();
-		                if (items.size() == 0) {
-		                    response = "You search the room but find nothing.";
+		                if (items != null) {
+		                	response = "You search the area and find the following items: " + name + "." ;
 		                } else {
-		                    response = "You search the area and find the following items: " + name + "." ;
+		                    response = "You search the room but find nothing.";
 		                }
 		                break;
 		            case "inventory":
