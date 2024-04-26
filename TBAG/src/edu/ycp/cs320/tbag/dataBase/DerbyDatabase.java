@@ -149,7 +149,6 @@ public class DerbyDatabase implements IDatabase {
 					// populate actors table
 					insertActor = conn.prepareStatement("insert into actors (room_id, name, level, xp, current_health, max_health) values (?, ?, ?, ? ,?, ?)");
 					for (Actor actor : actorList) {
-//						insertAuthor.setInt(1, actor.getActorID());
 						insertActor.setInt(1, actor.getRoomID());
 						insertActor.setString(2, actor.getName());
 						insertActor.setInt(3, actor.getLevel());

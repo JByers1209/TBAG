@@ -26,28 +26,21 @@ public class InitialData {
 				}
 				Iterator<String> i = tuple.iterator();
 			
+				Actor actor;
 				if(actorID == 1) {
-					Player actor = new Player();
-					actor.setActorID(actorID);
-					actor.setRoomID(Integer.parseInt(i.next()));
-					actor.setName(i.next());
-					actor.setLevel(Integer.parseInt(i.next()));
-					actor.setXP(Integer.parseInt(i.next()));
-					actor.setCurrentHealth(Integer.parseInt(i.next()));
-					actor.setMaxHealth(Integer.parseInt(i.next()));
-					actorList.add(actor);
-					
+					 actor = new Player();
 				}else {
-					NPC actor = new NPC();
-					actor.setActorID(actorID);
-					actor.setRoomID(Integer.parseInt(i.next()));
-					actor.setName(i.next());
-					actor.setLevel(Integer.parseInt(i.next()));
-					actor.setXP(Integer.parseInt(i.next()));
-					actor.setCurrentHealth(Integer.parseInt(i.next()));
-					actor.setMaxHealth(Integer.parseInt(i.next()));
-					actorList.add(actor);
+					actor = new NPC();
+
 				}
+				actor.setActorID(actorID);
+				actor.setRoomID(Integer.parseInt(i.next()));
+				actor.setName(i.next());
+				actor.setLevel(Integer.parseInt(i.next()));
+				actor.setXP(Integer.parseInt(i.next()));
+				actor.setCurrentHealth(Integer.parseInt(i.next()));
+				actor.setMaxHealth(Integer.parseInt(i.next()));
+				actorList.add(actor);
 				actorID++;
 				
 			}
