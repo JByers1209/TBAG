@@ -13,6 +13,8 @@ public class Game {
 	Room currentRoom;
 	Player player;
 	List<Item> items = null;
+	List<RoomConnection> connection = null;
+	int nextRoomId;
 	
 	DerbyDatabase db = new DerbyDatabase();
 	
@@ -48,9 +50,17 @@ public class Game {
 		            case "south":
 		            case "west":
 		            case "east":
-		                int nextRoom_id = db.findConnectionByRoomIDandDirection(currentRoom.getRoomID(), input);
-		                Room nextRoom = db.findRoomByRoomID(nextRoom_id);
-		                if (nextRoom_id != 0 && nextRoom.getNeedsKey().equals("true") && !nextRoom.getKeyName().equals("none")) {
+		                connection = db.findConnectionsByRoomID(currentRoom.getRoomID());
+		                for(int i = 0; i<connection.size(); i++) {
+		                	if(connection.get(i).getMove().equals(input)) {
+		                		nextRoomId = connection.get(i).getDestId();
+		                	}
+		                	else {
+		                		nextRoomId = 0;
+		                	}
+		                }
+		                Room nextRoom = db.findRoomByRoomID(nextRoomId);
+		                if (nextRoomId != 0 && nextRoom.getNeedsKey().equals("true") && !nextRoom.getKeyName().equals("none")) {
 		                   String keyName = nextRoom.getKeyName();
 		                   items = db.findItemsByOwnerID(1);
 		                   for(int i=0; i<items.size(); i++) {
@@ -67,7 +77,7 @@ public class Game {
 			                        response = "The following location is locked.";
 			                    }
 		                   }
-		                }else if (nextRoom_id != 0) {
+		                }else if (nextRoomId != 0) {
 		                    player.moveTo(nextRoom);
 		                    currentRoom = player.getCurrentRoom();
 		                    if (nextRoom.getVisited().equals("false")) {

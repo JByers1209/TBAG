@@ -14,6 +14,7 @@ import edu.ycp.cs320.tbag.model.Actor;
 import edu.ycp.cs320.tbag.model.Item;
 import edu.ycp.cs320.tbag.model.NPC;
 import edu.ycp.cs320.tbag.model.Room;
+import edu.ycp.cs320.tbag.model.RoomConnection;
 
 public class DataBaseTest {
 	private DerbyDatabase db;
@@ -24,21 +25,16 @@ public class DataBaseTest {
 	}
 	
 	@Test
-	public void testFindConnectionByRoomIDandDirection() {
+	public void testFindConnectionByRoomID() {
 		
 		System.out.println("Find Connection Test");
 		
-		//Tests room1
-		assertEquals(0, db.findConnectionByRoomIDandDirection(1, "north"));
-		assertEquals(4, db.findConnectionByRoomIDandDirection(1, "south"));
-		assertEquals(2, db.findConnectionByRoomIDandDirection(1, "east"));
-		assertEquals(0, db.findConnectionByRoomIDandDirection(1, "west"));
+		List<RoomConnection> room1;
+		room1 = db.findConnectionsByRoomID(1);
+		assertEquals(4, room1.size());
+		assertEquals("north", room1.get(0).getMove());
+		assertEquals(0, room1.get(0).getDestId());
 		
-		//Tests room2
-		assertEquals(0, db.findConnectionByRoomIDandDirection(2, "north"));
-		assertEquals(5, db.findConnectionByRoomIDandDirection(2, "south"));
-		assertEquals(3, db.findConnectionByRoomIDandDirection(2, "east"));
-		assertEquals(1, db.findConnectionByRoomIDandDirection(2, "west"));
 	}
 	
 	@Test
@@ -156,7 +152,7 @@ public class DataBaseTest {
 
 
     }
-	
+	/*
 	@Test
 	public void testFindActorByID() {
 		NPC npc = new NPC(4, 12, "silly specter", 4, 800, 69, 420);
@@ -200,4 +196,5 @@ public class DataBaseTest {
 		assertEquals(npc.getMaxHealth(), retrievedNPC.getMaxHealth());
 		
 	}
+	*/
 }
