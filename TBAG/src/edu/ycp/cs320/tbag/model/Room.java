@@ -18,6 +18,21 @@ public class Room {
 		
 	}
 
+	public Room(String name, String shortDescription, String longDescription, String hasVisited, String needsKey, String keyName ) {
+		this.name = name;
+		this.shortDescription = shortDescription;
+		this.longDescription = longDescription;
+		this.hasVisited = hasVisited;
+		this.needsKey = needsKey;
+		this.keyName = keyName;
+	}
+	
+	public Room(String name, String longDescription, String hasVisited) {
+		this.name = name;
+		this.longDescription = longDescription;
+		this.hasVisited = hasVisited;
+	}
+	
 	public void setRoomID(int roomId) {
 		this.roomId = roomId;
 	}

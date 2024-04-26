@@ -1,4 +1,4 @@
-package edu.ycp.cs320.tbag.controller;
+package edu.ycp.cs320.tbag.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
