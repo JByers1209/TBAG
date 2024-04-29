@@ -3,6 +3,7 @@ package edu.ycp.cs320.tbag.controller;
 import java.util.List;
 
 import edu.ycp.cs320.tbag.dataBase.DerbyDatabase;
+import edu.ycp.cs320.tbag.model.Actor;
 import edu.ycp.cs320.tbag.model.Item;
 import edu.ycp.cs320.tbag.model.Player;
 import edu.ycp.cs320.tbag.model.Room;
@@ -14,7 +15,7 @@ public class GameEngine {
 	boolean hasStarted = false;
 	boolean canMove = true;
 	Room currentRoom;
-	Player player;
+	Actor player;
 	List<Item> items = null;
 	List<RoomConnection> connection = null;
 	int nextRoomId;
@@ -22,7 +23,7 @@ public class GameEngine {
 	DerbyDatabase db = new DerbyDatabase();
 	
 	public void setup() {
-	        player = new Player();
+	        player = db.findActorByID(1);
 	        currentRoom = db.findRoomByRoomID(5);
 	}
 	
@@ -70,15 +71,41 @@ public class GameEngine {
 	            
 	            if (foundConnection && nextRoomId != 0) {
 	                Room nextRoom = db.findRoomByRoomID(nextRoomId);
-	                player.moveTo(nextRoom);
-	                currentRoom = player.getCurrentRoom();
-	                response = currentRoom.getVisited().equals("false") ?
-	                           "You move " + input + ". New Location: " + currentRoom.getName() + ". " + currentRoom.getLongDescription() :
-	                           "You move " + input + " to " + currentRoom.getName() + ". " + currentRoom.getShortDescription();
-	                currentRoom.setVisited("true");
-	                db.updateRoomByRoom(currentRoom);
-	            } else {
-	                response = "You cannot move that way.";
+	                if (nextRoomId != 0 && nextRoom.getNeedsKey().equals("true") && !nextRoom.getKeyName().equals("none")) {
+	                    String keyName = nextRoom.getKeyName();
+	                    items = db.findItemsByOwnerID(1);
+	                    for(int i=0; i<items.size(); i++) {
+	                 	   if (items.get(i).getName().equals(keyName)) {
+	 	                        player.moveTo(nextRoom);
+	 	                        currentRoom = player.getCurrentRoom();
+	 	                        response = "You use the " + keyName + " to unlock the door. " + currentRoom.getLongDescription();
+	 	                        currentRoom.setVisited("true");
+	 	                        db.updateRoomByRoom(currentRoom);
+	 	                        db.updateItem(items.get(i).getItemID(), currentRoom.getRoomID(), i);
+	 	                        nextRoom.setNeedsKey("false");
+	 	                        db.updateRoomByRoom(nextRoom);
+	 	                    } else {
+	 	                        response = "The following location is locked.";
+	 	                    }
+	                    }
+	                 }else if (nextRoomId != 0) {
+	                     player.moveTo(nextRoom);
+	                     currentRoom = player.getCurrentRoom();
+	                     if (nextRoom.getVisited().equals("false")) {
+	                             response = "You move " + input + ". New Location: " + currentRoom.getName() + ". " + currentRoom.getLongDescription();
+	                             currentRoom.setVisited("true");
+	                             db.updateRoomByRoom(currentRoom);
+	                         } else if (nextRoom.getVisited().equals("true")) {
+	                             response = "You move " + input + " to " + currentRoom.getName() + ". " + currentRoom.getShortDescription();
+	                         }
+	                     if (db.findActorByRoomID(currentRoom.getRoomID()) != null) {
+	                         Actor actor = db.findActorByRoomID(currentRoom.getRoomID());
+	                         response += " A " + actor.getName() + " stands in front of you! You can either fight or run.";
+	                     } 
+	                     
+	                 } else {
+	                     response = "You cannot move that way.";
+	                 }
 	            }
 	        } else {
 	            // Handle other commands like health, inventory, etc.
@@ -100,8 +127,8 @@ public class GameEngine {
 	                    break;
 	                case "search":
 	                    items = db.findItemsByRoomID(currentRoom.getRoomID());
-	                    String name = items.get(0).getName();
 	                    if (items != null) {
+	                    	String name = items.get(0).getName();
 	                        response = "You search the area and find the following items: " + name + "." ;
 	                    } else {
 	                        response = "You search the room but find nothing.";
