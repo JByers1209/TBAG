@@ -46,59 +46,65 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Display initial prompt
-            var gameText = document.getElementById("game-text");
-            gameText.innerHTML += "<p>Welcome to Spooky York! Type 'start' to begin.</p>";
-    
-            var form = document.getElementById("game-form");
-            var commandLine = document.getElementById("command-line");
-            var buttonsContainer = document.getElementById("buttons-container");
-            var directions = []; // Array to store entered directions
+    document.addEventListener("DOMContentLoaded", function() {
+        // Display initial prompt
+        var gameText = document.getElementById("game-text");
 
-            form.addEventListener("submit", function(event) {
-                event.preventDefault(); // Prevent default form submission
-                var userInput = commandLine.value.trim().toLowerCase();
-                if (userInput === "north" || userInput === "south" || userInput === "east" || userInput === "west") {
-                    if (!directions.includes(userInput)) {
-                        directions.push(userInput); // Add direction to array if not already present
-                    }
-                }
-                // Check if all directions have been entered
-                if (directions.length === 4) {
-                    buttonsContainer.style.display = "block"; // Show buttons
-                }
-                sendCommand(userInput);
-                commandLine.value = ""; // Clear input field
-            });
+        var form = document.getElementById("game-form");
+        var commandLine = document.getElementById("command-line");
+        var buttonsContainer = document.getElementById("buttons-container");
+        var directions = []; // Array to store entered directions
 
-            function sendCommand(userInput) {
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", form.action, true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        gameText.innerHTML += "<p><strong> >  " + userInput + "</strong></p>";
-                        gameText.innerHTML += "<p>" + xhr.responseText + "</p>";
-                        gameText.scrollTop = gameText.scrollHeight;
-                    }
-                };
-                xhr.send("userInput=" + encodeURIComponent(userInput));
+        form.addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+            var userInput = commandLine.value.trim().toLowerCase();
+            if (userInput === "north" || userInput === "south" || userInput === "east" || userInput === "west") {
+                if (!directions.includes(userInput)) {
+                    directions.push(userInput); // Add direction to array if not already present
+                }
             }
-
-            document.getElementById("button1").addEventListener("click", function() {
-                sendCommand("west"); 
-            });
-            document.getElementById("button2").addEventListener("click", function() {
-                sendCommand("east"); 
-            });
-            document.getElementById("button3").addEventListener("click", function() {
-                sendCommand("north"); 
-            });
-            document.getElementById("button4").addEventListener("click", function() {
-                sendCommand("south"); 
-            });
+            // Check if all directions have been entered
+            if (directions.length === 4) {
+                buttonsContainer.style.display = "block"; // Show buttons
+            }
+            sendCommand(userInput);
+            commandLine.value = ""; // Clear input field
         });
-    </script>
+
+        function sendCommand(userInput) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", form.action, true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    // Clear previous game text
+                    gameText.innerHTML = "";
+                    // Split response text into lines
+                    var responseLines = xhr.responseText.split('\n');
+                    // Display each line of response
+                    responseLines.forEach(function(line) {
+                        gameText.innerHTML += "<p>" + line + "</p>";
+                    });
+                    gameText.scrollTop = gameText.scrollHeight;
+                }
+            };
+            xhr.send("userInput=" + encodeURIComponent(userInput));
+        }
+
+        document.getElementById("button1").addEventListener("click", function() {
+            sendCommand("west"); 
+        });
+        document.getElementById("button2").addEventListener("click", function() {
+            sendCommand("east"); 
+        });
+        document.getElementById("button3").addEventListener("click", function() {
+            sendCommand("north"); 
+        });
+        document.getElementById("button4").addEventListener("click", function() {
+            sendCommand("south"); 
+        });
+    });
+</script>
+
 </body>
 </html>
