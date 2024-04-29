@@ -12,6 +12,7 @@ public class FakeDatabase implements IDatabase {
 	
 
 	private List<Actor> actorList;
+	private List<Room> roomList;
 
 	//constructor
 	public FakeDatabase() {
@@ -39,6 +40,16 @@ public class FakeDatabase implements IDatabase {
 		for(Actor actor: actorList) {
 			if(actor.getActorID() == actorID) {
 				return actor;
+			}
+		}
+		return null;
+	}
+	
+	public Room findRoomByRoomID(int roomID) {
+		
+		for(Room room: roomList) {
+			if(room.getRoomID() == roomID) {
+				return room;
 			}
 		}
 		return null;
