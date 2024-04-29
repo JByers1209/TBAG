@@ -36,62 +36,42 @@ public class DerbyDatabase implements IDatabase {
 	private static final int MAX_ATTEMPTS = 10;
 
 	
-	@Override
-	public int findConnectionByRoomIDandDirection(int roomId, String move) {
-	    return executeTransaction(new Transaction<Integer>() {
+	public List<RoomConnection> findConnectionsByRoomID(int roomID) {
+	    return executeTransaction(new Transaction<List<RoomConnection>>() {
 	        @Override
-	        public Integer execute(Connection conn) throws SQLException {
+	        public List<RoomConnection> execute(Connection conn) throws SQLException {
 	            PreparedStatement stmt = null;
 	            ResultSet resultSet = null;
-	            int destinationId = 0; // Default value if no connection found or 'none' is returned
-	            
+
 	            try {
-	                // Construct the SQL query to fetch the destination based on room ID and direction
-	                String query = "";
-	                switch (move.toLowerCase()) {
-	                    case "north":
-	                        query = "SELECT dest1 FROM RoomConnections WHERE room_id = ?";
-	                        break;
-	                    case "west":
-	                        query = "SELECT dest2 FROM RoomConnections WHERE room_id = ?";
-	                        break;
-	                    case "east":
-	                        query = "SELECT dest3 FROM RoomConnections WHERE room_id = ?";
-	                        break;
-	                    case "south":
-	                        query = "SELECT dest4 FROM RoomConnections WHERE room_id = ?";
-	                        break;
-	                    default:
-	                        // Invalid direction
-	                        System.out.println("Invalid direction: " + move);
-	                        return destinationId;
-	                }
-	                
-	                stmt = conn.prepareStatement(query);
-	                stmt.setInt(1, roomId);
-	                
+	                stmt = conn.prepareStatement(
+	                        "SELECT * FROM RoomConnections WHERE room_id = ?"
+	                );
+	                stmt.setInt(1, roomID);
+
+	                List<RoomConnection> result = new ArrayList<>();
+
 	                resultSet = stmt.executeQuery();
-	                
-	                if (resultSet.next()) {
-	                    // If a connection is found, retrieve the destination string
-	                    String destString = resultSet.getString(1);
-	                    // Transform string to integer, if 'none' return 0
-	                    if (!destString.equals("none")) {
-	                        destinationId = Integer.parseInt(destString);
-	                    }
-	                } else {
-	                    System.out.println("No connection found for room " + roomId + " and direction " + move);
+
+	                while (resultSet.next()) {
+	                    RoomConnection connection = new RoomConnection();
+	                    
+	                    // Load common attributes
+	                    loadRoomConnection(connection, resultSet, 1);
+	                    result.add(connection);
 	                }
-	            } catch (NumberFormatException e) {
-	                // Handle parsing error
-	                System.out.println("Error parsing destination ID.");
+
+	                if (result.isEmpty()) {
+	                    System.out.println("<" + roomID + "> was not found in the connections table");
+	                    return new ArrayList<>(); // Return an empty list
+	                }
+
+
+	                return result;
 	            } finally {
-	                // Close resources
 	                DBUtil.closeQuietly(resultSet);
 	                DBUtil.closeQuietly(stmt);
 	            }
-	            
-	            return destinationId;
 	        }
 	    });
 	}
@@ -148,7 +128,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	
-	public void updateRoomByRoomID(Room room) {
+	public void updateRoomByRoom(Room room) {
 	    executeTransaction(new Transaction<Void>() {
 	        @Override
 	        public Void execute(Connection conn) throws SQLException {
@@ -426,12 +406,17 @@ public class DerbyDatabase implements IDatabase {
 	                            item = new KeyItem();
 	                            break;
 	                        default:
-	                            // Handle unknown item types or create a generic Item object
-	                            break;
+	                            // If item type is not recognized, return null
+	                            return null;
 	                    }
 	                    // Load common attributes
 	                    loadItems(item, resultSet, 1);
 	                    result.add(item);
+	                }
+
+	                if (result.isEmpty()) {
+	                    // Return null if no items were found
+	                    return null;
 	                }
 
 	                return result;
@@ -442,6 +427,7 @@ public class DerbyDatabase implements IDatabase {
 	        }
 	    });
 	}
+
 
 	public List<Item> findItemsByOwnerID(int ownerID) {
 	    return executeTransaction(new Transaction<List<Item>>() {
@@ -578,7 +564,6 @@ public class DerbyDatabase implements IDatabase {
 	        }
 	    });
 	}
-
 	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
@@ -644,15 +629,10 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	private void loadRoomConnection(RoomConnection roomConnection, ResultSet resultSet, int index) throws SQLException {
+		roomConnection.setConnectionID(resultSet.getInt(index++));
 		roomConnection.setRoomID(resultSet.getInt(index++));
-		roomConnection.setMove1(resultSet.getString(index++));
-		roomConnection.setDest1(resultSet.getInt(index++));
-		roomConnection.setMove2(resultSet.getString(index++));
-		roomConnection.setDest2(resultSet.getInt(index++));
-		roomConnection.setMove3(resultSet.getString(index++));
-		roomConnection.setDest3(resultSet.getInt(index++));
-		roomConnection.setMove4(resultSet.getString(index++));
-		roomConnection.setDest4(resultSet.getInt(index++));
+		roomConnection.setMove(resultSet.getString(index++));
+		roomConnection.setDestId(resultSet.getInt(index++));
 	}
 	
 	private void loadActor(Actor actor, ResultSet resultSet, int index) throws SQLException {
@@ -706,14 +686,8 @@ public class DerbyDatabase implements IDatabase {
 						    "	connection_id integer primary key " +
 							"		generated always as identity (start with 1, increment by 1), " +
 							"	 room_id integer constraint room_id references rooms, " +
-						    "    move1 varchar(40)," +
-						    "    dest1 integer," +
-						    "    move2 varchar(40)," +
-						    "    dest2 integer," +
-						    "    move3 varchar(40)," +
-						    "    dest3 integer," +
-						    "    move4 varchar(40)," +
-						    "    dest4 integer" +
+						    "    move varchar(40)," +
+						    "    destId integer" +
 						    ")"
 						);
 					stmt2.executeUpdate();
@@ -778,7 +752,7 @@ public class DerbyDatabase implements IDatabase {
 				}
 
 				PreparedStatement insertRoom = null;
-				PreparedStatement insertConnection   = null;
+				PreparedStatement insertConnection = null;
 				PreparedStatement insertActor = null;
 				PreparedStatement insertItem = null;
 				
@@ -798,26 +772,19 @@ public class DerbyDatabase implements IDatabase {
 					insertRoom.executeBatch();
 					
 					// populate connections table
-					insertConnection = conn.prepareStatement("insert into roomConnections (room_id, move1, dest1, move2, dest2, move3, dest3, move4, dest4) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					insertConnection = conn.prepareStatement("insert into roomConnections (room_id, move, destId) values (?, ?, ?)");
 					for (RoomConnection roomConnection : connectionList) {
-//						insertBook.setInt(1, roomConnections.getBookId());		// auto-generated primary key, don't insert this
-						insertConnection.setInt(1, roomConnection.getRoomID());
-						insertConnection.setString(2, roomConnection.getMove1());
-						insertConnection.setInt(3, roomConnection.getDest1());
-						insertConnection.setString(4, roomConnection.getMove2());
-						insertConnection.setInt(5, roomConnection.getDest2());
-						insertConnection.setString(6, roomConnection.getMove3());
-						insertConnection.setInt(7, roomConnection.getDest3());
-						insertConnection.setString(8, roomConnection.getMove4());
-						insertConnection.setInt(9, roomConnection.getDest4());
-						insertConnection.addBatch();
+					    insertConnection.setInt(1, roomConnection.getRoomID());
+					    insertConnection.setString(2, roomConnection.getMove());
+					    insertConnection.setInt(3, roomConnection.getDestId());
+					    insertConnection.addBatch();
 					}
-					insertConnection.executeBatch();
+					insertConnection.executeBatch(); 
+
 					
 					// populate actors table
 					insertActor = conn.prepareStatement("insert into actors (room_id, name, level, xp, current_health, max_health) values (?, ?, ?, ? ,?, ?)");
 					for (Actor actor : actorList) {
-//						insertAuthor.setInt(1, actor.getActorID());
 						insertActor.setInt(1, actor.getRoomID());
 						insertActor.setString(2, actor.getName());
 						insertActor.setInt(3, actor.getLevel());
@@ -869,6 +836,12 @@ public class DerbyDatabase implements IDatabase {
 
 	@Override
 	public Room findCurrentLocationByActorID(int actorId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Item> findItemsByRoom(int roomID) {
 		// TODO Auto-generated method stub
 		return null;
 	}

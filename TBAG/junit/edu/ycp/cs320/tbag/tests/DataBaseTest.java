@@ -10,8 +10,11 @@ import org.junit.Test;
 
 
 import edu.ycp.cs320.tbag.dataBase.DerbyDatabase;
+import edu.ycp.cs320.tbag.model.Actor;
 import edu.ycp.cs320.tbag.model.Item;
+import edu.ycp.cs320.tbag.model.NPC;
 import edu.ycp.cs320.tbag.model.Room;
+import edu.ycp.cs320.tbag.model.RoomConnection;
 
 public class DataBaseTest {
 	private DerbyDatabase db;
@@ -22,21 +25,21 @@ public class DataBaseTest {
 	}
 	
 	@Test
-	public void testFindConnectionByRoomIDandDirection() {
+	public void testFindConnectionByRoomID() {
 		
 		System.out.println("Find Connection Test");
 		
-		//Tests room1
-		assertEquals(0, db.findConnectionByRoomIDandDirection(1, "north"));
-		assertEquals(4, db.findConnectionByRoomIDandDirection(1, "south"));
-		assertEquals(2, db.findConnectionByRoomIDandDirection(1, "east"));
-		assertEquals(0, db.findConnectionByRoomIDandDirection(1, "west"));
+		List<RoomConnection> room1;
+		List<RoomConnection> room5;
+		room1 = db.findConnectionsByRoomID(1);
+		assertEquals(4, room1.size());
+		assertEquals("north", room1.get(0).getMove());
+		assertEquals(0, room1.get(0).getDestId());
 		
-		//Tests room2
-		assertEquals(0, db.findConnectionByRoomIDandDirection(2, "north"));
-		assertEquals(5, db.findConnectionByRoomIDandDirection(2, "south"));
-		assertEquals(3, db.findConnectionByRoomIDandDirection(2, "east"));
-		assertEquals(1, db.findConnectionByRoomIDandDirection(2, "west"));
+		room5 = db.findConnectionsByRoomID(5);
+		assertEquals(4, room5.size());
+		assertEquals(2, room5.get(0).getDestId());
+		
 	}
 	
 	@Test
@@ -61,7 +64,7 @@ public class DataBaseTest {
 	
 	
 	@Test
-	public void testUpdateRoomByRoomID() {
+	public void testUpdateRoomByRoom() {
 		
 		System.out.println("Update Room Test");
 		Room room = db.findRoomByRoomID(1);
@@ -70,7 +73,7 @@ public class DataBaseTest {
 		
 		room.setVisited("true");
 		room.setNeedsKey("false");
-		db.updateRoomByRoomID(room);
+		db.updateRoomByRoom(room);
 		
 		room = db.findRoomByRoomID(1);
 		assertEquals("true", room.getVisited());
@@ -79,7 +82,7 @@ public class DataBaseTest {
 		//Sets database back to default
 		room.setVisited("false");
 		room.setNeedsKey("true");
-		db.updateRoomByRoomID(room);
+		db.updateRoomByRoom(room);
 	}
 	
 	@Test
@@ -154,5 +157,49 @@ public class DataBaseTest {
 
 
     }
+	
+	@Test
+	public void testFindActorByID() {
+		NPC npc = new NPC(4, 12, "silly specter", 4, 800, 69, 420);
+		Actor retrievedNPC = db.findActorByID(4);
+		
+		assertEquals(npc.getActorID(), retrievedNPC.getActorID());
+		assertEquals(npc.getRoomID(), retrievedNPC.getRoomID());
+		assertEquals(npc.getName(), retrievedNPC.getName());
+		assertEquals(npc.getLevel(), retrievedNPC.getLevel());
+		assertEquals(npc.getXP(), retrievedNPC.getXP());
+		assertEquals(npc.getCurrentHealth(), retrievedNPC.getCurrentHealth());
+		assertEquals(npc.getMaxHealth(), retrievedNPC.getMaxHealth());
+	}
+	
+	@Test
+	public void testFindActorByRoomID() {
+		NPC npc = new NPC(4, 12, "silly specter", 4, 800, 69, 420);
+		Actor retrievedNPC = db.findActorByRoomID(12);
+		
+		assertEquals(npc.getActorID(), retrievedNPC.getActorID());
+		assertEquals(npc.getRoomID(), retrievedNPC.getRoomID());
+		assertEquals(npc.getName(), retrievedNPC.getName());
+		assertEquals(npc.getLevel(), retrievedNPC.getLevel());
+		assertEquals(npc.getXP(), retrievedNPC.getXP());
+		assertEquals(npc.getCurrentHealth(), retrievedNPC.getCurrentHealth());
+		assertEquals(npc.getMaxHealth(), retrievedNPC.getMaxHealth());
+	}
+	
+	@Test
+	public void testUpdateActor() {
+		Actor npc = new NPC(2, 7, "Less Friendly Ghost", 4, 600, 6, 64);
+		db.updateActor(2, npc);
+		Actor retrievedNPC = db.findActorByID(2);
+		
+		assertEquals(npc.getActorID(), retrievedNPC.getActorID());
+		assertEquals(npc.getRoomID(), retrievedNPC.getRoomID());
+		assertEquals(npc.getName(), retrievedNPC.getName());
+		assertEquals(npc.getLevel(), retrievedNPC.getLevel());
+		assertEquals(npc.getXP(), retrievedNPC.getXP());
+		assertEquals(npc.getCurrentHealth(), retrievedNPC.getCurrentHealth());
+		assertEquals(npc.getMaxHealth(), retrievedNPC.getMaxHealth());
+		
+	}
 	
 }

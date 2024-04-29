@@ -55,7 +55,7 @@ public class InitialData {
 		ReadCSV readConnections = new ReadCSV("RoomConnections.csv");
 		try {
 			// auto-generated primary key for room connections table
-			Integer roomId = 1;
+			Integer connectionID = 1;
 			while (true) {
 				List<String> tuple = readConnections.next();
 				if (tuple == null) {
@@ -63,15 +63,10 @@ public class InitialData {
 				}
 				Iterator<String> i = tuple.iterator();
 				RoomConnection connection = new RoomConnection();
-				connection.setRoomID(roomId++);
-				connection.setMove1(i.next());
-				connection.setDest1(Integer.parseInt(i.next()));
-				connection.setMove2(i.next());
-				connection.setDest2(Integer.parseInt(i.next()));
-				connection.setMove3(i.next());
-				connection.setDest3(Integer.parseInt(i.next()));
-				connection.setMove4(i.next());
-				connection.setDest4(Integer.parseInt(i.next()));
+				connection.setConnectionID(connectionID++);
+				connection.setRoomID(Integer.parseInt(i.next()));
+				connection.setMove(i.next());
+				connection.setDestId(Integer.parseInt(i.next()));
 				connectionList.add(connection);
 				
 			}
@@ -85,6 +80,7 @@ public class InitialData {
 	    List<Actor> actorList = new ArrayList<Actor>();
 	    ReadCSV readActors = new ReadCSV("Actors.csv");
 	    try {
+	    	int actorID = 1;
 	        while (true) {
 	            List<String> tuple = readActors.next();
 	            if (tuple == null) {
@@ -92,27 +88,22 @@ public class InitialData {
 	            }
 
 	            Iterator<String> i = tuple.iterator();
-	            if (!i.hasNext()) {
-	                // Skip empty lines
-	                continue;
-	            }
-
-	            int actorID = Integer.parseInt(i.next());
-	            String actorType = i.next();
 
 	            Actor actor;
-	            if ("player".equals(actorType)) {
+	            if (actorID == 1) {
 	                actor = new Player();
 	            } else {
 	                actor = new NPC();
 	            }
 	            actor.setActorID(actorID);
 	            actor.setRoomID(Integer.parseInt(i.next()));
+	            actor.setName((i.next()));
 	            actor.setLevel(Integer.parseInt(i.next()));
 	            actor.setXP(Integer.parseInt(i.next()));
 	            actor.setCurrentHealth(Integer.parseInt(i.next()));
-
+	            actor.setMaxHealth(Integer.parseInt(i.next()));
 	            actorList.add(actor);
+	            actorID++;
 	        }
 
 	        return actorList;
