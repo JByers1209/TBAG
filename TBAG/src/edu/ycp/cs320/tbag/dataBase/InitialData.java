@@ -80,6 +80,7 @@ public class InitialData {
 	    List<Actor> actorList = new ArrayList<Actor>();
 	    ReadCSV readActors = new ReadCSV("Actors.csv");
 	    try {
+	    	int actorID = 1;
 	        while (true) {
 	            List<String> tuple = readActors.next();
 	            if (tuple == null) {
@@ -87,27 +88,22 @@ public class InitialData {
 	            }
 
 	            Iterator<String> i = tuple.iterator();
-	            if (!i.hasNext()) {
-	                // Skip empty lines
-	                continue;
-	            }
-
-	            int actorID = Integer.parseInt(i.next());
-	            String actorType = i.next();
 
 	            Actor actor;
-	            if ("player".equals(actorType)) {
+	            if (actorID == 1) {
 	                actor = new Player();
 	            } else {
 	                actor = new NPC();
 	            }
 	            actor.setActorID(actorID);
 	            actor.setRoomID(Integer.parseInt(i.next()));
+	            actor.setName((i.next()));
 	            actor.setLevel(Integer.parseInt(i.next()));
 	            actor.setXP(Integer.parseInt(i.next()));
 	            actor.setCurrentHealth(Integer.parseInt(i.next()));
-
+	            actor.setMaxHealth(Integer.parseInt(i.next()));
 	            actorList.add(actor);
+	            actorID++;
 	        }
 
 	        return actorList;

@@ -30,10 +30,15 @@ public class DataBaseTest {
 		System.out.println("Find Connection Test");
 		
 		List<RoomConnection> room1;
+		List<RoomConnection> room5;
 		room1 = db.findConnectionsByRoomID(1);
 		assertEquals(4, room1.size());
 		assertEquals("north", room1.get(0).getMove());
 		assertEquals(0, room1.get(0).getDestId());
+		
+		room5 = db.findConnectionsByRoomID(5);
+		assertEquals(4, room5.size());
+		assertEquals(2, room5.get(0).getDestId());
 		
 	}
 	
@@ -152,7 +157,7 @@ public class DataBaseTest {
 
 
     }
-	/*
+	
 	@Test
 	public void testFindActorByID() {
 		NPC npc = new NPC(4, 12, "silly specter", 4, 800, 69, 420);
@@ -196,5 +201,5 @@ public class DataBaseTest {
 		assertEquals(npc.getMaxHealth(), retrievedNPC.getMaxHealth());
 		
 	}
-	*/
+	
 }
