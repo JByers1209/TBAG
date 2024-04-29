@@ -564,6 +564,56 @@ public class DerbyDatabase implements IDatabase {
 	        }
 	    });
 	}
+	public Room findUserByUserID(int user_id) {
+	    return executeTransaction(new Transaction<Room>() {
+	        @Override
+	        public User execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
+	            User result = null;
+
+	            try {
+	                // Construct the SQL query to retrieve the room based on room_id
+	                stmt = conn.prepareStatement(
+	                        "SELECT * FROM users WHERE user_id = ?"
+	                );
+	                stmt.setInt(1, user_id);
+
+	                resultSet = stmt.executeQuery();
+
+	                // Check if the result set contains any rows
+	                if (resultSet.next()) {
+	                    // If a room is found, create a Room object and populate its attributes
+	                    result = new User();
+	                    result.setUserID(resultSet.getInt(1));
+	                    result.setName(resultSet.getString(2));
+	                    result.setLongDescription(resultSet.getString(3));
+	                    result.setShortDescription(resultSet.getString(4));
+	                    result.setVisited(resultSet.getString(5));
+	                    result.setNeedsKey(resultSet.getString(6));
+	                    result.setKeyName(resultSet.getString(7));
+	                    
+	                    // Log the retrieved room's attributes for debugging
+	                    System.out.println("Retrieved room attributes:");
+	                    System.out.println("Room ID: " + result.getRoomID());
+	                    System.out.println("Name: " + result.getName());
+	                    System.out.println("Has Visited: " + result.getVisited());
+	                    System.out.println("Needs Key: " + result.getNeedsKey());
+	                    // Log other attributes similarly
+	                } else {
+	                    // No room found
+	                    System.out.println("Room with room_id " + room_id + " not found.");
+	                }
+	            } finally {
+	                // Close resources
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+
+	            return result;
+	        }
+	    });
+	}
 	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
@@ -609,7 +659,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	private Connection connect() throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:derby:test.db;create=true");
+		Connection conn = DriverManager.getConnection("jdbc:derby:Documents/Spring_2024/CS320_spring2024/tbag.db;create=true");
 		
 		// Set autocommit to false to allow execution of
 		// multiple queries/statements as part of the same transaction.
