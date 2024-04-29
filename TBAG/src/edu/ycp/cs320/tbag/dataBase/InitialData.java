@@ -8,10 +8,14 @@ import java.util.List;
 
 import edu.ycp.cs320.tbag.dataBase.ReadCSV;
 import edu.ycp.cs320.tbag.model.Actor;
+import edu.ycp.cs320.tbag.model.Consumable;
+import edu.ycp.cs320.tbag.model.Item;
+import edu.ycp.cs320.tbag.model.KeyItem;
 import edu.ycp.cs320.tbag.model.NPC;
 import edu.ycp.cs320.tbag.model.Player;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
+import edu.ycp.cs320.tbag.model.Weapon;
 
 
 
@@ -51,7 +55,7 @@ public class InitialData {
 		ReadCSV readConnections = new ReadCSV("RoomConnections.csv");
 		try {
 			// auto-generated primary key for room connections table
-			Integer roomId = 1;
+			Integer connectionID = 1;
 			while (true) {
 				List<String> tuple = readConnections.next();
 				if (tuple == null) {
@@ -59,15 +63,10 @@ public class InitialData {
 				}
 				Iterator<String> i = tuple.iterator();
 				RoomConnection connection = new RoomConnection();
-				connection.setRoomID(roomId++);
-				connection.setMove1(i.next());
-				connection.setDest1(Integer.parseInt(i.next()));
-				connection.setMove2(i.next());
-				connection.setDest2(Integer.parseInt(i.next()));
-				connection.setMove3(i.next());
-				connection.setDest3(Integer.parseInt(i.next()));
-				connection.setMove4(i.next());
-				connection.setDest4(Integer.parseInt(i.next()));
+				connection.setConnectionID(connectionID++);
+				connection.setRoomID(Integer.parseInt(i.next()));
+				connection.setMove(i.next());
+				connection.setDestId(Integer.parseInt(i.next()));
 				connectionList.add(connection);
 				
 			}
@@ -81,6 +80,7 @@ public class InitialData {
 	    List<Actor> actorList = new ArrayList<Actor>();
 	    ReadCSV readActors = new ReadCSV("Actors.csv");
 	    try {
+	    	int actorID = 1;
 	        while (true) {
 	            List<String> tuple = readActors.next();
 	            if (tuple == null) {
@@ -88,27 +88,22 @@ public class InitialData {
 	            }
 
 	            Iterator<String> i = tuple.iterator();
-	            if (!i.hasNext()) {
-	                // Skip empty lines
-	                continue;
-	            }
-
-	            int actorID = Integer.parseInt(i.next());
-	            String actorType = i.next();
 
 	            Actor actor;
-	            if ("player".equals(actorType)) {
+	            if (actorID == 1) {
 	                actor = new Player();
 	            } else {
 	                actor = new NPC();
 	            }
 	            actor.setActorID(actorID);
 	            actor.setRoomID(Integer.parseInt(i.next()));
+	            actor.setName((i.next()));
 	            actor.setLevel(Integer.parseInt(i.next()));
 	            actor.setXP(Integer.parseInt(i.next()));
 	            actor.setCurrentHealth(Integer.parseInt(i.next()));
-
+	            actor.setMaxHealth(Integer.parseInt(i.next()));
 	            actorList.add(actor);
+	            actorID++;
 	        }
 
 	        return actorList;
@@ -116,5 +111,55 @@ public class InitialData {
 	        readActors.close();
 	    }
 	}
+	
+	public static List<Item> getItems() throws IOException {
+	    List<Item> itemList = new ArrayList<Item>();
+	    ReadCSV readItems = new ReadCSV("Items.csv");
+	    try {
+	        // auto-generated primary key for rooms table
+	        Integer itemId = 1;
+	        while (true) {
+	            List<String> tuple = readItems.next();
+	            if (tuple == null) {
+	                break;
+	            }
+	            Iterator<String> i = tuple.iterator();
+	            
+	            // Parse item type from the second element of the tuple
+	            int itemType = Integer.parseInt(i.next());
+
+	            Item item;
+	            switch (itemType) {
+	                case 1:
+	                    item = new Weapon();
+	                    break;
+	                case 2:
+	                    item = new Consumable();
+	                    break;
+	                case 3:
+	                    item = new KeyItem();
+	                    break;
+	                default:
+	                    throw new IllegalArgumentException("Invalid item type: " + itemType);
+	            }
+
+	            // Set item properties
+	            item.setItemID(itemId++);
+	            item.setType(itemType);
+	            item.setName(i.next());
+	            item.setDescription(i.next());
+	            item.setThrowable(i.next());
+	            item.setDamage(Integer.parseInt(i.next()));
+	            item.setEffect(i.next());
+	            item.setRoomID(Integer.parseInt(i.next()));
+	            item.setOwnerID(Integer.parseInt(i.next()));
+	            itemList.add(item);
+	        }
+	        return itemList;
+	    } finally {
+	        readItems.close();
+	    }
+	}
+
 
 }
