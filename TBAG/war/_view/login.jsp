@@ -18,31 +18,16 @@
         <form id="loginForm" function="LoginServlet" method="get">
             <input type="text" id="username" name="username" placeholder="Username" required>
             <input type="password" id="password" name="password" placeholder="Password" required>
-            <input type="submit" value="Login Now">
+            <input type="login" name="function" value="Login Now" class="submit">
         </form>
         <p id="error" style="color: red; display: none;">Incorrect username or password</p>
     </div>
+    <div id="signUp">
+        <form id="signUpform" function="LoginServlet" method="get">
+            <input type="sign up" name="function" value="Sign up" class="submit">
+        </form>
+            </form>
+        </form>
+    </div>
 </body>
 </html>
-
-
-
-
-    <!-- <script>
-        document.getElementById("loginForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent the form from submitting normally
-            
-            // // Get username and password values
-            // var username = document.getElementById("username").value;
-            // var password = document.getElementById("password").value;
-
-            // // Check if username and password are correct
-            // if (username === "admin" && password === "password") {
-            //     // If correct, submit the form
-            //     this.submit();
-            // } else {
-            //     // If incorrect, display error message
-            //     document.getElementById("error").style.display = "block";
-            // }
-        });
-    </script> -->
