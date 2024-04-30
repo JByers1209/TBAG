@@ -32,8 +32,8 @@ public class ActorTest {
 		InitDatabase.init();
 		db = DatabaseProvider.getInstance();
 		
-		room1 = new Room("Test Room 1", "a rubber room with rats");
-		room2 = new Room("Test Room 2", "a boring old empty room");
+		room1 = new Room("Test Room 1", "a rubber room with rats", "false");
+		room2 = new Room("Test Room 2", "a boring old empty room", "false");
 		item1 = new Weapon("A Rusty Sword", false, 10);
 		item2 = new KeyItem("A Strange Key", false);
 		player = new Player(20, room1);

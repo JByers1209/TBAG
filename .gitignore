@@ -1,3 +1,6 @@
 /build/
 
-/TBAG/test.db
+/TBAG/tbag.db
+TBAG/derby.log
+
+/TBAG/Documents

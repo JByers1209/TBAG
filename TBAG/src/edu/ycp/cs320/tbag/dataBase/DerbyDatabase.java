@@ -644,7 +644,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	private Connection connect() throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:derby:C:/Users/josmb/git/tbag.db;create=true");
+		Connection conn = DriverManager.getConnection("jdbc:derby:tbag.db;create=true");
 		
 		// Set autocommit to false to allow execution of
 		// multiple queries/statements as part of the same transaction.
