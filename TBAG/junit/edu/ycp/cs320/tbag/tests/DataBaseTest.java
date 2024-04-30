@@ -15,6 +15,7 @@ import edu.ycp.cs320.tbag.model.Item;
 import edu.ycp.cs320.tbag.model.NPC;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
+import edu.ycp.cs320.tbag.model.User;
 
 public class DataBaseTest {
 	private DerbyDatabase db;
@@ -199,6 +200,15 @@ public class DataBaseTest {
 		assertEquals(npc.getXP(), retrievedNPC.getXP());
 		assertEquals(npc.getCurrentHealth(), retrievedNPC.getCurrentHealth());
 		assertEquals(npc.getMaxHealth(), retrievedNPC.getMaxHealth());
+		
+	}
+	
+	@Test
+	public void testFindUser() {
+		List<User> user = db.findUserByUsername("kdealva");
+		assertEquals(2, user.get(0).getUserID());
+		assertEquals("kdealva", user.get(0).getUsername());
+		assertEquals("wwof1153", user.get(0).getPassword());
 		
 	}
 	

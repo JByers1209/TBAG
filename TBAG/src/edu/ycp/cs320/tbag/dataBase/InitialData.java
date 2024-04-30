@@ -166,8 +166,8 @@ public class InitialData {
 		List<User> userList = new ArrayList<User>();
 		ReadCSV readUsers = new ReadCSV("users.csv");
 		try {
-			// auto-generated primary key for rooms table
-			Integer userId = 1;
+			// auto-generated primary key for room connections table
+			Integer userID = 1;
 			while (true) {
 				List<String> tuple = readUsers.next();
 				if (tuple == null) {
@@ -175,7 +175,7 @@ public class InitialData {
 				}
 				Iterator<String> i = tuple.iterator();
 				User user = new User();
-				user.setUserID(userId++);
+				user.setUserID(userID++);
 				user.setUsername(i.next());
 				user.setPassword(i.next());
 				userList.add(user);
@@ -186,5 +186,6 @@ public class InitialData {
 			readUsers.close();
 		}
 	}
+
 
 }
