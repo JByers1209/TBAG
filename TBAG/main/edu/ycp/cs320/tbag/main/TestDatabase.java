@@ -16,7 +16,7 @@ public class TestDatabase {
 			Scanner keyboard = new Scanner(System.in);
 
 			// Create the default IDatabase instance
-			InitDatabase.init(keyboard);
+			InitDatabase.init();
 			
 			System.out.print("Enter Actor ID: ");
 			int actorID = Integer.parseInt(keyboard.nextLine());
