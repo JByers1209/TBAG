@@ -4,41 +4,65 @@ import java.util.HashMap;
 
 public class Room {
 	private String name;
-	private String description;
+	private String shortDescription;
+	private String longDescription;
 	private HashMap<String, Room> exits;
-	private boolean hasVisited;
-	private boolean needsKey;
+	private String hasVisited;
+	private String needsKey;
 	private String keyName;
+	private int roomId;
 
 	Inventory roomInventory = new Inventory();
 	
-	public Room(String name, String description, boolean needsKey) {
-		this.name = name;
-	    this.description = description;
-	    this.hasVisited = false;
-	    this.needsKey = needsKey;
-	    exits = new HashMap<>();
+	public Room() {
+		
 	}
-	
-	public Room(String name, String description) {
-		this.name = name;
-	    this.description = description;
-	    this.hasVisited = false;
-	    this.needsKey = false;
-	    exits = new HashMap<>();
-	}
-	
 
+	public Room(String name, String shortDescription, String longDescription, String hasVisited, String needsKey, String keyName ) {
+		this.name = name;
+		this.shortDescription = shortDescription;
+		this.longDescription = longDescription;
+		this.hasVisited = hasVisited;
+		this.needsKey = needsKey;
+		this.keyName = keyName;
+	}
+	
+	public Room(String name, String longDescription, String hasVisited) {
+		this.name = name;
+		this.longDescription = longDescription;
+		this.hasVisited = hasVisited;
+	}
+	
+	public void setRoomID(int roomId) {
+		this.roomId = roomId;
+	}
+	
+	public int getRoomID() {
+		return roomId;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public String getName() {
 	    return name;
 	}
 
-	public String getDescription() {
-	    return description;
+	public String getShortDescription() {
+	    return shortDescription;
 	}
 
-	public void setDescription(String description) {
-	    this.description = description;
+	public void setShortDescription(String shortDescription) {
+	    this.shortDescription = shortDescription;
+	}
+	
+	public String getLongDescription() {
+	    return longDescription;
+	}
+
+	public void setLongDescription(String longDescription) {
+	    this.longDescription = longDescription;
 	}
 
 	public void setExit(String direction, Room neighbor) {
@@ -49,11 +73,11 @@ public class Room {
 	    return exits.get(direction);
 	}
 	
-	public void setVisited(boolean hasVisited) {
+	public void setVisited(String hasVisited) {
 		this.hasVisited = hasVisited;
 	}
 	
-	public boolean getVisited() {
+	public String getVisited() {
 		return hasVisited;
 	}
 
@@ -65,11 +89,11 @@ public class Room {
 	    return exitString.substring(0, exitString.length() - 2); // Remove the last comma and space
 	}
 
-	public boolean getNeedsKey() {
+	public String getNeedsKey() {
 		return needsKey;
 	}
 
-	public void setNeedsKey(boolean needsKey) {
+	public void setNeedsKey(String needsKey) {
 		this.needsKey = needsKey;
 	}
 

@@ -24,7 +24,7 @@ public class InventoryTest {
     @Test
     public void testAddItem() {
         int initialSize = inventory.getItems().size();
-        inventory.addItem(new KeyItem("TestKey", true));
+        inventory.addItem(new KeyItem());
         assertEquals(initialSize + 1, inventory.getItems().size());
     }
     

@@ -6,11 +6,11 @@ import java.util.List;
 
 
 import edu.ycp.cs320.tbag.model.Actor;
+import edu.ycp.cs320.tbag.model.Room;
 
 public class FakeDatabase implements IDatabase {
 	
-	
-	
+
 	private List<Actor> actorList;
 
 	//constructor
@@ -58,6 +58,48 @@ public class FakeDatabase implements IDatabase {
 	
 	@Override
 	public void updateActor(int actorID, Actor actor) {
+		
+	}
+
+
+	@Override
+	public Room findCurrentLocationByActorID(int actorId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Room findRoomByRoomID(int room_id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public int findConnectionByRoomIDandDirection(int roomId, String move) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void updateRoomByRoomID(Room room) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public Actor findActorByRoomID(int roomID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void updateActor(int actorID, Actor actor) {
+		// TODO Auto-generated method stub
 		
 	}
 
