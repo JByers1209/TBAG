@@ -15,10 +15,10 @@
         </div>
     </div>
     <div id="authentication">
-        <form id="loginForm" function="LoginServlet" method="get">
+        <form id="loginForm" action="/tbag/login" method="post">
             <input type="text" id="username" name="username" placeholder="Username" required>
             <input type="password" id="password" name="password" placeholder="Password" required>
-            <input type="login" name="function" value="Login Now" class="submit">
+            <button type="submit">Login Now</button>
         </form>
         <p id="error" style="color: red; display: none;">Incorrect username or password</p>
     </div>

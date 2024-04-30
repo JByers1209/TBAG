@@ -16,6 +16,7 @@ import edu.ycp.cs320.tbag.model.Item;
 import edu.ycp.cs320.tbag.model.KeyItem;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
+import edu.ycp.cs320.tbag.model.User;
 import edu.ycp.cs320.tbag.model.Weapon;
 import edu.ycp.cs320.tbag.model.NPC;
 import edu.ycp.cs320.tbag.model.Player;
@@ -564,6 +565,7 @@ public class DerbyDatabase implements IDatabase {
 	        }
 	    });
 	}
+	/*
 	public Room findUserByUserID(int user_id) {
 	    return executeTransaction(new Transaction<Room>() {
 	        @Override
@@ -614,7 +616,7 @@ public class DerbyDatabase implements IDatabase {
 	        }
 	    });
 	}
-	
+	*/
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
 			return doExecuteTransaction(txn);
@@ -659,7 +661,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	private Connection connect() throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:derby:Documents/Spring_2024/CS320_spring2024/tbag.db;create=true");
+		Connection conn = DriverManager.getConnection("jdbc:derby:C:/Users/josmb/git/tbag.db;create=true");
 		
 		// Set autocommit to false to allow execution of
 		// multiple queries/statements as part of the same transaction.
@@ -715,6 +717,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt2 = null;
 				PreparedStatement stmt3 = null;
 				PreparedStatement stmt4 = null;
+				PreparedStatement stmt5 = null;
 				
 				try {
 					stmt1 = conn.prepareStatement(
@@ -771,6 +774,17 @@ public class DerbyDatabase implements IDatabase {
 							")"
 						);
 						stmt4.executeUpdate();
+						
+					stmt5 = conn.prepareStatement(
+							"create table users (" +
+							"	user_id integer primary key " +
+							"		generated always as identity (start with 1, increment by 1), " +									
+							"	type integer," +
+							"   username varchar(40)," +
+							"	password varchar(40)" +
+							")"
+						);
+						stmt5.executeUpdate();
 					
 					return true;
 				} finally {
@@ -778,6 +792,7 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmt2);
 					DBUtil.closeQuietly(stmt3);
 					DBUtil.closeQuietly(stmt4);
+					DBUtil.closeQuietly(stmt5);
 				}
 			}
 		});
@@ -791,12 +806,14 @@ public class DerbyDatabase implements IDatabase {
 				List<RoomConnection> connectionList;
 				List<Actor> actorList;
 				List<Item> itemList;
+				List<User> userList;
 				
 				try {
 					roomList = InitialData.getRooms();
 					connectionList = InitialData.getConnections();
 					actorList = InitialData.getActors();
 					itemList = InitialData.getItems();
+					userList = InitialData.getUsers();
 				} catch (IOException e) {
 					throw new SQLException("Couldn't read initial data", e);
 				}
@@ -805,6 +822,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement insertConnection = null;
 				PreparedStatement insertActor = null;
 				PreparedStatement insertItem = null;
+				PreparedStatement insertUsers = null;
 				
 				try {
 					// populate rooms table (do authors first, since author_id is foreign key in books table)
@@ -861,12 +879,23 @@ public class DerbyDatabase implements IDatabase {
 					}
 					insertItem.executeBatch();
 					
+					//insert users table
+					insertUsers = conn.prepareStatement("insert into users (username, password) values (?, ?)");
+					for (User user : userList) {
+//						insertUser.setInt(1, item.getUserID());		// auto-generated primary key, don't insert this
+						insertUsers.setString(1, user.getUsername());
+						insertUsers.setString(2, user.getPassword());
+						insertUsers.addBatch();
+					}
+					insertItem.executeBatch();
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(insertRoom);
 					DBUtil.closeQuietly(insertConnection);
 					DBUtil.closeQuietly(insertActor);
 					DBUtil.closeQuietly(insertItem);
+					DBUtil.closeQuietly(insertUsers);
 				}
 			}
 		});
