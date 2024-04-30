@@ -22,12 +22,5 @@
         </form>
         <p id="error" style="color: red; display: none;">Incorrect username or password</p>
     </div>
-    <div id="signUp">
-        <form id="signUpform" function="LoginServlet" method="get">
-            <input type="sign up" name="function" value="Sign up" class="submit">
-        </form>
-            </form>
-        </form>
-    </div>
 </body>
 </html>
