@@ -41,11 +41,11 @@ public class LoginServlet extends HttpServlet {
 
     private boolean authenticate(String username, String password) {
         // Establish database connection
-        String url = "jdbc:mysql://localhost:3306/your_database_name";
-        String dbUsername = "your_database_username";
-        String dbPassword = "your_database_password";
-
-        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword);
+        String url = "jdbc:derby:Documents/Spring_2024/CS320_spring2024/tbag.db";
+     
+        String dbUsername = null;
+		String dbPassword = null;
+		try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword);
              PreparedStatement stmt = conn.prepareStatement("SELECT password FROM users WHERE username = ?");
         ) {
             stmt.setString(1, username);
