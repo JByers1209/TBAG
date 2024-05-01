@@ -9,7 +9,9 @@ import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
 
 public class GameEngine {
-
+	
+	int userId;
+	String username;
     String response;
     boolean hasStarted = false;
     boolean canMove = true;
@@ -20,7 +22,7 @@ public class GameEngine {
     Actor player;
     Actor enemy;
     String actionResult;
-    String gameLog = "Welcome to Spooky York! Type 'start' to begin.";
+    String gameLog = "Welcome to Spooky York! Type 'start' to begin." + username + "/" + userId;
     List<Item> items = null;
     List<RoomConnection> connection = null;
     int nextRoomId;
@@ -126,7 +128,7 @@ public class GameEngine {
 
     private String startFight(Actor enemy) {
     	decision = true;
-        return "A " + enemy.getName() + " stands in front of you! You can either fight or run.";
+        return "A " + enemy.getName() + " stands in front of your way! You can either fight or run.";
     }
     
     private String processDecision(String input) {
@@ -246,14 +248,15 @@ public class GameEngine {
                     	enemy.setCurrentHealth(enemy.getCurrentHealth() - item.getDamage());
                     	db.updateActor(enemy.getActorID(), enemy);
                         return " You use the " + item.getName() + " against the " + enemy.getName() + "." +
-                    	"/n Your health: " + player.getCurrentHealth() + " | " + enemy.getName() + " health: " + enemy.getCurrentHealth();
+                    	" Your health: " + player.getCurrentHealth() + " | " + enemy.getName() + " health: " + enemy.getCurrentHealth();
                     case "health":
-                        return " You use the " + item.getName() ;
+                    	player.setCurrentHealth(player.getCurrentHealth() + item.getDamage());
+                        return " You use the " + item.getName();
                     case "key":
                         return " You can't use a key here.";
                     default:
                         // Handle unknown item types
-                        return "Unknown item type!";
+                        return "Unknown item!";
                 }
             }
         }
@@ -314,5 +317,13 @@ public class GameEngine {
             return "There is no " + itemName + " in this room.";
         }
     }
+
+	public void setUserId(int userId) {
+		this.userId=(userId);
+	}
+	
+	public void setUsername(String username) {
+		this.username=(username);
+	}
 }
 

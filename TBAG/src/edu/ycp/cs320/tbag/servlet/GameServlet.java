@@ -24,7 +24,6 @@ public class GameServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
    
-        	 
         String userInput = req.getParameter("userInput");
 
         // Process user input using GameEngine
@@ -37,24 +36,26 @@ public class GameServlet extends HttpServlet {
         resp.getWriter().write(gameResponse);
     }
     
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		 HttpSession session = req.getSession(false);
-		 
-    	 if (session != null && session.getAttribute("username") != null) {
-    		 resp.sendRedirect("/_view/game.jsp");
-         } else {
-        	 resp.sendRedirect("/_view/login.jsp");
-        	 
-		String function = req.getParameter("function");
-    
-    if ("Resume".equals(function)) {
-        req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
+            throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
+        
+        if (session != null && session.getAttribute("user_id") != null) {
+            int userId = (int) session.getAttribute("user_id");
+            String username = (String) session.getAttribute("username");
+            
+            // Pass the user ID and username to the GameEngine
+            gameEngine.setUserId(userId);
+            gameEngine.setUsername(username);
+            
+            // If the user is logged in, redirect to the game page
+            resp.sendRedirect("/_view/game.jsp");
+        } else {
+            // If the user is not logged in, redirect to the login page
+            resp.sendRedirect("/_view/login.jsp");
+        }
     }
-  
-    else {
-    	req.getRequestDispatcher("/_view/pause.jsp").forward(req, resp);
-    	}
-    }
-  }
+
+
 }
