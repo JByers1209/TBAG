@@ -1,70 +1,76 @@
 package edu.ycp.cs320.tbag.servlet;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-
+import javax.servlet.http.HttpSession;
 
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        // Forward GET requests to the login page
+        req.getRequestDispatcher("_view/login.jsp").forward(req, resp);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
-        // Retrieve username and password 
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-
-        // Authenticate user 
-        boolean isAuthenticated = authenticate(username, password);
-
-        if (isAuthenticated) {
-            // Create a session and store user information
-            HttpSession session = req.getSession();
-            session.setAttribute("username", username);
-
-            // Redirect user to the home page or some other protected resource
-            resp.sendRedirect(req.getContextPath() + "/game.jsp");
+        
+        // Check if username and password are not null
+        if (username != null && password != null) {
+            // Authenticate user
+            boolean isAuthenticated = authenticateUser(username, password);
+            
+            if (isAuthenticated) {
+                // If authentication is successful, create a session
+                HttpSession session = req.getSession();
+                session.setAttribute("username", username);
+                
+                // Redirect to a success page or perform other actions
+                resp.sendRedirect("index");
+            } else {
+                // If authentication fails, show error message
+                resp.sendRedirect("login?error=1");
+            }
         } else {
-            // Invalid credentials, redirect back to login page with an error message
-            resp.sendRedirect(req.getContextPath() + "/login?error=1");
+            // If username or password is null, show error message
+            resp.sendRedirect("login?error=2");
         }
     }
 
-    private boolean authenticate(String username, String password) {
-        // Establish database connection
-        String url = "jdbc:mysql://localhost:3306/your_database_name";
-        String dbUsername = "your_database_username";
-        String dbPassword = "your_database_password";
+    private boolean authenticateUser(String username, String password) {
+        // Database connection parameters
+        String dbUrl = "jdbc:derby:C:/Users/josmb/git/tbag.db"; // Update with your database URL
+        
+        try (Connection conn = DriverManager.getConnection(dbUrl)) {
+            // Prepare the SQL statement
+            String sql = "SELECT * FROM users WHERE username=? AND password=?";
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, username);
+                statement.setString(2, password);
 
-        try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword);
-             PreparedStatement stmt = conn.prepareStatement("SELECT password FROM users WHERE username = ?");
-        ) {
-            stmt.setString(1, username);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                String storedPass = rs.getString("password");
-                // Compare passwords using equals() method
-                if (storedPass.equals(password)) {
-                    return true;
+                // Execute the query
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    // Check if the query returned any rows
+                    return resultSet.next(); // Return true if the query returned at least one row
                 }
-            
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            // Handle database connection or query errors
+            e.printStackTrace(); // Log any SQL exceptions
+            return false; // Return false in case of any database error
         }
-
-        // Return false if authentication fails
-        return false;
     }
 }

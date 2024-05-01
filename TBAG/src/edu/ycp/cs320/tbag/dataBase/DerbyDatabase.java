@@ -16,6 +16,7 @@ import edu.ycp.cs320.tbag.model.Item;
 import edu.ycp.cs320.tbag.model.KeyItem;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
+import edu.ycp.cs320.tbag.model.User;
 import edu.ycp.cs320.tbag.model.Weapon;
 import edu.ycp.cs320.tbag.model.NPC;
 import edu.ycp.cs320.tbag.model.Player;
@@ -565,6 +566,40 @@ public class DerbyDatabase implements IDatabase {
 	    });
 	}
 	
+	public List<User> findUserByUsername(String username) {
+	    return executeTransaction(new Transaction<List<User>>() {
+	        @Override
+	        public List<User> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
+
+	            try {
+	                stmt = conn.prepareStatement("SELECT * FROM users WHERE username = ?");
+	                stmt.setString(1, username);
+
+	                List<User> result = new ArrayList<>();
+	                resultSet = stmt.executeQuery();
+
+	                while (resultSet.next()) {
+	                    User user = new User();
+	                    // Assuming loadUser method populates user data from ResultSet
+	                    loadUsers(user, resultSet, 1); // Assuming this method exists
+	                    result.add(user);
+	                }
+
+	                return result;
+	            } finally {
+	                // Closing resources in a finally block
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+	}
+
+
+
+	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
 			return doExecuteTransaction(txn);
@@ -609,7 +644,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	private Connection connect() throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:derby:test.db;create=true");
+		Connection conn = DriverManager.getConnection("jdbc:derby:C:/Users/josmb/git/tbag.db;create=true");
 		
 		// Set autocommit to false to allow execution of
 		// multiple queries/statements as part of the same transaction.
@@ -657,6 +692,13 @@ public class DerbyDatabase implements IDatabase {
 		item.setOwnerID(resultSet.getInt(index++));
 		}
 	
+	private void loadUsers(User user, ResultSet resultSet, int index) throws SQLException {
+	    user.setUserID(resultSet.getInt(index++));
+	    user.setUsername(resultSet.getString(index++));
+	    user.setPassword(resultSet.getString(index++));
+	}
+
+	
 	public void createTables() {
 		executeTransaction(new Transaction<Boolean>() {
 			@Override
@@ -665,6 +707,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt2 = null;
 				PreparedStatement stmt3 = null;
 				PreparedStatement stmt4 = null;
+				PreparedStatement stmt5 = null;
 				
 				try {
 					stmt1 = conn.prepareStatement(
@@ -721,6 +764,16 @@ public class DerbyDatabase implements IDatabase {
 							")"
 						);
 						stmt4.executeUpdate();
+						
+					stmt5 = conn.prepareStatement(
+							"create table users (" +
+							"	user_id integer primary key " +
+							"		generated always as identity (start with 1, increment by 1), " +									
+							"   username varchar(40)," +
+							"	password varchar(40)" +
+							")"
+						);
+						stmt5.executeUpdate();
 					
 					return true;
 				} finally {
@@ -728,99 +781,111 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmt2);
 					DBUtil.closeQuietly(stmt3);
 					DBUtil.closeQuietly(stmt4);
+					DBUtil.closeQuietly(stmt5);
 				}
 			}
 		});
 	}
 	
 	public void loadInitialData() {
-		executeTransaction(new Transaction<Boolean>() {
-			@Override
-			public Boolean execute(Connection conn) throws SQLException {
-				List<Room> roomList;
-				List<RoomConnection> connectionList;
-				List<Actor> actorList;
-				List<Item> itemList;
-				
-				try {
-					roomList = InitialData.getRooms();
-					connectionList = InitialData.getConnections();
-					actorList = InitialData.getActors();
-					itemList = InitialData.getItems();
-				} catch (IOException e) {
-					throw new SQLException("Couldn't read initial data", e);
-				}
+	    executeTransaction(new Transaction<Boolean>() {
+	        @Override
+	        public Boolean execute(Connection conn) throws SQLException {
+	            List<Room> roomList;
+	            List<RoomConnection> connectionList;
+	            List<Actor> actorList;
+	            List<Item> itemList;
+	            List<User> userList;
 
-				PreparedStatement insertRoom = null;
-				PreparedStatement insertConnection = null;
-				PreparedStatement insertActor = null;
-				PreparedStatement insertItem = null;
-				
-				try {
-					// populate rooms table (do authors first, since author_id is foreign key in books table)
-					insertRoom = conn.prepareStatement("insert into rooms (name, longDescription, shortDescription, hasVisited, needsKey, keyName) values (?, ?, ?, ?, ?, ?)");
-					for (Room room : roomList) {
-//						insertRoom.setInt(1, room.getRoomId());		// auto-generated primary key, don't insert this
-						insertRoom.setString(1, room.getName());
-						insertRoom.setString(2, room.getLongDescription());
-						insertRoom.setString(3, room.getShortDescription());
-						insertRoom.setString(4, room.getVisited());
-						insertRoom.setString(5, room.getNeedsKey());
-						insertRoom.setString(6, room.getKeyName());
-						insertRoom.addBatch();
-					}
-					insertRoom.executeBatch();
-					
-					// populate connections table
-					insertConnection = conn.prepareStatement("insert into roomConnections (room_id, move, destId) values (?, ?, ?)");
-					for (RoomConnection roomConnection : connectionList) {
-					    insertConnection.setInt(1, roomConnection.getRoomID());
-					    insertConnection.setString(2, roomConnection.getMove());
-					    insertConnection.setInt(3, roomConnection.getDestId());
-					    insertConnection.addBatch();
-					}
-					insertConnection.executeBatch(); 
+	            try {
+	                roomList = InitialData.getRooms();
+	                connectionList = InitialData.getConnections();
+	                actorList = InitialData.getActors();
+	                itemList = InitialData.getItems();
+	                userList = InitialData.getUsers();
+	            } catch (IOException e) {
+	                throw new SQLException("Couldn't read initial data", e);
+	            }
 
-					
-					// populate actors table
-					insertActor = conn.prepareStatement("insert into actors (room_id, name, level, xp, current_health, max_health) values (?, ?, ?, ? ,?, ?)");
-					for (Actor actor : actorList) {
-						insertActor.setInt(1, actor.getRoomID());
-						insertActor.setString(2, actor.getName());
-						insertActor.setInt(3, actor.getLevel());
-						insertActor.setInt(4, actor.getXP());
-						insertActor.setInt(5, actor.getCurrentHealth());
-						insertActor.setInt(6, actor.getMaxHealth());
-						insertActor.addBatch();
-					}
-					insertActor.executeBatch();
-					
-					//insert items table
-					insertItem = conn.prepareStatement("insert into items (type, name, description, throwable, damage, effect, room_id, owner_id) values (?, ?, ?, ?, ?, ?, ?, ?)");
-					for (Item item : itemList) {
-//						insertItem.setInt(1, item.getItemID());		// auto-generated primary key, don't insert this
-						insertItem.setInt(1, item.getType());
-						insertItem.setString(2, item.getName());
-						insertItem.setString(3, item.getDescription());
-						insertItem.setString(4, item.getThrowable());
-						insertItem.setInt(5, item.getDamage());
-						insertItem.setString(6, item.getEffect());
-						insertItem.setInt(7, item.getRoomID());
-						insertItem.setInt(8, item.getOwnerID());
-						insertItem.addBatch();
-					}
-					insertItem.executeBatch();
-					
-					return true;
-				} finally {
-					DBUtil.closeQuietly(insertRoom);
-					DBUtil.closeQuietly(insertConnection);
-					DBUtil.closeQuietly(insertActor);
-					DBUtil.closeQuietly(insertItem);
-				}
-			}
-		});
+	            PreparedStatement insertRoom = null;
+	            PreparedStatement insertConnection = null;
+	            PreparedStatement insertActor = null;
+	            PreparedStatement insertItem = null;
+	            PreparedStatement insertUsers = null;
+
+	            try {
+	                // Populate rooms table
+	                insertRoom = conn.prepareStatement("insert into rooms (name, longDescription, shortDescription, hasVisited, needsKey, keyName) values (?, ?, ?, ?, ?, ?)");
+	                for (Room room : roomList) {
+	                    insertRoom.setString(1, room.getName());
+	                    insertRoom.setString(2, room.getLongDescription());
+	                    insertRoom.setString(3, room.getShortDescription());
+	                    insertRoom.setString(4, room.getVisited());
+	                    insertRoom.setString(5, room.getNeedsKey());
+	                    insertRoom.setString(6, room.getKeyName());
+	                    insertRoom.addBatch();
+	                }
+	                insertRoom.executeBatch();
+
+	                // Populate connections table
+	                insertConnection = conn.prepareStatement("insert into roomConnections (room_id, move, destId) values (?, ?, ?)");
+	                for (RoomConnection roomConnection : connectionList) {
+	                    insertConnection.setInt(1, roomConnection.getRoomID());
+	                    insertConnection.setString(2, roomConnection.getMove());
+	                    insertConnection.setInt(3, roomConnection.getDestId());
+	                    insertConnection.addBatch();
+	                }
+	                insertConnection.executeBatch();
+
+	                // Populate actors table
+	                insertActor = conn.prepareStatement("insert into actors (room_id, name, level, xp, current_health, max_health) values (?, ?, ?, ? ,?, ?)");
+	                for (Actor actor : actorList) {
+	                    insertActor.setInt(1, actor.getRoomID());
+	                    insertActor.setString(2, actor.getName());
+	                    insertActor.setInt(3, actor.getLevel());
+	                    insertActor.setInt(4, actor.getXP());
+	                    insertActor.setInt(5, actor.getCurrentHealth());
+	                    insertActor.setInt(6, actor.getMaxHealth());
+	                    insertActor.addBatch();
+	                }
+	                insertActor.executeBatch();
+
+	                // Populate items table
+	                insertItem = conn.prepareStatement("insert into items (type, name, description, throwable, damage, effect, room_id, owner_id) values (?, ?, ?, ?, ?, ?, ?, ?)");
+	                for (Item item : itemList) {
+	                    insertItem.setInt(1, item.getType());
+	                    insertItem.setString(2, item.getName());
+	                    insertItem.setString(3, item.getDescription());
+	                    insertItem.setString(4, item.getThrowable());
+	                    insertItem.setInt(5, item.getDamage());
+	                    insertItem.setString(6, item.getEffect());
+	                    insertItem.setInt(7, item.getRoomID());
+	                    insertItem.setInt(8, item.getOwnerID());
+	                    insertItem.addBatch();
+	                }
+	                insertItem.executeBatch();
+
+	                // Populate users table
+	                insertUsers = conn.prepareStatement("insert into users (username, password) values (?, ?)");
+	                for (User user : userList) {
+	                    insertUsers.setString(1, user.getUsername());
+	                    insertUsers.setString(2, user.getPassword());
+	                    insertUsers.addBatch();
+	                }
+	                insertUsers.executeBatch();
+
+	                return true;
+	            } finally {
+	                DBUtil.closeQuietly(insertRoom);
+	                DBUtil.closeQuietly(insertConnection);
+	                DBUtil.closeQuietly(insertActor);
+	                DBUtil.closeQuietly(insertItem);
+	                DBUtil.closeQuietly(insertUsers);
+	            }
+	        }
+	    });
 	}
+
 	
 	// The main method creates the database tables and loads the initial data.
 	public static void main(String[] args) throws IOException {
@@ -832,18 +897,6 @@ public class DerbyDatabase implements IDatabase {
 		db.loadInitialData();
 		
 		System.out.println("Success!");
-	}
-
-	@Override
-	public Room findCurrentLocationByActorID(int actorId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Item> findItemsByRoom(int roomID) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

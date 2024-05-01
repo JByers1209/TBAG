@@ -15,6 +15,7 @@ import edu.ycp.cs320.tbag.model.NPC;
 import edu.ycp.cs320.tbag.model.Player;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
+import edu.ycp.cs320.tbag.model.User;
 import edu.ycp.cs320.tbag.model.Weapon;
 
 
@@ -159,6 +160,31 @@ public class InitialData {
 	    } finally {
 	        readItems.close();
 	    }
+	}
+
+	public static List<User> getUsers() throws IOException {
+		List<User> userList = new ArrayList<User>();
+		ReadCSV readUsers = new ReadCSV("users.csv");
+		try {
+			// auto-generated primary key for room connections table
+			Integer userID = 1;
+			while (true) {
+				List<String> tuple = readUsers.next();
+				if (tuple == null) {
+					break;
+				}
+				Iterator<String> i = tuple.iterator();
+				User user = new User();
+				user.setUserID(userID++);
+				user.setUsername(i.next());
+				user.setPassword(i.next());
+				userList.add(user);
+				
+			}
+			return userList;
+		} finally {
+			readUsers.close();
+		}
 	}
 
 
