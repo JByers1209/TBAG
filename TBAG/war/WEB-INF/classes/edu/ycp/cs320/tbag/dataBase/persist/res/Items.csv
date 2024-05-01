@@ -1,4 +1,5 @@
-1 | sword | A strong and powerful blade. | False | 15 | none | 1 | 0 
-2 | bandage | Used for healing. | True | 0 | Heal | 6 | 0 
-3 | blue key | Used to enter a blue door. | False | 0 | none | 8 | 0 
-1 | knife | A small throwable blade | True | 10 | none | 0 | 3
+1 | sword | A strong and powerful blade. | False | 15 | damage | 2 | 0 
+2 | bandage | Used for healing. | True | 0 | heal | 6 | 0 
+3 | blue key | Used to enter a blue door. | False | 0 | key | 8 | 0
+1 | knife | A small throwable blade | True | 10 | damage | 0 | 3
+1 | lightsaber | A power Jedi weapon | False | 25 | damage | 0 | 1
