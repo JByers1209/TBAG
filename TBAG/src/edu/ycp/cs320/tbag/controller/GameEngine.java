@@ -18,6 +18,8 @@ public class GameEngine {
     Room currentRoom;
     Room lastroom;
     Actor player;
+    Actor enemy;
+    String actionResult;
     String gameLog = "Welcome to Spooky York! Type 'start' to begin.";
     List<Item> items = null;
     List<RoomConnection> connection = null;
@@ -60,7 +62,7 @@ public class GameEngine {
                 response = processCommand(input);
             }
         }
-
+        db.updateActor(1, player);
         gameLog += "\n >" + userInput;
         gameLog += "\n" + response;
         return gameLog;
@@ -113,17 +115,18 @@ public class GameEngine {
 
             // Check if there is an NPC in the next room after the player has been moved
             Actor npcInNextRoom = db.findActorByRoomID(currentRoom.getRoomID());
-            if (npcInNextRoom != null) {
-                moveResult += "\n" + startFight(npcInNextRoom);
+            if (npcInNextRoom != null && npcInNextRoom.getActorID() != 1) {
+            	enemy = npcInNextRoom;
+                moveResult += "\n" + startFight(enemy);
             }
             return moveResult;
         }
     }
 
 
-    private String startFight(Actor npc) {
+    private String startFight(Actor enemy) {
     	decision = true;
-        return "A " + npc.getName() + "stands in front of you! You can either fight or run.";
+        return "A " + enemy.getName() + " stands in front of you! You can either fight or run.";
     }
     
     private String processDecision(String input) {
@@ -153,7 +156,7 @@ public class GameEngine {
                 currentRoom = player.getCurrentRoom();
                 nextRoom.setNeedsKey("false");
                 db.updateRoomByRoom(nextRoom);
-                db.updateItem(item.getItemID(), currentRoom.getRoomID(), 1);
+                db.updateItem(item.getItemID(), 0, 0);
                 return "You use the " + keyName + " to unlock the door. " + currentRoom.getLongDescription();
             }
         }
@@ -189,37 +192,80 @@ public class GameEngine {
     private String processFightCommands(String input) {
         if (input.startsWith("use ")) {
             String itemName = input.substring(4);
-            return useItem(itemName);
+            actionResult = useItem(itemName);
+            return checkFightStatus(actionResult);
         } else if (input.startsWith("throw ")) {
             String itemName = input.substring(6);
-            return throwItem(itemName);
+            actionResult = throwItem(itemName);
+            return checkFightStatus(actionResult);
         } else {
             switch (input) {
-                case "run":
-                    return runAway();
                 case "kick":
-                    return kick();
+                	actionResult = kick();
+                    return checkFightStatus(actionResult);
                 case "punch":
-                    return punch();
+                	actionResult = punch();
+                    return checkFightStatus(actionResult);
                 default:
                     return "Invalid fight command.";
             }
         }
     }
+    
+    private String checkFightStatus(String actionResult) {
+        if (enemy.getCurrentHealth() <= 0) {
+            // NPC's health is 0 or less, handle victory
+        	inFight = false;
+        	enemy.setRoomID(0);
+        	db.updateActor(enemy.getActorID(), enemy);
+            return "You defeated the " + enemy.getName() + "!";
+        } else if (player.getCurrentHealth() <= 0) {
+            // Player's health is 0 or less, handle defeat
+        	inFight = false;
+            return "You were defeated by " + enemy.getName() + ".";
+        } else {
+            // Neither player nor NPC's health is 0 or less, return action result
+            return actionResult;
+        }
+    }
 
     private String useItem(String itemName) {
-        // Implement logic to use the specified item in combat
-        return "You use " + itemName + "!";
+        // Get the items owned by the player
+        items = db.findItemsByOwnerID(1);
+        
+        // Iterate through the player's items
+        for (Item item : items) {
+            // Check if the item's name matches the provided itemName
+            if (item.getName().equals(itemName)) {
+                // Check the type of the item
+                String itemType = item.getEffect();
+                
+                // Perform actions based on the item type
+                switch (itemType) {
+                    case "damage":
+                    	enemy.setCurrentHealth(enemy.getCurrentHealth() - item.getDamage());
+                    	db.updateActor(enemy.getActorID(), enemy);
+                        return " You use the " + item.getName() + " against the " + enemy.getName() + "." +
+                    	"/n Your health: " + player.getCurrentHealth() + " | " + enemy.getName() + " health: " + enemy.getCurrentHealth();
+                    case "health":
+                        return " You use the " + item.getName() ;
+                    case "key":
+                        return " You can't use a key here.";
+                    default:
+                        // Handle unknown item types
+                        return "Unknown item type!";
+                }
+            }
+        }
+        
+        // If the itemName does not match any of the player's items
+        return "You do not have that item.";
     }
+
 
     private String throwItem(String itemName) {
         // Implement logic to throw the specified item in combat
-        return "You throw " + itemName + "!";
-    }
-
-    private String runAway() {
-        // Implement logic to allow the player to run away from the fight
-        return "You try to run away!";
+        return "You throw the " + itemName + "!";
     }
 
     private String kick() {
