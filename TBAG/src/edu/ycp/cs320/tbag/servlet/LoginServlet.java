@@ -31,13 +31,14 @@ public class LoginServlet extends HttpServlet {
         
         // Check if username and password are not null
         if (username != null && password != null) {
-            // Authenticate user
-            boolean isAuthenticated = authenticateUser(username, password);
+            // Authenticate user and get user_id
+            int userId = authenticateUser(username, password);
             
-            if (isAuthenticated) {
+            if (userId != -1) {
                 // If authentication is successful, create a session
                 HttpSession session = req.getSession();
                 session.setAttribute("username", username);
+                session.setAttribute("user_id", userId);
                 
                 // Redirect to a success page or perform other actions
                 resp.sendRedirect("index");
@@ -51,13 +52,14 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-    private boolean authenticateUser(String username, String password) {
+
+    private int authenticateUser(String username, String password) {
         // Database connection parameters
         String dbUrl = "jdbc:derby:C:/Users/josmb/git/tbag.db"; // Update with your database URL
         
         try (Connection conn = DriverManager.getConnection(dbUrl)) {
             // Prepare the SQL statement
-            String sql = "SELECT * FROM users WHERE username=? AND password=?";
+            String sql = "SELECT user_id FROM users WHERE username=? AND password=?";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, username);
                 statement.setString(2, password);
@@ -65,12 +67,19 @@ public class LoginServlet extends HttpServlet {
                 // Execute the query
                 try (ResultSet resultSet = statement.executeQuery()) {
                     // Check if the query returned any rows
-                    return resultSet.next(); // Return true if the query returned at least one row
+                    if (resultSet.next()) {
+                        // If the user is authenticated, return the user_id
+                        return resultSet.getInt("user_id");
+                    } else {
+                        // If authentication fails, return -1
+                        return -1;
+                    }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Log any SQL exceptions
-            return false; // Return false in case of any database error
+            return -1; // Return -1 in case of any database error
         }
     }
+
 }
