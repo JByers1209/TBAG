@@ -37,7 +37,7 @@ public class TestDatabase {
 			System.out.println(actor2.toString());
 			
 			Actor actor3 = new NPC(2, 7, "Less Friendly Ghost", 4, 600, 6, 64);
-			db.updateActor(2, actor3);
+			db.updateActor(actor3);
 			
 			Actor actor4 = db.findActorByID(2);
 		

@@ -21,6 +21,13 @@ public abstract class Item {
         this.throwable = "false";
     }
     
+    public void update(SaveData saveData) {
+    	this.itemID = saveData.getIdSlot1();
+    	this.roomID = saveData.getIdSlot2();
+    	this.ownerID = saveData.getIdSlot3();
+    	
+    }
+    
     public void setItemID(int itemID) {
     	this.itemID = itemID;
     }

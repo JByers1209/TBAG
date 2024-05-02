@@ -42,6 +42,15 @@ public abstract class Actor {
     	this.currentHealth = currentHealth;
     }
 		
+    public void update(SaveData saveData) {
+    	this.actorID = saveData.getIdSlot1();
+    	this.roomID = saveData.getIdSlot2();
+    	this.level = saveData.getLevel();
+    	this.xp = saveData.getXp();
+    	this.currentHealth = saveData.getCurrentHealth();
+    	this.maxHealth = saveData.getMaxHealth();
+    }
+    
 	public String getName() {
 		return name;
 	}

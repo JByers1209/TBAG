@@ -115,7 +115,7 @@ public class ActorTest {
 	@Test
 	public void testUpdateActor() {
 		Actor npc = new NPC(2, 7, "Less Friendly Ghost", 4, 600, 6, 64);
-		db.updateActor(2, npc);
+		db.updateActor(npc);
 		Actor retrievedNPC = db.findActorByID(2);
 		
 		assertEquals(npc.getActorID(), retrievedNPC.getActorID());

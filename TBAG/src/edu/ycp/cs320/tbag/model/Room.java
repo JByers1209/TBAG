@@ -33,6 +33,12 @@ public class Room {
 		this.hasVisited = hasVisited;
 	}
 	
+	public void update(SaveData saveData) {
+		this.roomId = saveData.getIdSlot1();
+		this.hasVisited = saveData.getHasVisited();
+		this.needsKey = saveData.getNeedsKey();
+	}
+	
 	public void setRoomID(int roomId) {
 		this.roomId = roomId;
 	}
