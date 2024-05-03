@@ -57,7 +57,8 @@
         var directions = []; // Array to store entered directions
 
         sendGetRequest();
-
+        sendCommand("preStart");
+        
         form.addEventListener("submit", function(event) {
             event.preventDefault(); // Prevent default form submission
             var userInput = commandLine.value.trim().toLowerCase();

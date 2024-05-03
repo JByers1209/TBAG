@@ -10,6 +10,8 @@ import edu.ycp.cs320.tbag.model.RoomConnection;
 
 public class GameEngine {
 	
+	DerbyDatabase db = new DerbyDatabase();
+	
 	int userId = 0;
 	String username = null;
     String response;
@@ -17,34 +19,18 @@ public class GameEngine {
     boolean canMove = true;
     boolean inFight = false;
     boolean decision = false;
-    Room currentRoom;
+    Room currentRoom = db.findRoomByRoomID(1);
     Room lastroom;
-    Actor player;
+    Actor player = db.findActorByID(1);
     Actor enemy;
     String actionResult;
-    String gameLog = "Welcome to Spooky York! Type 'start' to begin.";
+    String gameLog = "Welcome to Spooky York! " + currentRoom.getLongDescription();
     List<Item> items = null;
     List<RoomConnection> connection = null;
     int nextRoomId;
-
-    DerbyDatabase db = new DerbyDatabase();
-
-    public void setup() {
-        player = db.findActorByID(1);
-        currentRoom = db.findRoomByRoomID(1);
-    }
-
-    public String start() {
-        if (hasStarted) {
-            return "Game has already started";
-        } else {
-            setup();
-            String startingText = currentRoom.getLongDescription();
-            currentRoom.setVisited("true");
-            db.updateRoomByRoom(currentRoom);
-            hasStarted = true;
-            return startingText;
-        }
+    
+    public String preStart() {
+    	return gameLog;
     }
 
     public String processUserInput(String userInput) {
@@ -56,17 +42,22 @@ public class GameEngine {
         } else if (decision) {
         	response = processDecision(input);
         } else {
-            if (input.equals("start")) {
-                response = start();
+        	if(input.equals("preStart") && !hasStarted){
+        		response = preStart();
             } else if (!hasStarted) {
                 response = "Type start to begin";
             } else {
                 response = processCommand(input);
             }
         }
-        db.updateActor(1, player);
-        gameLog += "\n >" + userInput;
-        gameLog += "\n" + response;
+        
+        if(!hasStarted) {
+        	hasStarted = true;
+        }else {
+        	db.updateActor(1, player);
+        	gameLog += "\n >" + userInput;
+            gameLog += "\n" + response;
+        }
         return gameLog;
     }
 
@@ -110,6 +101,8 @@ public class GameEngine {
             currentRoom = player.getCurrentRoom();
             String moveResult;
             if (nextRoom.getVisited().equals("false")) {
+            	nextRoom.setVisited("true");
+            	db.updateRoomByRoom(nextRoom);
                 moveResult = "You move " + direction + ". New Location: " + currentRoom.getName() + ". " + currentRoom.getLongDescription();
             } else {
                 moveResult = "You move " + direction + " to " + currentRoom.getName() + ". " + currentRoom.getShortDescription();
