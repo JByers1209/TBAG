@@ -19,6 +19,8 @@ public class GameEngine {
     boolean canMove = true;
     boolean inFight = false;
     boolean decision = false;
+    boolean returnInput;
+    
     Room currentRoom = db.findRoomByRoomID(1);
     Room lastroom;
     Actor player = db.findActorByID(1);
@@ -28,10 +30,6 @@ public class GameEngine {
     List<Item> items = null;
     List<RoomConnection> connection = null;
     int nextRoomId;
-    
-    public String preStart() {
-    	return gameLog;
-    }
 
     public String processUserInput(String userInput) {
         String input = userInput.toLowerCase().trim();
@@ -40,26 +38,34 @@ public class GameEngine {
             // Player is in a fight, so only process fight-related commands
             response = processFightCommands(input);
         } else if (decision) {
-        	response = processDecision(input);
+            response = processDecision(input);
         } else {
-        	if(input.equals("preStart") && !hasStarted){
-        		response = preStart();
-            } else if (!hasStarted) {
-                response = "Type start to begin";
+            if (input.equals("prestart") && !hasStarted) {
+                response = gameLog;
+                returnInput = false;
+            } else if (input.equals("prestart")) {
+                returnInput = false;
+                response = gameLog;
             } else {
                 response = processCommand(input);
+                returnInput = true;
             }
         }
-        
-        if(!hasStarted) {
-        	hasStarted = true;
-        }else {
-        	db.updateActor(1, player);
-        	gameLog += "\n >" + userInput;
+
+        if (!hasStarted) {
+            hasStarted = true;
+        }
+
+        // Append user input and response to gameLog if returnInput is true
+        if (returnInput && !input.equals("prestart")) {
+            db.updateActor(1, player);
+            gameLog += "\n >" + userInput;
             gameLog += "\n" + response;
         }
+
         return gameLog;
     }
+
 
 	private String processCommand(String input) {
         if (isDirectionCommand(input)) {
@@ -70,7 +76,9 @@ public class GameEngine {
     }
 
     private boolean isDirectionCommand(String input) {
-        return input.equals("north") || input.equals("south") || input.equals("east") || input.equals("west");
+        return input.equals("north") || input.equals("south") || input.equals("east") || input.equals("west") || 
+        		input.equals("climb") || input.equals("crawl") || input.equals("up") || input.equals("down") || input.equals("left")
+        || input.equals("right");
     }
 
     private String processDirectionCommand(String direction) {
