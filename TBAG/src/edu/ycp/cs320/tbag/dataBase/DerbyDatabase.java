@@ -642,79 +642,17 @@ public class DerbyDatabase implements IDatabase {
 			DBUtil.closeQuietly(conn);
 		}
 	}
-	
-	
-	
 
-
-
-	public class DatabaseConnection {
-	    
-	    public void dbconnect(String[] args) {
-	        // Example usage:
-	        DatabaseConnection dbConnection = new DatabaseConnection();
-	        Connection conn = dbConnection.connect();
-	        // Use the connection...
-	    }
-
-	    private Connection connect() {
-	        try {
-	            // Check the operating system
-	            String osName = System.getProperty("os.name");
-	            String dbUrl;
-
-	            if (osName.toLowerCase().contains("windows")) {
-	                // Windows specific database URL
-	                dbUrl = "jdbc:derby:C:/Users/josmb/git/tbag.db;create=true";
-	            } else if (osName.toLowerCase().contains("mac")) {
-	                // Mac specific database URL
-	                dbUrl = "jdbc:derby:/Users/Ren De Alva/CS320_spring2024/tbag.db;create=true";
-	            } else {
-	                // Default database URL
-	                dbUrl = "jdbc:derby:tbag.db;create=true";
-	            }
-	            // Establish database connection using the determined URL
-	            Connection conn = DriverManager.getConnection(dbUrl);
-
-	            // Set autocommit to false to allow execution of
-	            // multiple queries/statements as part of the same transaction.
-	            conn.setAutoCommit(false);
-
-	            return conn;
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	            // Handle connection failure
-	            return null;
-	        }
-	    }
+	private Connection connect() throws SQLException {
+		Connection conn = DriverManager.getConnection("jdbc:derby:C:/Users/josmb/git/tbag.db;create=true");
+		
+		// Set autocommit to false to allow execution of
+		// multiple queries/statements as part of the same transaction.
+		conn.setAutoCommit(false);
+		
+		return conn;
 	}
-
-//	public class findOS{
-//		 public void OS(String[] args) {
-//		        String osName = System.getProperty("os.name");
-//		        
-//		        if (osName.toLowerCase().contains("windows")) {
-//		            // Windows specific code
-//		           
-//		            // Perform actions specific to Windows
-//		        } else if (osName.toLowerCase().contains("mac")) {
-//		            // Mac specific code
-//		        	
-//		        }
-//	}
-//		 
-//	
-//
-//	private Connection connect() throws SQLException {
-//		Connection conn = DriverManager.getConnection("jdbc:derby:C:/Users/josmb/git/tbag.db;create=true");
-//		
-//		// Set autocommit to false to allow execution of
-//		// multiple queries/statements as part of the same transaction.
-//		conn.setAutoCommit(false);
-//		
-//		return conn;
-//	}
-//	
+	
 	private void loadRoom(Room room, ResultSet resultSet, int index) throws SQLException {
 		room.setRoomID(resultSet.getInt(index++));
 		room.setName(resultSet.getString(index++));
