@@ -19,6 +19,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        System.out.println("test2");
         // Forward GET requests to the login page
         req.getRequestDispatcher("_view/login.jsp").forward(req, resp);
     }
@@ -31,46 +32,48 @@ public class LoginServlet extends HttpServlet {
         
         // Check if username and password are not null
         if (username != null && password != null) {
-            // Authenticate user
-            boolean isAuthenticated = authenticateUser(username, password);
+            // Authenticate user and get user_id
+            int userId = authenticateUser(username, password);
             
-            if (isAuthenticated) {
-                // If authentication is successful, create a session
+            if (userId > 0) {
                 HttpSession session = req.getSession();
                 session.setAttribute("username", username);
-                
-                // Redirect to a success page or perform other actions
+                session.setAttribute("user_id", userId);
+                System.out.println(username);
+                System.out.println(userId);
                 resp.sendRedirect("index");
             } else {
-                // If authentication fails, show error message
                 resp.sendRedirect("login?error=1");
             }
+
         } else {
             // If username or password is null, show error message
             resp.sendRedirect("login?error=2");
         }
     }
 
-    private boolean authenticateUser(String username, String password) {
-        // Database connection parameters
-        String dbUrl = "jdbc:derby:C:/Users/josmb/git/tbag.db"; // Update with your database URL
+
+    private int authenticateUser(String username, String password) {
+        String dbUrl = "jdbc:derby:C:/Users/josmb/git/tbag.db";
         
         try (Connection conn = DriverManager.getConnection(dbUrl)) {
-            // Prepare the SQL statement
-            String sql = "SELECT * FROM users WHERE username=? AND password=?";
+            String sql = "SELECT user_id FROM users WHERE username=? AND password=?";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, username);
                 statement.setString(2, password);
 
-                // Execute the query
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    // Check if the query returned any rows
-                    return resultSet.next(); // Return true if the query returned at least one row
+                    if (resultSet.next()) {
+                        return resultSet.getInt("user_id");
+                    } else {
+                        return 0; // Return 0 if authentication fails
+                    }
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log any SQL exceptions
-            return false; // Return false in case of any database error
+            e.printStackTrace();
+            return 0; // Return 0 in case of any database error
         }
     }
+
 }
