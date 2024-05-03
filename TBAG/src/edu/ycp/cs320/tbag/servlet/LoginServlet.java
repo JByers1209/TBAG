@@ -19,6 +19,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        System.out.println("test2");
         // Forward GET requests to the login page
         req.getRequestDispatcher("_view/login.jsp").forward(req, resp);
     }
@@ -34,18 +35,17 @@ public class LoginServlet extends HttpServlet {
             // Authenticate user and get user_id
             int userId = authenticateUser(username, password);
             
-            if (userId != -1) {
-                // If authentication is successful, create a session
+            if (userId > 0) {
                 HttpSession session = req.getSession();
                 session.setAttribute("username", username);
                 session.setAttribute("user_id", userId);
-                
-                // Redirect to a success page or perform other actions
+                System.out.println(username);
+                System.out.println(userId);
                 resp.sendRedirect("index");
             } else {
-                // If authentication fails, show error message
                 resp.sendRedirect("login?error=1");
             }
+
         } else {
             // If username or password is null, show error message
             resp.sendRedirect("login?error=2");
@@ -54,31 +54,25 @@ public class LoginServlet extends HttpServlet {
 
 
     private int authenticateUser(String username, String password) {
-        // Database connection parameters
-        String dbUrl = "jdbc:derby:C:/Users/josmb/git/tbag.db"; // Update with your database URL
+        String dbUrl = "jdbc:derby:C:/Users/josmb/git/tbag.db";
         
         try (Connection conn = DriverManager.getConnection(dbUrl)) {
-            // Prepare the SQL statement
             String sql = "SELECT user_id FROM users WHERE username=? AND password=?";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, username);
                 statement.setString(2, password);
 
-                // Execute the query
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    // Check if the query returned any rows
                     if (resultSet.next()) {
-                        // If the user is authenticated, return the user_id
                         return resultSet.getInt("user_id");
                     } else {
-                        // If authentication fails, return -1
-                        return -1;
+                        return 0; // Return 0 if authentication fails
                     }
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log any SQL exceptions
-            return -1; // Return -1 in case of any database error
+            e.printStackTrace();
+            return 0; // Return 0 in case of any database error
         }
     }
 

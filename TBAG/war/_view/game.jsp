@@ -43,9 +43,10 @@
                 </div>
             </div>
         </div>
-    </div>2
+    </div>
 
     <script>
+        
     document.addEventListener("DOMContentLoaded", function() {
         // Display initial prompt
         var gameText = document.getElementById("game-text");
@@ -54,6 +55,8 @@
         var commandLine = document.getElementById("command-line");
         var buttonsContainer = document.getElementById("buttons-container");
         var directions = []; // Array to store entered directions
+
+        sendGetRequest();
 
         form.addEventListener("submit", function(event) {
             event.preventDefault(); // Prevent default form submission
@@ -90,6 +93,17 @@
             };
             xhr.send("userInput=" + encodeURIComponent(userInput));
         }
+
+        function sendGetRequest() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "game", true);
+            xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+            // Handle response if needed
+            }
+        };
+        xhr.send();
+}
 
         document.getElementById("button1").addEventListener("click", function() {
             sendCommand("west"); 

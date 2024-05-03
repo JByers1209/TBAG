@@ -10,8 +10,8 @@ import edu.ycp.cs320.tbag.model.RoomConnection;
 
 public class GameEngine {
 	
-	int userId;
-	String username;
+	int userId = 0;
+	String username = null;
     String response;
     boolean hasStarted = false;
     boolean canMove = true;
@@ -22,7 +22,7 @@ public class GameEngine {
     Actor player;
     Actor enemy;
     String actionResult;
-    String gameLog = "Welcome to Spooky York! Type 'start' to begin." + username + "/" + userId;
+    String gameLog = "Welcome to Spooky York! Type 'start' to begin.";
     List<Item> items = null;
     List<RoomConnection> connection = null;
     int nextRoomId;

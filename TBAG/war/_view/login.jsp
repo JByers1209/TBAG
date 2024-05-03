@@ -20,7 +20,20 @@
             <input type="password" id="password" name="password" placeholder="Password" required>
             <button type="submit">Login Now</button>
         </form>
-        <p id="error" style="color: red; display: none;">Incorrect username or password</p>
+        <p id="error" style="color: red;"></p>
     </div>
+
+    <script>
+        // Get the error paragraph element
+        var errorParagraph = document.getElementById("error");
+
+        // Check if the error parameter is present in the URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var errorParam = urlParams.get('error');
+        if (errorParam === "1") {
+            // If error parameter is present and equals 1, display the error message
+            errorParagraph.textContent = "Incorrect username or password";
+        }
+    </script>
 </body>
 </html>
