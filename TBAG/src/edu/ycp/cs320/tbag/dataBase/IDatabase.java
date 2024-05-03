@@ -29,6 +29,9 @@ public interface IDatabase {
 	
 	//user
 	public List<User> findUserByUsername(String username);
+	public void createUser(User user);
+	
+	
 	
 	//save game
 	public void saveActor(int saveID, Actor actor);
