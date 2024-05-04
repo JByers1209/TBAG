@@ -31,6 +31,22 @@ public class GameEngine {
     List<Item> items = null;
     List<RoomConnection> connection = null;
     int nextRoomId;
+    
+	public void reset() {
+		userId = 0;
+		username = null;
+		response = null;
+	    hasStarted = false;
+	    canMove = true;
+	    inFight = false;
+	    decision = false;
+	    
+	    currentRoom = db.findRoomByRoomID(1);
+	    player = db.findActorByID(1);
+	    gameLog = currentRoom.getLongDescription();
+	    items = null;
+	    connection = null;
+	}
 
     public String processUserInput(String userInput) {
         String input = userInput.toLowerCase().trim();
@@ -42,9 +58,17 @@ public class GameEngine {
             response = processDecision(input);
         } else {
             if (input.equals("prestart") && !hasStarted) {
+            	db.dropTables();
+                db.reCreateTables();
+                db.reLoadInitialData();
+            	reset();
                 response = gameLog;
                 returnInput = false;
             } else if (input.equals("prestart")) {
+            	db.dropTables();
+                db.reCreateTables();
+                db.reLoadInitialData();
+            	reset();
                 returnInput = false;
                 response = gameLog;
             } else {
@@ -297,7 +321,7 @@ public class GameEngine {
         // Determine the outcome based on the random number
         if (randomNumber < 33) {
         	player.setCurrentHealth(player.getCurrentHealth() - 10);
-        	result = "/n The " + enemy.getName() + " fights back and hits you. ";
+        	result = "\n The " + enemy.getName() + " fights back and hits you. ";
         } else if (randomNumber < 66) {
         	player.setCurrentHealth(player.getCurrentHealth() - 15);
         	result = "\n The " + enemy.getName() + " fights back and hits you. ";
