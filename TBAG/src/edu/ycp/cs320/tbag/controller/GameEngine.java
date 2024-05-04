@@ -1,6 +1,7 @@
 package edu.ycp.cs320.tbag.controller;
 
 import java.util.List;
+import java.util.Random;
 
 import edu.ycp.cs320.tbag.dataBase.DerbyDatabase;
 import edu.ycp.cs320.tbag.model.Actor;
@@ -26,7 +27,7 @@ public class GameEngine {
     Actor player = db.findActorByID(1);
     Actor enemy;
     String actionResult;
-    String gameLog = "Welcome to Spooky York! " + currentRoom.getLongDescription();
+    String gameLog = currentRoom.getLongDescription();
     List<Item> items = null;
     List<RoomConnection> connection = null;
     int nextRoomId;
@@ -246,10 +247,17 @@ public class GameEngine {
                 // Perform actions based on the item type
                 switch (itemType) {
                     case "damage":
-                    	enemy.setCurrentHealth(enemy.getCurrentHealth() - item.getDamage());
-                    	db.updateActor(enemy.getActorID(), enemy);
-                        return " You use the " + item.getName() + " against the " + enemy.getName() + "." +
-                    	" Your health: " + player.getCurrentHealth() + " | " + enemy.getName() + " health: " + enemy.getCurrentHealth();
+                    	Random random = new Random();
+                        int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
+
+                        // Determine the outcome based on the random number
+                        if (randomNumber < 66) {
+                            // 66% chance of outcome 1
+                            return processDamage1(item);
+                        } else if (randomNumber > 66) {
+                            // 33% chance of outcome 2
+                            return processDamage2(item);
+                        }
                     case "health":
                     	player.setCurrentHealth(player.getCurrentHealth() + item.getDamage());
                         return " You use the " + item.getName();
@@ -266,7 +274,41 @@ public class GameEngine {
         return "You do not have that item.";
     }
 
+// Functions used to process the damage the user makes to the enemy
+    private String processDamage1(Item item) {
+        // Process outcome 1
+        enemy.setCurrentHealth(enemy.getCurrentHealth() - item.getDamage());
+        db.updateActor(enemy.getActorID(), enemy);
+        String outcome = "You use the " + item.getName() + " against the " + enemy.getName() + ".";
+        return enemyFightsBack(outcome);
+    }
 
+    private String processDamage2(Item item) {
+        // Process outcome 2
+    	String outcome = "You attempt to use the " + item.getName() + " against the " + enemy.getName() + " but miss.";
+    	return enemyFightsBack(outcome);
+    }
+
+    // Function used to determine if the user takes damage from the enemy
+    private String enemyFightsBack(String outcome) {
+    	Random random = new Random();
+        int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
+        String result = null;
+        // Determine the outcome based on the random number
+        if (randomNumber < 33) {
+        	player.setCurrentHealth(player.getCurrentHealth() - 10);
+        	result = "/n The " + enemy.getName() + " fights back and hits you. ";
+        } else if (randomNumber < 66) {
+        	player.setCurrentHealth(player.getCurrentHealth() - 15);
+        	result = "\n The " + enemy.getName() + " fights back and hits you. ";
+        } else {
+        	result = "\n The " + enemy.getName() + " fights back and misses you. ";
+        }
+    	result = outcome + result + 
+    			"\n Your health: " + player.getCurrentHealth() + " | " + enemy.getName() + " health: " + enemy.getCurrentHealth();;
+    	return result;
+    }
+    
     private String throwItem(String itemName) {
         // Implement logic to throw the specified item in combat
         return "You throw the " + itemName + "!";
