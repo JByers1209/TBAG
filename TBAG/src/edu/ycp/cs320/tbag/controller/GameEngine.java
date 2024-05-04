@@ -132,6 +132,8 @@ public class GameEngine {
         	lastroom = currentRoom;
             player.moveTo(nextRoom);
             currentRoom = player.getCurrentRoom();
+            player.setRoomID(currentRoom.getRoomID());
+            db.updateActor(1, player);
             String moveResult;
             if (nextRoom.getVisited().equals("false")) {
             	nextRoom.setVisited("true");
@@ -157,6 +159,7 @@ public class GameEngine {
         return "A " + enemy.getName() + " stands in front of your way! You can either fight or run.";
     }
     
+    //Function used to process the fight decision
     private String processDecision(String input) {
         if (input.equals("fight")) {
             inFight = true;
@@ -174,7 +177,7 @@ public class GameEngine {
         }
     }
 
-
+//Function used for unlocking rooms
     private String unlockDoor(Room nextRoom) {
         String keyName = nextRoom.getKeyName();
         items = db.findItemsByOwnerID(1);
@@ -191,6 +194,7 @@ public class GameEngine {
         return "The following location is locked.";
     }
 
+    //Function used to process non fight commands
     private String processOtherCommands(String input) {
         switch (input) {
             case "health":
@@ -217,6 +221,7 @@ public class GameEngine {
         }
     }
     
+    //Function used to process fighting commands
     private String processFightCommands(String input) {
         if (input.startsWith("use ")) {
             String itemName = input.substring(4);
@@ -240,10 +245,20 @@ public class GameEngine {
         }
     }
     
+    //Function used to check the health of both fighters and end the fight
     private String checkFightStatus(String actionResult) {
         if (enemy.getCurrentHealth() <= 0) {
             // NPC's health is 0 or less, handle victory
         	inFight = false;
+        	List<Item> item = db.findItemsByOwnerID(enemy.getActorID());
+        	
+        	for (Item items : item) {
+                // Update each item's information
+                items.setDescription("New description");
+                // Update other fields as needed
+                db.updateItem(items.getItemID(), enemy.getRoomID(), 0);
+            }
+        	
         	enemy.setRoomID(0);
         	db.updateActor(enemy.getActorID(), enemy);
             return "You defeated the " + enemy.getName() + "!";
@@ -295,7 +310,7 @@ public class GameEngine {
         }
         
         // If the itemName does not match any of the player's items
-        return "You do not have that item.";
+        return "You do not have an item by that name.";
     }
 
 // Functions used to process the damage the user makes to the enemy
@@ -334,18 +349,67 @@ public class GameEngine {
     }
     
     private String throwItem(String itemName) {
-        // Implement logic to throw the specified item in combat
-        return "You throw the " + itemName + "!";
+    	Random random = new Random();
+    	String result = null;
+        int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
+        List<Item> item = db.findItemsByName(itemName);
+        if(item.get(0).getThrowable().equals("True")) {
+        	// Determine the outcome based on the random number
+            if (randomNumber < 66) {
+                
+            	db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
+                result = "You throw the " + itemName + " and hit the enemy!";
+                return enemyFightsBack(result);
+            } else if( randomNumber < 90){
+                
+            	db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
+                result = "You throw the " + itemName + " and miss the enemy.";
+                return enemyFightsBack(result);
+            }else {
+            	db.updateItem(item.get(0).getItemID(), 0, enemy.getActorID());
+            	result = "You throw the " + itemName + " and the " + enemy.getName() + " catches it!";
+            	return enemyFightsBack(result);
+            }
+        }else {
+        	return "You cannot throw that item!";
+        }
+      
     }
 
     private String kick() {
-        // Implement logic for the player to kick during the fight
-        return "You kick the opponent!";
+    	Random random = new Random();
+    	String result = null;
+        int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
+            if (randomNumber < 66) {
+                enemy.setCurrentHealth(enemy.getCurrentHealth() - 5);
+                result = "You kick the " + enemy.getName() + ".";
+                return enemyFightsBack(result);
+            } else if( randomNumber < 85){
+            	enemy.setCurrentHealth(enemy.getCurrentHealth() - 8);
+                result = "You kick the " + enemy.getName() + " really hard. ";
+                return enemyFightsBack(result);
+            }else {
+            	result = "You attempt to kick the " + enemy.getName() + " but miss.";
+            	return enemyFightsBack(result);
+            }
     }
 
     private String punch() {
-        // Implement logic for the player to punch during the fight
-        return "You punch the opponent!";
+    	Random random = new Random();
+    	String result = null;
+        int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
+            if (randomNumber < 66) {
+                enemy.setCurrentHealth(enemy.getCurrentHealth() - 8);
+                result = "You punch the " + enemy.getName() + ".";
+                return enemyFightsBack(result);
+            } else if( randomNumber < 85){
+            	enemy.setCurrentHealth(enemy.getCurrentHealth() - 12);
+                result = "You punch the " + enemy.getName() + " really hard. ";
+                return enemyFightsBack(result);
+            }else {
+            	result = "You swing a punch at the " + enemy.getName() + " but miss.";
+            	return enemyFightsBack(result);
+            }
     }
 
 
