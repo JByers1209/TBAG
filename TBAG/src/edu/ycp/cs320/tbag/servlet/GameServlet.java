@@ -33,14 +33,16 @@ public class GameServlet extends HttpServlet {
             // Pass the user ID and username to the GameEngine
             gameEngine.setUserId(userId);
             gameEngine.setUsername(username);
-            System.out.println(userId + username);
-            // If the user is logged in, redirect to the game page
+            
+            // If the user is logged in, forward to the game page
             req.getRequestDispatcher("_view/game.jsp").forward(req, resp);
         } else {
             // If the user is not logged in, redirect to the login page
-        	req.getRequestDispatcher("_view/login.jsp").forward(req, resp);
+            req.getRequestDispatcher("_view/login.jsp").forward(req, resp);
         }
     }
+
+
     
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -49,7 +51,7 @@ public class GameServlet extends HttpServlet {
         String userInput = req.getParameter("userInput");
 
         // Process user input using GameEngine
-        String gameResponse = gameEngine.processUserInput(userInput);
+        String gameResponse = gameEngine.getPlayerHealth() + "\n" + gameEngine.processUserInput(userInput);
 
         // Set response content type
         resp.setContentType("text/plain");

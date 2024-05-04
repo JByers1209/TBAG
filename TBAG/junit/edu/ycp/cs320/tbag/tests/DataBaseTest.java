@@ -205,10 +205,10 @@ public class DataBaseTest {
 	
 	@Test
 	public void testFindUser() {
-		List<User> user = db.findUserByUsername("kdealva");
-		assertEquals(2, user.get(0).getUserID());
-		assertEquals("kdealva", user.get(0).getUsername());
-		assertEquals("wwof1153", user.get(0).getPassword());
+		User user = db.findUserByUsername("kdealva");
+		assertEquals(2, user.getUserID());
+		assertEquals("kdealva", user.getUsername());
+		assertEquals("wwof1153", user.getPassword());
 		
 	}
 	

@@ -392,5 +392,14 @@ public class GameEngine {
 	public void setUsername(String username) {
 		this.username=(username);
 	}
+	
+	public int getPlayerHealth() {
+		return player.getCurrentHealth();
+	}
+	
+	public String getPlayerMaxHealth() {
+		Actor playerInfo = db.findActorByID(1);
+		return "$" + playerInfo.getMaxHealth();
+	}
 }
 
