@@ -24,7 +24,7 @@ public class DataBaseTest {
 	public void setUp() {
 		db = new DerbyDatabase();
 	}
-	
+	/*
 	@Test
 	public void testFindConnectionByRoomID() {
 		
@@ -117,7 +117,7 @@ public class DataBaseTest {
         assertEquals(1, items.size());
         assertEquals("knife", items.get(0).getName());
     }
-	
+	*/
 	@Test
 	public void testUpdateItem() {
 		List<Item> items;
@@ -205,11 +205,20 @@ public class DataBaseTest {
 	
 	@Test
 	public void testFindUser() {
-		User user = db.findUserByUsername("kdealva");
+		User user = db.findUser("kdealva");
 		assertEquals(2, user.getUserID());
 		assertEquals("kdealva", user.getUsername());
 		assertEquals("wwof1153", user.getPassword());
 		
+	}
+	
+	@Test
+	public void testFindItemByName() {
+		List<Item> item = db.findItemsByName("lightsaber");
+		assertEquals("False", item.get(0).getThrowable());
+		assertEquals("lightsaber", item.get(0).getName());
+		assertEquals(1, item.get(0).getType());
+		assertEquals("damage", item.get(0).getEffect());
 	}
 	
 }

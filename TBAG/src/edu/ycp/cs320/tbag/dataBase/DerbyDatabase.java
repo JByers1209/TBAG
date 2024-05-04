@@ -526,7 +526,54 @@ public class DerbyDatabase implements IDatabase {
 	        }
 	    });
 	}
+	
+	public List<Item> findItemsByName(String name) {
+	    return executeTransaction(new Transaction<List<Item>>() {
+	        @Override
+	        public List<Item> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
 
+	            try {
+	                stmt = conn.prepareStatement(
+	                        "SELECT * FROM items WHERE name = ?"
+	                );
+	                stmt.setString(1, name);
+
+	                List<Item> result = new ArrayList<>();
+
+	                resultSet = stmt.executeQuery();
+
+	                while (resultSet.next()) {
+	                    Item item = null;
+	                    int itemType = resultSet.getInt("type");
+	                    switch (itemType) {
+	                        case 1:
+	                            item = new Weapon();
+	                            break;
+	                        case 2:
+	                            item = new Consumable();
+	                            break;
+	                        case 3:
+	                            item = new KeyItem();
+	                            break;
+	                        default:
+	                            // Handle unknown item types or create a generic Item object
+	                            break;
+	                    }
+	                    // Load common attributes
+	                    loadItems(item, resultSet, 1);
+	                    result.add(item);
+	                }
+
+	                return result;
+	            } finally {
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+	}
 	
 	@Override
 	public void updateItem(int itemID, int roomID, int ownerID) {
@@ -566,7 +613,7 @@ public class DerbyDatabase implements IDatabase {
 	    });
 	}
 	
-	public User findUserByUsername(String username) {
+	public User findUser(String username) {
 	    return executeTransaction(new Transaction<User>() {
 	        @Override
 	        public User execute(Connection conn) throws SQLException {
