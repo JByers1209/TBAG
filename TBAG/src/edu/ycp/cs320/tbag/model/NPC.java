@@ -3,7 +3,7 @@ package edu.ycp.cs320.tbag.model;
 public class NPC extends Actor{
 	
 	
-	public NPC(int actorID, int roomID, String name, int level, int xp, int currentHealth, int maxHealth) {
+	public NPC(int actorID, int roomID, String name, int level, int xp,  int currentHealth, int maxHealth) {
     	super(actorID, roomID, name, level, xp, currentHealth, maxHealth);
     }
 
@@ -19,5 +19,13 @@ public class NPC extends Actor{
 	public NPC() {
 		super();
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
