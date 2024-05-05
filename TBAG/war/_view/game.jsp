@@ -29,10 +29,20 @@
                     <button id="button4" class="game-button" type="button">v</button>
                 </span>
             </div>
+            <div id="search-button" style="display: none;">
+                <button id="searchButton" class="extra-button" type="button">Search</button>
+            </div>
+            <div id="punch-button" style="display: none;">
+                <button id="punchButton" class="extra-button" type="button">Punch</button>
+            </div>
+            <div id="kick-button" style="display: none;">
+                <button id="kickButton" class="extra-button" type="button">Kick</button>
+            </div>
+            
             <!-- pause button -->
             <div id="pause">
                 <form function="PauseServlet" method="get">
-                    <input type="submit" name="function" value="Pause" class="pause">
+                    <input type="submit" name="function" value="Save and Quit" class="pause">
                 </form>
             </div>
             <!-- HEALTH STATUS -->
@@ -115,21 +125,44 @@
     
             // Event listener for form submission
             form.addEventListener("submit", function(event) {
-                event.preventDefault(); // Prevent default form submission
-                var userInput = commandLine.value.trim().toLowerCase();
-                if (userInput === "north" || userInput === "south" || userInput === "east" || userInput === "west") {
-                    if (!directions.includes(userInput)) {
-                        directions.push(userInput); // Add direction to array if not already present
-                    }
-                }
-                // Check if all directions have been entered
-                if (directions.length === 4) {
-                    buttonsContainer.style.display = "block"; // Show buttons
-                }
-                sendCommand(userInput);
-                commandLine.value = ""; // Clear input field
-            });
+    event.preventDefault(); // Prevent default form submission
+    var userInput = commandLine.value.trim().toLowerCase();
+    if (userInput === "north" || userInput === "south" || userInput === "east" || userInput === "west") {
+        if (!directions.includes(userInput)) {
+            directions.push(userInput); // Add direction to array if not already present
+        }
+    }
+    // Check if all directions have been entered
+    if (directions.length === 4) {
+        buttonsContainer.style.display = "block"; // Show buttons
+    }
+    sendCommand(userInput);
+    commandLine.value = ""; // Clear input field
     
+    // Show corresponding buttons based on user input
+    showButtons(userInput);
+});
+
+// Function to show corresponding buttons based on user input
+function showButtons(userInput) {
+    var searchButton = document.getElementById("search-button");
+    var punchButton = document.getElementById("punch-button");
+    var kickButton = document.getElementById("kick-button");
+
+    switch (userInput) {
+        case "search":
+            searchButton.style.display = "block";
+            break;
+        case "punch":
+            punchButton.style.display = "block";
+            break;
+        case "kick":
+            kickButton.style.display = "block";
+            break;
+        default:
+            break;
+    }
+}
             // Event listeners for direction buttons
             document.getElementById("button1").addEventListener("click", function() {
                 sendCommand("west"); 
@@ -142,6 +175,15 @@
             });
             document.getElementById("button4").addEventListener("click", function() {
                 sendCommand("south"); 
+            });
+            document.getElementById("searchButton").addEventListener("click", function() {
+                sendCommand("search"); 
+            });
+            document.getElementById("kickButton").addEventListener("click", function() {
+                sendCommand("kick"); 
+            });
+            document.getElementById("punchButton").addEventListener("click", function() {
+                sendCommand("punch"); 
             });
     
             // Initial GET request
