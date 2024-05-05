@@ -135,10 +135,10 @@
                 sendCommand("west"); 
             });
             document.getElementById("button2").addEventListener("click", function() {
-                sendCommand("east"); 
+                sendCommand("east");
             });
             document.getElementById("button3").addEventListener("click", function() {
-                sendCommand("north"); 
+                sendCommand("north");
             });
             document.getElementById("button4").addEventListener("click", function() {
                 sendCommand("south"); 
@@ -149,10 +149,6 @@
             sendCommand("preStart");
         });
     </script>
-    
-    
-    
-    
 
 </body>
 </html>
