@@ -142,7 +142,7 @@ public class GameEngine {
             if (nextRoom.getVisited().equals("false")) {
             	nextRoom.setVisited("true");
             	db.updateRoomByRoom(nextRoom);
-                moveResult = "You move " + direction + ". New Location: " + currentRoom.getName() + ". " + currentRoom.getLongDescription();
+                moveResult = "You move " + direction + ". " + currentRoom.getLongDescription();
             } else {
                 moveResult = "You move " + direction + " to " + currentRoom.getName() + ". " + currentRoom.getShortDescription();
             }
@@ -160,7 +160,7 @@ public class GameEngine {
 
     private String startFight(Actor enemy) {
     	decision = true;
-        return "A " + enemy.getName() + " stands in front of your way! You can either fight or run.";
+        return "The " + enemy.getName() + " stands in front of you! You can either fight or run.";
     }
     
     //Function used to process the fight decision
@@ -174,7 +174,7 @@ public class GameEngine {
             player.moveTo(db.findRoomByRoomID(lastroom.getRoomID()));
             currentRoom = player.getCurrentRoom();
             decision = false; // Reset decision flag
-            return "You run back to the location you came from. Current location: " + currentRoom.getName() + ".";
+            return "You run back to the location you came from.";
         } else {
             // Invalid command
             return "Invalid decision. You can either 'fight' or 'run'.";
@@ -220,11 +220,15 @@ public class GameEngine {
                 if (input.startsWith("take ")) {
                     return takeItem(input.substring(5));
                 } else if (input.startsWith("save ")) {
-                	
                     return "saved " + input.substring(5);
                 } else if (input.startsWith("load ")) {
-                	
                     return "Loaded " + input.substring(5);
+                } else if (input.startsWith("use ")) {
+                    String itemName = input.substring(4);
+                    return  useItem(itemName);
+                } else if (input.startsWith("throw ")) {
+                    String itemName = input.substring(6);
+                    return throwItem(itemName);
                 } else {
                     return "Invalid command.";
                 }
@@ -296,17 +300,21 @@ public class GameEngine {
                 // Perform actions based on the item type
                 switch (itemType) {
                     case "damage":
-                    	Random random = new Random();
-                        int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
+                    	if(!inFight) {
+                    		return "You cannot use that item now";
+                    	} else {
+                    		Random random = new Random();
+                            int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
 
-                        // Determine the outcome based on the random number
-                        if (randomNumber < 66) {
-                            // 66% chance of outcome 1
-                            return processDamage1(item);
-                        } else if (randomNumber > 66) {
-                            // 33% chance of outcome 2
-                            return processDamage2(item);
-                        }
+                            // Determine the outcome based on the random number
+                            if (randomNumber < 66) {
+                                // 66% chance of outcome 1
+                                return processDamage1(item);
+                            } else if (randomNumber > 66) {
+                                // 33% chance of outcome 2
+                                return processDamage2(item);
+                            }
+                    	}
                     case "health":
                     	player.setCurrentHealth(player.getCurrentHealth() + item.getDamage());
                         return " You use the " + item.getName();
@@ -354,7 +362,7 @@ public class GameEngine {
         	result = "\n The " + enemy.getName() + " fights back and misses you. ";
         }
     	result = outcome + result + 
-    			"\n Your health: " + player.getCurrentHealth() + " | " + enemy.getName() + " health: " + enemy.getCurrentHealth();;
+    			"\n " + enemy.getName() + " health: " + enemy.getCurrentHealth();
     	return result;
     }
     
@@ -363,26 +371,30 @@ public class GameEngine {
     	String result = null;
         int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
         List<Item> item = db.findItemsByName(itemName);
-        if(item.get(0).getThrowable().equals("True")) {
-        	// Determine the outcome based on the random number
-            if (randomNumber < 66) {
-                
-            	db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
-                result = "You throw the " + itemName + " and hit the enemy!";
-                return enemyFightsBack(result);
-            } else if( randomNumber < 90){
-                
-            	db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
-                result = "You throw the " + itemName + " and miss the enemy.";
-                return enemyFightsBack(result);
-            }else {
-            	db.updateItem(item.get(0).getItemID(), 0, enemy.getActorID());
-            	result = "You throw the " + itemName + " and the " + enemy.getName() + " catches it!";
-            	return enemyFightsBack(result);
-            }
+        if(!inFight) {
+        	db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
+            result = "You throw the " + itemName + ".";
         }else {
-        	return "You cannot throw that item!";
+        	if(item.get(0).getThrowable().equals("True")) {
+            	// Determine the outcome based on the random number
+                if (randomNumber < 66) {
+                    
+                	db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
+                    result = "You throw the " + itemName + " and hit the enemy!";
+                    return enemyFightsBack(result);
+                } else if( randomNumber < 90){
+                    
+                	db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
+                    result = "You throw the " + itemName + " and miss the enemy.";
+                    return enemyFightsBack(result);
+                }else {
+                	db.updateItem(item.get(0).getItemID(), 0, enemy.getActorID());
+                	result = "You throw the " + itemName + " and the " + enemy.getName() + " catches it!";
+                	return enemyFightsBack(result);
+                }
+        	}
         }
+        return "You cannot throw that item!";
       
     }
 
