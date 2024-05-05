@@ -217,6 +217,12 @@ public class GameEngine {
             default:
                 if (input.startsWith("take ")) {
                     return takeItem(input.substring(5));
+                } else if (input.startsWith("save ")) {
+                	
+                    return "saved " + input.substring(5);
+                } else if (input.startsWith("load ")) {
+                	
+                    return "Loaded " + input.substring(5);
                 } else {
                     return "Invalid command.";
                 }
