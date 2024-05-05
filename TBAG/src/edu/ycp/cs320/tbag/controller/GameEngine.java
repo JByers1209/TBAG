@@ -223,12 +223,10 @@ public class GameEngine {
                     return "Loaded " + input.substring(5);
                 } else if (input.startsWith("use ")) {
                     String itemName = input.substring(4);
-                    actionResult = useItem(itemName);
-                    return checkFightStatus(actionResult);
+                    return  useItem(itemName);
                 } else if (input.startsWith("throw ")) {
                     String itemName = input.substring(6);
-                    actionResult = throwItem(itemName);
-                    return checkFightStatus(actionResult);
+                    return throwItem(itemName);
                 } else {
                     return "Invalid command.";
                 }
