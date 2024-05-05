@@ -12,6 +12,7 @@ public class FakeDatabase implements IDatabase {
 	
 
 	private List<Actor> actorList;
+	private List<Room> roomList;
 
 	//constructor
 	public FakeDatabase() {
@@ -20,7 +21,7 @@ public class FakeDatabase implements IDatabase {
 		// Add initial data
 		readInitialData();
 		
-		System.out.println(actorList.size() + " actors");
+		System.out.println(actorList.size() + " actor");
 	}
 
 	
@@ -41,24 +42,17 @@ public class FakeDatabase implements IDatabase {
 				return actor;
 			}
 		}
-		System.out.println("Couldnt find actor");
 		return null;
 	}
 	
-	@Override
-	public Actor findActorByRoomID(int roomID) {
-	
-		for(Actor actor: actorList) {
-			if(actor.getRoomID() == roomID) {
-				return actor;
+	public Room findRoomByRoomID(int roomID) {
+		
+		for(Room room: roomList) {
+			if(room.getRoomID() == roomID) {
+				return room;
 			}
 		}
 		return null;
-	}
-	
-	@Override
-	public void updateActor(int actorID, Actor actor) {
-		
 	}
 
 
