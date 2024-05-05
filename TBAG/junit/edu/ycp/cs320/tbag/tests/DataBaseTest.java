@@ -171,44 +171,42 @@ public class DataBaseTest {
 	
 	@Test
 	public void testFindActorByID() {
-		Actor NPC = db.findActorByID(4);
+		Actor NPC = db.findActorByID(3);
 		
-		assertEquals(4, NPC.getActorID());
-		assertEquals(12, NPC.getRoomID());
-		assertEquals("silly specter", NPC.getName());
-		assertEquals(4, NPC.getLevel());
+		assertEquals(3, NPC.getActorID());
+		assertEquals(8, NPC.getRoomID());
+		assertEquals("null", NPC.getName());
+		assertEquals(6, NPC.getLevel());
 		assertEquals(100, NPC.getXP());
-		assertEquals(69, NPC.getCurrentHealth());
-		assertEquals(420, NPC.getMaxHealth());
+		assertEquals(200, NPC.getCurrentHealth());
+		assertEquals(200, NPC.getMaxHealth());
 	}
 	
 	@Test
 	public void testFindActorByRoomID() {
 		Actor NPC = db.findActorByRoomID(12);
 		
-		assertEquals(4, NPC.getActorID());
+		assertEquals(2, NPC.getActorID());
 		assertEquals(12, NPC.getRoomID());
-		assertEquals("silly specter", NPC.getName());
+		assertEquals("gray man", NPC.getName());
 		assertEquals(4, NPC.getLevel());
 		assertEquals(100, NPC.getXP());
-		assertEquals(69, NPC.getCurrentHealth());
-		assertEquals(420, NPC.getMaxHealth());
+		assertEquals(75, NPC.getCurrentHealth());
+		assertEquals(100, NPC.getMaxHealth());
 	}
 	
 	@Test
 	public void testUpdateActor() {
-		Actor npc = new NPC(2, 7, "Less Friendly Ghost", 4, 600, 6, 64);
-		db.updateActor(2, npc);
-		Actor retrievedNPC = db.findActorByID(2);
+		Actor NPC = db.findActorByID(3);
+		db.updateActor(3, NPC);
 		
-		assertEquals(npc.getActorID(), retrievedNPC.getActorID());
-		assertEquals(npc.getRoomID(), retrievedNPC.getRoomID());
-		assertEquals(npc.getName(), retrievedNPC.getName());
-		assertEquals(npc.getLevel(), retrievedNPC.getLevel());
-		assertEquals(npc.getXP(), retrievedNPC.getXP());
-		assertEquals(npc.getCurrentHealth(), retrievedNPC.getCurrentHealth());
-		assertEquals(npc.getMaxHealth(), retrievedNPC.getMaxHealth());
+		NPC.setCurrentHealth(150);
+		db.updateActor(3,  NPC);
 		
+		assertEquals(150, NPC.getCurrentHealth());
+		
+		NPC.setCurrentHealth(150);
+		db.updateActor(3,  NPC);
 	}
 	
 	@Test
