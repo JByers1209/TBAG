@@ -30,6 +30,10 @@
     <servlet-name>LogoutServlet</servlet-name>
     <servlet-class>edu.ycp.cs320.tbag.servlet.LogoutServlet</servlet-class>
 </servlet>
+<servlet>
+    <servlet-name>RegisterServlet</servlet-name>
+    <servlet-class>edu.ycp.cs320.tbag.servlet.RegisterServlet</servlet-class> <!-- You need to create this servlet -->
+</servlet>
   
   <!-- AJAX servlets. -->
   <servlet>
@@ -69,6 +73,10 @@
 <servlet-mapping>
     <servlet-name>LogoutServlet</servlet-name>
     <url-pattern>/LogoutServlet</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+    <servlet-name>RegisterServlet</servlet-name>
+    <url-pattern>/register</url-pattern>
 </servlet-mapping>
   
   <!--  AJAX servlet mappings. -->

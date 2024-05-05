@@ -57,7 +57,6 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-
     private int authenticateUser(String username, String password) {
         String dbUrl = "jdbc:derby:C:/Users/josmb/git/tbag.db";
         
