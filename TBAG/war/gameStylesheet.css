@@ -1,0 +1,211 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: var(--gray);
+    color: #fff;
+}
+
+:root {
+    --gray: #575859;
+}
+
+#wrapper {
+    position: relative; /* Add relative positioning to act as a reference for absolutely positioned elements */
+}
+
+/* CSS for the health bar */
+.health-bar-container {
+    text-align: center;
+    position: absolute;
+    top: 220px; /* Specific top position */
+    right: -13%; /* Specific right position */
+    transform: translateX(20%);
+}
+
+.health-text {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+.health-bar {
+    width: 200px;
+    height: 30px;
+    border: 1px solid #333;
+    position: relative;
+    overflow: hidden;
+    display: inline-block; /* Ensure health bar and text stay in line */
+}
+.health-bar .bar {
+    height: 100%;
+    background-color: green;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: width 0.3s ease;
+}
+
+#logo-container {
+    display: flex;
+    flex-direction: column; /* Arrange items vertically */
+    align-items: center; /* Center items horizontally */
+    margin-bottom: 0px; /* Adjust the margin between the logo and the button */
+}
+
+#content-container {
+    position: absolute; /* Change to absolute positioning */
+    top: 50%; /* Position content in the middle vertically */
+    transform: translateY(-50%); /* Adjust to center content vertically */
+    left: 100px; /* Adjust left position */
+}
+
+#game-container {
+    position: relative;
+    background-color: #000;
+    width: 800px;
+    max-width: 800px;
+    height: 400px;
+    overflow: hidden;
+    border: 4px solid #fff;
+    padding: 10px;
+    margin-right: 100px; /* Adjust margin between the game container and buttons */
+    margin-left: 100px;
+    top: 200px; /* Adjust the top position to move the game container lower */
+}
+
+#game-text {
+    height: calc(100% - 40px);
+    overflow-y: auto;
+    margin-bottom: 10px;
+    max-height: 80vh;
+}
+
+#command-line {
+    width: calc(100% - 20px);
+    padding: 5px;
+    box-sizing: border-box;
+    border: none;
+    background-color: #000;
+    color: #fff;
+    outline: none;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+#buttons-container {
+    display: flex;
+    justify-content: center; /* Center buttons horizontally */
+    align-items: center; /* Center buttons vertically */
+    background-color: black;
+    height: 150px;
+    position: absolute; /* Change to absolute positioning */
+    right: -70px; /* Specific right position */
+    bottom: -50px; /* Specific bottom position */
+}
+.pause {
+    position: absolute;
+    top: calc(50% + 350px); /* Adjust based on button size */
+    transform: translate(-50%, -50%); 
+    background-color: #511717; 
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    Right: -130px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+
+#button1 {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#button2 {
+    position: absolute;
+    top: 50%;
+    left: calc(50% + 50px); /* Adjust based on button size */
+    transform: translate(-50%, -50%);
+}
+
+#button3 {
+    position: absolute;
+    top: calc(50% - 50px); /* Adjust based on button size */
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#button4 {
+    position: absolute;
+    top: calc(50% + 50px); /* Adjust based on button size */
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.game-button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background-color: #fff;
+    color: #000;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 0 5px; /* Add margin between buttons */
+    position: relative; /* Added */
+}
+
+#searchButton {
+    position: absolute;
+    top: calc(50% + 350px); /* Adjust based on button size */
+    transform: translate(-50%, -50%); 
+    background-color: #511717; 
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+#punchButton {
+    position: absolute;
+    top: calc(50% + 300px); /* Adjust based on button size */
+    transform: translate(-50%, -50%); 
+    background-color: #511717; 
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+#kickButton {
+    position: absolute;
+    top: calc(50% + 250px); /* Adjust based on button size */
+    transform: translate(-50%, -50%); 
+    background-color: #511717; 
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 10px;
+}

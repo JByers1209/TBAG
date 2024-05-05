@@ -8,6 +8,8 @@ import edu.ycp.cs320.tbag.model.Actor;
 import edu.ycp.cs320.tbag.model.Item;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
+import edu.ycp.cs320.tbag.model.SaveData;
+import edu.ycp.cs320.tbag.model.SaveGame;
 
 public class GameEngine {
 	
@@ -85,7 +87,7 @@ public class GameEngine {
 
         // Append user input and response to gameLog if returnInput is true
         if (returnInput && !input.equals("prestart")) {
-            db.updateActor(1, player);
+            db.updateActor(player);
             gameLog += "\n >" + userInput;
             gameLog += "\n" + response;
         }
@@ -135,7 +137,7 @@ public class GameEngine {
             player.moveTo(nextRoom);
             currentRoom = player.getCurrentRoom();
             player.setRoomID(currentRoom.getRoomID());
-            db.updateActor(1, player);
+            db.updateActor(player);
             String moveResult;
             if (nextRoom.getVisited().equals("false")) {
             	nextRoom.setVisited("true");
@@ -268,7 +270,7 @@ public class GameEngine {
             }
         	
         	enemy.setRoomID(0);
-        	db.updateActor(enemy.getActorID(), enemy);
+        	db.updateActor(enemy);
             return "You defeated the " + enemy.getName() + "!";
         } else if (player.getCurrentHealth() <= 0) {
             // Player's health is 0 or less, handle defeat
@@ -325,7 +327,7 @@ public class GameEngine {
     private String processDamage1(Item item) {
         // Process outcome 1
         enemy.setCurrentHealth(enemy.getCurrentHealth() - item.getDamage());
-        db.updateActor(enemy.getActorID(), enemy);
+        db.updateActor(enemy);
         String outcome = "You use the " + item.getName() + " against the " + enemy.getName() + ".";
         return enemyFightsBack(outcome);
     }
@@ -473,5 +475,107 @@ public class GameEngine {
 		Actor playerInfo = db.findActorByID(1);
 		return "$" + playerInfo.getMaxHealth();
 	}
-}
+	
+    public void saveGame(String saveName) {
+    	
+    	int actorCount = db.getActorCount() , roomCount = db.getRoomCount(), itemCount = db.getItemCount();
+    	List<SaveGame> saveGames = db.getSaveGames(userId);
+    	
+    	//check if save already exists
+    	boolean saveExists = false;
+    	for(SaveGame saveGame: saveGames) {
+    		if(saveGame.getSaveName().equals(saveName)) {
+    			saveExists = true;
+    		}
+    	}
+    	//if already exists error
+    	if(saveExists) {
+    		System.out.println("Error: Save Already Exists with Given Name");
+    	
+        //else if doesn't exist generate a new saveID and make a new save game and save the data
+    	}else { 	
+	    	int saveID = db.getNextSaveID();
+	    	
+	    	
+	    	//save game
+	    	SaveGame newSaveGame = new SaveGame();
+	    	newSaveGame.setUserID(userId);
+	    	newSaveGame.setSaveID(saveID);
+	    	newSaveGame.setSaveName(saveName);
+	    	db.addSaveGame(newSaveGame);
+	    	  	
+	    	//save actors
+	    	for(int i = 1; i <= actorCount; i++) {
+	    		Actor actor = db.findActorByID(i);
+	    		db.saveActor(saveID, actor);
+	    	}
+	    	
+	    	//save rooms
+	    	for(int i = 1; i <= roomCount; i++ ) {
+	    		Room room = db.findRoomByRoomID(i);
+	    		db.saveRoom(saveID, room);
+	    	}
+	    	
+	    	//save items
+	    	for(int i = 1; i <= itemCount; i++ ) {
+	    		Item item = db.findItemByID(i);
+	    		db.saveItem(saveID, item);
+	    	}  
+	    	
+	    	
+	    	//save log
+	    	db.saveLog(saveID, gameLog);
+    	}
+    }//end SaveGame
+	
+	
+
+	
+	
+    public void loadGame(String saveName) {
+    	
+    	SaveGame saveGame = db.getSaveGameByName(saveName);
+    	List<SaveData> saveDataList = db.getSaveData(saveGame.getSaveID());
+    	
+    	
+    	for(SaveData saveData: saveDataList) {
+    		if(saveData.getSaveType().equals("actor")) {
+    			Actor actorToUpdate = db.findActorByID(saveData.getIdSlot1());
+    			actorToUpdate.update(saveData);
+    			db.updateActor(actorToUpdate);
+    			
+    		}else if(saveData.getSaveType().equals("room")) {
+    			Room roomToUpdate = db.findRoomByRoomID(saveData.getIdSlot1());
+    			roomToUpdate.update(saveData);
+    			db.updateRoomByRoom(roomToUpdate);
+    			
+    		}else if(saveData.getSaveType().equals("item")) {
+    			Item itemToUpdate = db.findItemByID(saveData.getIdSlot1());
+    			itemToUpdate.update(saveData);
+    			db.updateItem(itemToUpdate.getItemID(), itemToUpdate.getRoomID(), itemToUpdate.getOwnerID());
+    		}else {
+    			gameLog = saveData.getLog();
+    		}
+    	}
+    	
+    	
+    	
+    	
+    	
+    	
+    }//end loadGame
+	
+	
+	
+	
+}//endGameEngine
+
+
+
+
+
+
+
+
+
 

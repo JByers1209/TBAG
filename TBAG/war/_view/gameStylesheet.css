@@ -1,168 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pause Game</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+
+  <h1>
+    <div>
+      <img src="https://blog.flamingtext.com/blog/2024/03/13/flamingtext_com_1710299194_29928696.png" style="width:300px;height:300px;">
+    </div>
+  </h1>
+
+  <h2>
+    <div>
+      <img src="https://blog.flamingtext.com/blog/2024/03/14/flamingtext_com_1710445150_29928758.png" style="width:300px;height:300px;">
+    </div>
+  </h2>
+
+    <div>
+    <input type="submit" name= "function" value="Resume" class="submit">
+    <input type="submit" name= "function" value="Quit Game" class="submit"> 
+    <input type="submit" name= "function" value="Restart Game" class="submit"> 
+
+    </div>
+
+
+</body>
+</html>
+Image
+Image
+RESUME PAGE^^^^^^^^^^^^
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+
+  <h1>
+    <div>
+      <img src="https://blog.flamingtext.com/blog/2024/03/13/flamingtext_com_1710299194_29928696.png" style="width:300px;height:300px;">
+    </div>
+  </h1>
+
+  <h2>
+    <div>
+      <img src="https://blog.flamingtext.com/blog/2024/03/14/flamingtext_com_1710447290_29928759.png" border="0" style="width:300px;height:300px;">
+    </div>
+  </h2>
+</head>
+
+    <div class="login-container">
+
+        <form action="login.php" method="post">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+
+
+</body>
+</html>
+Image
+Image
+login page^^^^^^^^^^
+syle sheet in case you wanna pull bits from it
 body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
     background-color: var(--gray);
-    color: #fff;
+    color: white;
+    font-family: Arial, sans-serif;
 }
 
 :root {
     --gray: #575859;
 }
 
-#wrapper {
-    position: relative; /* Add relative positioning to act as a reference for absolutely positioned elements */
+.container {
+    margin-top: 25px;
+    text-align: center; /* Center the content horizontally /
 }
 
-/* CSS for the health bar */
-.health-bar-container {
-    text-align: center;
-    position: absolute;
-<<<<<<< HEAD:TBAG/war/_view/gameStylesheet.css
-    top: 300px; /* Adjust the value to move the health bar higher */
-    right: 15%;
-=======
-    top: 220px; /* Specific top position */
-    right: -13%; /* Specific right position */
->>>>>>> master:TBAG/war/gameStylesheet.css
-    transform: translateX(20%);
-}
-
-.health-text {
-    font-size: 18px;
-    margin-bottom: 5px;
-}
-.health-bar {
-    width: 200px;
-    height: 30px;
-    border: 1px solid #333;
-    position: relative;
-    overflow: hidden;
-    display: inline-block; /* Ensure health bar and text stay in line */
-}
-.health-bar .bar {
-    height: 100%;
-    background-color: green;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transition: width 0.3s ease;
-}
-
-#logo-container {
+.logo-container {
     display: flex;
-    flex-direction: column; /* Arrange items vertically */
-    align-items: center; /* Center items horizontally */
-    margin-bottom: 0px; /* Adjust the margin between the logo and the button */
+    flex-direction: column; / Arrange items vertically /
+    align-items: center; / Center items horizontally /
+    margin-bottom: 20px; / Adjust the margin between the logo and the button /
 }
 
-#content-container {
-    position: absolute; /* Change to absolute positioning */
-    top: 50%; /* Position content in the middle vertically */
-    transform: translateY(-50%); /* Adjust to center content vertically */
-    left: 100px; /* Adjust left position */
+img {
+    margin-bottom: -80px; / Adjust the margin between the two images /
 }
 
-#game-container {
-    position: relative;
-    background-color: #000;
-    width: 800px;
-    max-width: 800px;
-    height: 400px;
-    overflow: hidden;
-    border: 4px solid #fff;
+.submit {
+        background-color: #511717; / Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+
+    .submit:hover {
+        background-color: #ff8080;
+    }
+
+    .submit::-moz-focus-inner,
+    .submit::-moz-focus-inner {
+        border: 0;
+        padding: 0;
+    }
+
+    .submit:focus {
+        outline: none;
+    }
+#login-form {
+    margin-top: 100px;
+}
+
+#login-form input[type="text"],
+#login-form input[type="password"] {
     padding: 10px;
-    margin-right: 100px; /* Adjust margin between the game container and buttons */
-    margin-left: 100px;
-    top: 200px; /* Adjust the top position to move the game container lower */
+    margin: 5px;
+    width: 200px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
-#game-text {
-    height: calc(100% - 40px);
-    overflow-y: auto;
-    margin-bottom: 10px;
-    max-height: 80vh;
+#login-form button {
+    margin-top: 10px;
 }
+onnaii — 03/19/2024 3:56 PM
+<img src="https://blog.flamingtext.com/blog/2024/03/14/flamingtext_com_1710447290_29928759.png" border="0" style="width:300px;height:300px;">
+Image
+onnaii — 03/24/2024 12:02 AM
+servlet login
+package edu.ycp.cs320.tbag.servlet;
 
-#command-line {
-    width: calc(100% - 20px);
-    padding: 5px;
-    box-sizing: border-box;
-    border: none;
-    background-color: #000;
-    color: #fff;
-    outline: none;
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-}
+import java.io.IOException;
 
-#buttons-container {
-    display: flex;
-    justify-content: center; /* Center buttons horizontally */
-    align-items: center; /* Center buttons vertically */
-    background-color: black;
-    height: 150px;
-    position: absolute; /* Change to absolute positioning */
-    right: -70px; /* Specific right position */
-    bottom: -50px; /* Specific bottom position */
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import edu.ycp.cs320.tbag.controller.GameEngine;
+
+public class LoginServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    private GameEngine gameEngine; // Instantiate GameEngine
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        gameEngine = new GameEngine(); // Initialize GameEngine
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+          String username = req.getParameter("username");
+          String password = req.getParameter("password");
+
+          boolean isAuthenticated = authenticateUser(username, password);
+
+          if (isAuthenticated) {
+              // Forward to the game page upon successful login
+              req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
+          } else {
+              // Redirect back to the login page with an error message
+              resp.sendRedirect("/index.jsp?error=1");
+          }
+    }
+ // Placeholder method for authentication (replace with actual authentication logic)
+    private boolean authenticateUser(String username, String password) {
+        // This is a placeholder implementation, you should replace it with your actual authentication logic
+        return username.equals("admin") && password.equals("password");
+    }
 }
-.pause {
-    position: absolute;
-    top: calc(50% + 350px); /* Adjust based on button size */
-    transform: translate(-50%, -50%); 
-    background-color: #511717; 
-    border: none;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="styleSheet.css">
+</head>
+<body>
+
+  <h1>
+    <div>
+      <img src="https://blog.flamingtext.com/blog/2024/03/13/flamingtext_com_1710299194_29928696.png" style="width:300px;height:300px;">
+    </div>
+  </h1>
+
+  <h2>
+    <div>
+      <img src="https://blog.flamingtext.com/blog/2024/03/14/flamingtext_com_1710447290_29928759.png" border="0" style="width:300px;height:300px;">
+    </div>
+  </h2>
+
+  <div class="login-container">
+    <form action="login.php" method="post">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="submit" value="Login">
+    </form>
+  </div>
+
+</body>
+</html>
+Image
+Image
+login.jsp test
+NinjaMaster1209 — 03/24/2024 5:14 PM
+Game servlet:
+package edu.ycp.cs320.tbag.servlet;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import edu.ycp.cs320.tbag.controller.GameEngine;
+
+public class GameServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    private GameEngine gameEngine; // Instantiate GameEngine
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        gameEngine = new GameEngine(); // Initialize GameEngine
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        // Extract user input from request
+        String userInput = req.getParameter("userInput");
+
+        // Process user input using GameEngine
+        String gameResponse = gameEngine.processUserInput(userInput);
+
+        // Set response content type
+        resp.setContentType("text/plain");
+
+        // Send game response back to client
+        resp.getWriter().write(gameResponse);
+    }
+}
+index servlet:
+package edu.ycp.cs320.tbag.servlet;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class IndexServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String function = req.getParameter("function");
+
+        if ("Play".equals(function)) {
+            req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
+        } else {
+            req.getRequestDispatcher("/_view/index.jsp").forward(req, resp);
+        }
+    }
+}
+game.jsp:
+NinjaMaster1209 — 03/24/2024 5:21 PM
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Spooky York</title>
+    <link rel="stylesheet" type="text/css" href="styleSheet2.css">
+</head>
+<body>
+    <div id="logo-container">
+        <img src="https://blog.flamingtext.com/blog/2024/03/13/flamingtext_com_1710299194_29928696.png" border="0" alt="Game title" title="title">
+    </div>
+
+    <div id="game-container">
+        <div id="game-text">
+            <!-- This is where the game text will appear -->
+        </div>
+        <form id="game-form" action="game" method="post"> <!-- Form element added -->
+            <input type="text" id="command-line" name="userInput" placeholder="Type your command..."> <!-- Name attribute added -->
+        </form>
+    </div>\
+Image
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Display initial prompt
+            var gameText = document.getElementById("game-text");
+            gameText.innerHTML += "<p>Welcome to Spooky York! Type 'start' to begin.</p>";
+
+            var form = document.getElementById("game-form");
+            var commandLine = document.getElementById("command-line");
+
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                var userInput = commandLine.value.trim(); // Extract user input
+                commandLine.value = ""; // Clear input field
+
+                // Send AJAX request to server
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", form.action, true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Append new text to existing content
+                        gameText.innerHTML += "<p><strong> >  " + userInput + "</p>";
+                        gameText.innerHTML += "<p>" + xhr.responseText + "</p>";
+
+                        // Scroll to the bottom of the textbox
+                        gameText.scrollTop = gameText.scrollHeight;
+                    }
+                };
+                xhr.send("userInput=" + encodeURIComponent(userInput));
+            });
+        });
+    </script>
+
+</body>
+</html>
+index: <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spooky York</title>
+    <link rel="stylesheet" type="text/css" href="styleSheet.css">
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="https://blog.flamingtext.com/blog/2024/03/13/flamingtext_com_1710299194_29928696.png" border="0" alt="Game title" title="title">
+            <img src="https://blog.flamingtext.com/blog/2024/03/13/flamingtext_com_1710299127_29928695.png" border="0" alt="Game subtitle" title="subtitle">
+        </div>
+        <div id ="login-form">
+            <form function="IndexServlet" method="get">
+                <input type="submit" name="function" value="Play" class="submit">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+Image
+Image
+NinjaMaster1209 — 03/27/2024 12:19 AM
+body {
+    background-color: var(--gray);
     color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    Right: -130px;
-    transition-duration: 0.4s;
-    cursor: pointer;
-    border-radius: 10px;
+    font-family: Arial, sans-serif;
+}
+
+:root {
+    --gray: #575859;
+}
+
+.container {
+    margin-top: 25px;
+    text-align: center; /* Center the content horizontally /
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column; / Arrange items vertically /
+    align-items: center; / Center items horizontally /
+    margin-bottom: 20px; / Adjust the margin between the logo and the button /
+}
+#authentication {
+    text-align: center; / Center the content horizontally /
+    margin-top: 50px; / Adjust the top margin as needed /
+}
+
+img {
+    max-width: 100%; / Ensures the image doesn't exceed its container's width /
+    height: auto; / Allows the image's height to adjust accordingly /
+    margin-bottom: -80px; / Adjust the margin between the two images /
+}
+.logo-container2,
+.login {
+    text-align: center; / Center the content horizontally /
+    margin-top: 50px; / Adjust the top margin as needed */
 }
 
 
-#button1 {
-    position: absolute;
-    top: 50%;
-    right: 50%;
-    transform: translate(-50%, -50%);
+.submit {
+        background-color: #511717; 
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+
+    .submit:hover {
+        background-color: #ff8080;
+    }
+
+    .submit::-moz-focus-inner,
+    .submit::-moz-focus-inner {
+        border: 0;
+        padding: 0;
+    }
+
+    .submit:focus {
+        outline: none;
+    }
+#login-form {
+    margin-top: 100px;
 }
 
-#button2 {
-    position: absolute;
-    top: 50%;
-    left: calc(50% + 50px); /* Adjust based on button size */
-    transform: translate(-50%, -50%);
+#login-form input[type="text"],
+#login-form input[type="password"] {
+    padding: 10px;
+    margin: 5px;
+    width: 200px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
-#button3 {
-    position: absolute;
-    top: calc(50% - 50px); /* Adjust based on button size */
-    left: 50%;
-    transform: translate(-50%, -50%);
+#login-form button {
+    margin-top: 10px;
 }
+NinjaMaster1209 — Today at 12:51 AM
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Spooky York</title>
+    <link rel="stylesheet" type="text/css" href="gameStylesheet.css">
 
-#button4 {
-    position: absolute;
-    top: calc(50% + 50px); /* Adjust based on button size */
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
+</head>
+<body>
+    <div id="logo-container">
+        <img src="https://blog.flamingtext.com/blog/2024/03/13/flamingtext_com_1710299194_29928696.png" border="0" alt="Game title" title="title">
+    </div>
+    <div id="wrapper">
+        <div id="content-container">
+            <div id="game-container">
+                <div id="game-text">
+                    <!-- This is where the game text will appear -->
+                </div>
+                <form id="game-form" action="game" method="post">
+                    <input type="text" id="command-line" name="userInput" placeholder="Type your command...">
+                </form>
+            </div>
+            <!-- arrow buttons -->
+            <div id="buttons-container" style="display: none;">
+                <span id="button-span">
+                    <button id="button1" class="game-button" type="button"><</button>
+                    <button id="button2" class="game-button" type="button">></button>
+                    <button id="button3" class="game-button" type="button">^</button>
+                    <button id="button4" class="game-button" type="button">v</button>
+                </span>
+            </div>
+            <div id="search-button" style="display: none;">
+                <button id="searchButton" class="extra-button" type="button">Search</button>
+            </div>
+            <div id="punch-button" style="display: none;">
+                <button id="punchButton" class="extra-button" type="button">Punch</button>
+            </div>
+            <div id="kick-button" style="display: none;">
+                <button id="kickButton" class="extra-button" type="button">Kick</button>
+            </div>
+            
+            <!-- pause button -->
+            <div id="pause">
+                <form function="PauseServlet" method="get">
+                    <input type="submit" name="function" value="Save and Quit" class="pause">
+                </form>
+            </div>
+            <!-- HEALTH STATUS -->
+            <div class="health-bar-container">
+                <div class="health-text">Health Level</div>
+                <div class="health-bar">
+                    <div class="bar"></div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
 
-.game-button {
-    width: 40px;
-    height: 40px;
-    border: none;
-    border-radius: 50%;
-    background-color: #fff;
-    color: #000;
-    font-size: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    margin: 0 5px; /* Add margin between buttons */
-    position: relative; /* Added */
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var gameText = document.getElementById("game-text");
+            var form = document.getElementById("game-form");
+            var commandLine = document.getElementById("command-line");
+            var buttonsContainer = document.getElementById("buttons-container");
+            var directions = []; // Array to store entered directions
+    
+            // Function to send command to servlet
+            function sendCommand(userInput) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", form.action, true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        handleResponse(xhr.responseText);
+                    }
+                };
+                xhr.send("userInput=" + encodeURIComponent(userInput));
+            }
+    
+            // Function to handle response from servlet
+            function handleResponse(responseText) {
+                // Clear previous game text
+                gameText.innerHTML = "";
+                
+                // Split response text into lines
+                var responseLines = responseText.split('\n');
+                
+                // Extract health information (assuming it's the first part of the response)
+                var healthInfo = responseLines[0];
+                
+                // Call the updateHealthBar function to update the health bar
+                updateHealthBar(healthInfo);
+                
+                // Display each line of response except the health information
+                for (var i = 1; i < responseLines.length; i++) {
+                    gameText.innerHTML += "<p>" + responseLines[i] + "</p>";
+                }
+                gameText.scrollTop = gameText.scrollHeight;
+            }
+    
+... (97 lines left)
+Collapse
+message.txt
+9 KB
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Spooky York</title>
+    <link rel="stylesheet" type="text/css" href="gameStylesheet.css">
+
+</head>
+<body>
+    <div id="logo-container">
+        <img src="https://blog.flamingtext.com/blog/2024/03/13/flamingtext_com_1710299194_29928696.png" border="0" alt="Game title" title="title">
+    </div>
+    <div id="wrapper">
+        <div id="content-container">
+            <div id="game-container">
+                <div id="game-text">
+                    <!-- This is where the game text will appear -->
+                </div>
+                <form id="game-form" action="game" method="post">
+                    <input type="text" id="command-line" name="userInput" placeholder="Type your command...">
+                </form>
+            </div>
+            <!-- arrow buttons -->
+            <div id="buttons-container" style="display: none;">
+                <span id="button-span">
+                    <button id="button1" class="game-button" type="button"><</button>
+                    <button id="button2" class="game-button" type="button">></button>
+                    <button id="button3" class="game-button" type="button">^</button>
+                    <button id="button4" class="game-button" type="button">v</button>
+                </span>
+            </div>
+            <div id="search-button" style="display: none;">
+                <button id="searchButton" class="extra-button" type="button">Search</button>
+            </div>
+            <div id="punch-button" style="display: none;">
+                <button id="punchButton" class="extra-button" type="button">Punch</button>
+            </div>
+            <div id="kick-button" style="display: none;">
+                <button id="kickButton" class="extra-button" type="button">Kick</button>
+            </div>
+            
+            <!-- pause button -->
+            <div id="pause">
+                <form function="PauseServlet" method="get">
+                    <input type="submit" name="function" value="Save and Quit" class="pause">
+                </form>
+            </div>
+            <!-- HEALTH STATUS -->
+            <div class="health-bar-container">
+                <div class="health-text">Health Level</div>
+                <div class="health-bar">
+                    <div class="bar"></div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var gameText = document.getElementById("game-text");
+            var form = document.getElementById("game-form");
+            var commandLine = document.getElementById("command-line");
+            var buttonsContainer = document.getElementById("buttons-container");
+            var directions = []; // Array to store entered directions
+    
+            // Function to send command to servlet
+            function sendCommand(userInput) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", form.action, true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        handleResponse(xhr.responseText);
+                    }
+                };
+                xhr.send("userInput=" + encodeURIComponent(userInput));
+            }
+    
+            // Function to handle response from servlet
+            function handleResponse(responseText) {
+                // Clear previous game text
+                gameText.innerHTML = "";
+                
+                // Split response text into lines
+                var responseLines = responseText.split('\n');
+                
+                // Extract health information (assuming it's the first part of the response)
+                var healthInfo = responseLines[0];
+                
+                // Call the updateHealthBar function to update the health bar
+                updateHealthBar(healthInfo);
+                
+                // Display each line of response except the health information
+                for (var i = 1; i < responseLines.length; i++) {
+                    gameText.innerHTML += "<p>" + responseLines[i] + "</p>";
+                }
+                gameText.scrollTop = gameText.scrollHeight;
+            }
+    
+            // Function to update health bar width
+            function updateHealthBar(responseText) {
+                // Split the response text by the delimiter
+                var responseParts = responseText.split('$');
+    
+                // Extract the health percentage from the response
+                var healthPercentage = parseInt(responseParts[0]);
+    
+                // Update width of health bar
+                var healthBar = document.querySelector(".health-bar .bar");
+                healthBar.style.width = healthPercentage + "%";
+            }
+    
+            // Function to send initial GET request
+            function sendGetRequest() {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "game", true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Handle response if needed
+                    }
+                };
+                xhr.send();
+            }
+    
+            // Event listener for form submission
+            form.addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent default form submission
+    var userInput = commandLine.value.trim().toLowerCase();
+    if (userInput === "north" || userInput === "south" || userInput === "east" || userInput === "west") {
+        if (!directions.includes(userInput)) {
+            directions.push(userInput); // Add direction to array if not already present
+        }
+    }
+    // Check if all directions have been entered
+    if (directions.length === 4) {
+        buttonsContainer.style.display = "block"; // Show buttons
+    }
+    sendCommand(userInput);
+    commandLine.value = ""; // Clear input field
+    
+    // Show corresponding buttons based on user input
+    showButtons(userInput);
+});
+
+// Function to show corresponding buttons based on user input
+function showButtons(userInput) {
+    var searchButton = document.getElementById("search-button");
+    var punchButton = document.getElementById("punch-button");
+    var kickButton = document.getElementById("kick-button");
+
+    switch (userInput) {
+        case "search":
+            searchButton.style.display = "block";
+            break;
+        case "punch":
+            punchButton.style.display = "block";
+            break;
+        case "kick":
+            kickButton.style.display = "block";
+            break;
+        default:
+            break;
+    }
 }
+            // Event listeners for direction buttons
+            document.getElementById("button1").addEventListener("click", function() {
+                sendCommand("west"); 
+            });
+            document.getElementById("button2").addEventListener("click", function() {
+                sendCommand("east");
+            });
+            document.getElementById("button3").addEventListener("click", function() {
+                sendCommand("north");
+            });
+            document.getElementById("button4").addEventListener("click", function() {
+                sendCommand("south"); 
+            });
+            document.getElementById("searchButton").addEventListener("click", function() {
+                sendCommand("search"); 
+            });
+            document.getElementById("kickButton").addEventListener("click", function() {
+                sendCommand("kick"); 
+            });
+            document.getElementById("punchButton").addEventListener("click", function() {
+                sendCommand("punch"); 
+            });
+    
+            // Initial GET request
+            sendGetRequest();
+            sendCommand("preStart");
+        });
+    </script>
+
+</body>
+</html>

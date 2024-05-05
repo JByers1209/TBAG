@@ -58,7 +58,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private int authenticateUser(String username, String password) {
-        String dbUrl = "jdbc:derby:C:/Users/josmb/git/tbag.db";
+        String dbUrl = "jdbc:derby:tbag.db";
         
         try (Connection conn = DriverManager.getConnection(dbUrl)) {
             String sql = "SELECT user_id FROM users WHERE username=? AND password=?";

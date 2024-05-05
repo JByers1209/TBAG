@@ -14,10 +14,7 @@
         </div>
     </div>
     <div id="authentication">
-<<<<<<< HEAD
-=======
         <h2>Login</h2>
->>>>>>> master
         <form id="loginForm" action="/tbag/login" method="post">
             <input type="text" id="username" name="username" placeholder="Username" required>
             <input type="password" id="password" name="password" placeholder="Password" required>
@@ -33,10 +30,6 @@
             </form>
         </div>
     </div>
-<<<<<<< HEAD
-</body>
-</html>
-=======
 
     <script>
         // Get the error paragraph element
@@ -59,5 +52,3 @@
     
 </body>
 </html>
-
->>>>>>> master
