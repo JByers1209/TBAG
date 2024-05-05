@@ -6,6 +6,7 @@ import edu.ycp.cs320.tbag.model.Item;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
 import edu.ycp.cs320.tbag.model.SaveData;
+import edu.ycp.cs320.tbag.model.SaveGame;
 import edu.ycp.cs320.tbag.model.User;
 
 
@@ -31,13 +32,17 @@ public interface IDatabase {
 	public List<User> findUserByUsername(String username);
 	public void createUser(User user);
 	
-	
-	
-	//save game
+	//save data
 	public void saveActor(int saveID, Actor actor);
 	public void saveRoom(int saveID, Room room);
 	public void saveItem(int saveID, Item item);
 	public void saveLog(int saveID, String log);
 	public List<SaveData> getSaveData(int saveID);
+	
+	//save game
+	public List<SaveGame> getSaveGames(int userID);
+	public SaveGame getSaveGameByName(String saveName);
+	public int getNextSaveID();
+	public void addSaveGame(SaveGame saveGame);
 	
 }

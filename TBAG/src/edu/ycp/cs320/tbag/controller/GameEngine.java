@@ -8,6 +8,7 @@ import edu.ycp.cs320.tbag.model.Item;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
 import edu.ycp.cs320.tbag.model.SaveData;
+import edu.ycp.cs320.tbag.model.SaveGame;
 
 public class GameEngine {
 
@@ -20,6 +21,7 @@ public class GameEngine {
     List<Item> items = null;
     List<RoomConnection> connection = null;
     int nextRoomId;
+    
 
     DerbyDatabase db = new DerbyDatabase();
 
@@ -181,36 +183,63 @@ public class GameEngine {
     }
     
     
-    public void saveGame(int saveID) {
+    public void saveGame(String saveName) {
     	
     	int actorCount = db.getActorCount() , roomCount = db.getRoomCount(), itemCount = db.getItemCount();
+    	List<SaveGame> saveGames = db.getSaveGames(userID);
     	
-    	//save actors
-    	for(int i = 1; i <= actorCount; i++) {
-    		Actor actor = db.findActorByID(i);
-    		db.saveActor(saveID, actor);
+    	//check if save already exists
+    	boolean saveExists = false;
+    	for(SaveGame saveGame: saveGames) {
+    		if(saveGame.getSaveName().equals(saveName)) {
+    			saveExists = true;
+    		}
     	}
+    	//if already exists error
+    	if(saveExists) {
+    		System.out.println("Error: Save Already Exists with Given Name");
     	
-    	//save rooms
-    	for(int i = 1; i <= roomCount; i++ ) {
-    		Room room = db.findRoomByRoomID(i);
-    		db.saveRoom(saveID, room);
+        //else if doesn't exist generate a new saveID and make a new save game and save the data
+    	}else { 	
+	    	int saveID = db.getNextSaveID();
+	    	
+	    	
+	    	//save game
+	    	SaveGame newSaveGame = new SaveGame();
+	    	newSaveGame.setUserID(userID);
+	    	newSaveGame.setSaveID(saveID);
+	    	newSaveGame.setSaveName(saveName);
+	    	db.addSaveGame(newSaveGame);
+	    	  	
+	    	//save actors
+	    	for(int i = 1; i <= actorCount; i++) {
+	    		Actor actor = db.findActorByID(i);
+	    		db.saveActor(saveID, actor);
+	    	}
+	    	
+	    	//save rooms
+	    	for(int i = 1; i <= roomCount; i++ ) {
+	    		Room room = db.findRoomByRoomID(i);
+	    		db.saveRoom(saveID, room);
+	    	}
+	    	
+	    	//save items
+	    	for(int i = 1; i <= itemCount; i++ ) {
+	    		Item item = db.findItemByID(i);
+	    		db.saveItem(saveID, item);
+	    	}  
+	    	
+	    	
+	    	//save log
+	    	db.saveLog(saveID, gameLog);
     	}
-    	
-    	//save items
-    	for(int i = 1; i <= itemCount; i++ ) {
-    		Item item = db.findItemByID(i);
-    		db.saveItem(saveID, item);
-    	}  
-    	
-    	
-    	//save log
-    	db.saveLog(saveID, gameLog);
     }
     
-    public void loadGame(int saveID) {
+    public void loadGame(String saveName) {
     	
-    	List<SaveData> saveDataList = db.getSaveData(saveID);
+    	SaveGame saveGame = db.getSaveGameByName(saveName);
+    	List<SaveData> saveDataList = db.getSaveData(saveGame.getSaveID());
+    	
     	
     	for(SaveData saveData: saveDataList) {
     		if(saveData.getSaveType().equals("actor")) {

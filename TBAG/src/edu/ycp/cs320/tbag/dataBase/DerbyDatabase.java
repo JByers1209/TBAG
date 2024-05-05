@@ -17,6 +17,7 @@ import edu.ycp.cs320.tbag.model.KeyItem;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
 import edu.ycp.cs320.tbag.model.SaveData;
+import edu.ycp.cs320.tbag.model.SaveGame;
 import edu.ycp.cs320.tbag.model.User;
 import edu.ycp.cs320.tbag.model.Weapon;
 import edu.ycp.cs320.tbag.model.NPC;
@@ -932,6 +933,31 @@ public class DerbyDatabase implements IDatabase {
 		
 	}//end createUser
 	
+	public void addSaveGame(SaveGame saveGame) {
+	    executeTransaction(new Transaction<Void>() {
+        @Override
+        public Void execute(Connection conn) throws SQLException {
+            PreparedStatement stmt = null;
+            ResultSet resultSet = null;
+
+            try {
+                stmt = conn.prepareStatement("insert into save_games (user_id, save_name, save_id) values (?, ?, ?)");
+                stmt.setInt(1, saveGame.getUserID());
+                stmt.setString(2, saveGame.getSaveName());
+                stmt.setInt(3, saveGame.getSaveID());
+                stmt.executeUpdate();
+             
+            } finally {
+                // Closing resources in a finally block
+                DBUtil.closeQuietly(resultSet);
+                DBUtil.closeQuietly(stmt);
+            }
+            return null;
+        }
+    });
+		
+	}//end createUser
+	
 	@Override
 	public List<SaveData> getSaveData(int saveID){
 	    return executeTransaction(new Transaction<List<SaveData>>() {
@@ -966,8 +992,113 @@ public class DerbyDatabase implements IDatabase {
 	
 	}//end getSaveData
 
+	@Override
+	public List<SaveGame> getSaveGames(int userID){
+	    return executeTransaction(new Transaction<List<SaveGame>>() {
+	        @Override
+	        public List<SaveGame> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
 
+	            try {
+	                stmt = conn.prepareStatement("SELECT * FROM save_games WHERE user_id = ?");
+	                stmt.setInt(1, userID);
 
+	                List<SaveGame> result = new ArrayList<>();
+	                resultSet = stmt.executeQuery();
+
+	                while (resultSet.next()) {
+	                	SaveGame saveGame = new SaveGame();
+	                    // Assuming loadUser method populates user data from ResultSet
+	                    loadSaveGame(saveGame, resultSet, 1); // Assuming this method exists
+	                    result.add(saveGame);
+	                }
+
+	                return result;
+	            } finally {
+	                // Closing resources in a finally block
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+		
+	
+	}//end getSaveGame
+
+	
+	@Override
+	public SaveGame getSaveGameByName(String saveName){
+	    return executeTransaction(new Transaction<SaveGame>() {
+	        @Override
+	        public SaveGame execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
+
+	            try {
+	                stmt = conn.prepareStatement("SELECT * FROM save_games WHERE save_name = ?");
+	                stmt.setString(1, saveName);
+
+	             
+	                resultSet = stmt.executeQuery();
+	                SaveGame saveGame = new SaveGame();
+	                while (resultSet.next()) {
+	                    loadSaveGame(saveGame, resultSet, 1);
+	                }
+
+	                return saveGame;
+	            } finally {
+	                // Closing resources in a finally block
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+		
+	
+	}//end getSaveGame
+	
+	
+	public int getNextSaveID(){
+	    return executeTransaction(new Transaction<Integer>() {
+	        @Override
+	        public Integer execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
+	            int largestSaveID = 0;
+
+	            try {
+	                stmt = conn.prepareStatement("SELECT * FROM save_games");
+
+	                List<SaveGame> result = new ArrayList<>();
+	                resultSet = stmt.executeQuery();
+
+	                while (resultSet.next()) {
+	                	SaveGame saveGame = new SaveGame();
+	                    // Assuming loadUser method populates user data from ResultSet
+	                    loadSaveGame(saveGame, resultSet, 1); // Assuming this method exists
+	                    result.add(saveGame);
+	                }
+	                
+	                for(SaveGame saveGame: result) {
+	                	
+	                	if(saveGame.getSaveID() > largestSaveID) {
+	                		largestSaveID = saveGame.getSaveID();
+	                	}
+	                }
+	                
+
+	                return (largestSaveID + 1);
+	            } finally {
+	                // Closing resources in a finally block
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+		
+	
+	}//end getNextSaveID
 	
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
@@ -1045,6 +1176,13 @@ public class DerbyDatabase implements IDatabase {
 		saveData.setHasVisited(resultSet.getString(index++));
 		saveData.setNeedsKey(resultSet.getString(index++));
 		saveData.setLog(resultSet.getString(index++));
+	}
+	
+	private void loadSaveGame(SaveGame saveGame, ResultSet resultSet, int index) throws SQLException {
+		saveGame.setUserID(resultSet.getInt(index++));
+		saveGame.setSaveName(resultSet.getString(index++));
+		saveGame.setSaveID(resultSet.getInt(index++));
+		
 	}	
 	
 	
@@ -1095,6 +1233,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt4 = null;
 				PreparedStatement stmt5 = null;
 				PreparedStatement stmt6 = null;
+				PreparedStatement stmt7 = null;
 				
 				try {
 					stmt1 = conn.prepareStatement(
@@ -1180,6 +1319,14 @@ public class DerbyDatabase implements IDatabase {
 								")"
 							);
 							stmt6.executeUpdate();	
+							
+							stmt7 = conn.prepareStatement("create table save_games (" +
+								"	user_id integer"+									
+								"   save_name varchar(40)," +
+								"	save_id integer," +
+								")");
+							stmt7.executeUpdate();	
+						
 						
 						
 					return true;
@@ -1190,6 +1337,7 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmt4);
 					DBUtil.closeQuietly(stmt5);
 					DBUtil.closeQuietly(stmt6);
+					DBUtil.closeQuietly(stmt7);
 				}
 			}
 		});
