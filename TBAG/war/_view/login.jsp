@@ -11,16 +11,24 @@
     <div class="container">
         <div class= "logo-container">
             <img src="https://blog.flamingtext.com/blog/2024/03/13/flamingtext_com_1710299194_29928696.png">
-            <img src="https://blog.flamingtext.com/blog/2024/03/27/flamingtext_com_1711512717_626226192.png">
         </div>
     </div>
     <div id="authentication">
+        <h2>Login</h2>
         <form id="loginForm" action="/tbag/login" method="post">
             <input type="text" id="username" name="username" placeholder="Username" required>
             <input type="password" id="password" name="password" placeholder="Password" required>
             <button type="submit">Login Now</button>
         </form>
         <p id="error" style="color: red;"></p>
+        <div id="registrationBox">
+            <h3>Create an account</h3>
+            <form id="registerForm" action="/tbag/register" method="post">
+                <input type="text" id="newUsername" name="newUsername" placeholder="New Username" required>
+                <input type="password" id="newPassword" name="newPassword" placeholder="New Password" required>
+                <button type="submit">Register</button>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -37,3 +45,4 @@
     </script>
 </body>
 </html>
+

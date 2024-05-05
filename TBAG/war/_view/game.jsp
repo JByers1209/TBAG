@@ -39,87 +39,120 @@
             <div class="health-bar-container">
                 <div class="health-text">Health Level</div>
                 <div class="health-bar">
-                    <div class="bar" style="width: 100%;"></div>
+                    <div class="bar"></div>
                 </div>
+                
             </div>
         </div>
     </div>
 
     <script>
-        
-    document.addEventListener("DOMContentLoaded", function() {
-        // Display initial prompt
-        var gameText = document.getElementById("game-text");
-
-        var form = document.getElementById("game-form");
-        var commandLine = document.getElementById("command-line");
-        var buttonsContainer = document.getElementById("buttons-container");
-        var directions = []; // Array to store entered directions
-
-        sendGetRequest();
-        sendCommand("preStart");
-        
-        form.addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent default form submission
-            var userInput = commandLine.value.trim().toLowerCase();
-            if (userInput === "north" || userInput === "south" || userInput === "east" || userInput === "west") {
-                if (!directions.includes(userInput)) {
-                    directions.push(userInput); // Add direction to array if not already present
+        document.addEventListener("DOMContentLoaded", function() {
+            var gameText = document.getElementById("game-text");
+            var form = document.getElementById("game-form");
+            var commandLine = document.getElementById("command-line");
+            var buttonsContainer = document.getElementById("buttons-container");
+            var directions = []; // Array to store entered directions
+    
+            // Function to send command to servlet
+            function sendCommand(userInput) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", form.action, true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        handleResponse(xhr.responseText);
+                    }
+                };
+                xhr.send("userInput=" + encodeURIComponent(userInput));
+            }
+    
+            // Function to handle response from servlet
+            function handleResponse(responseText) {
+                // Clear previous game text
+                gameText.innerHTML = "";
+                
+                // Split response text into lines
+                var responseLines = responseText.split('\n');
+                
+                // Extract health information (assuming it's the first part of the response)
+                var healthInfo = responseLines[0];
+                
+                // Call the updateHealthBar function to update the health bar
+                updateHealthBar(healthInfo);
+                
+                // Display each line of response except the health information
+                for (var i = 1; i < responseLines.length; i++) {
+                    gameText.innerHTML += "<p>" + responseLines[i] + "</p>";
                 }
+                gameText.scrollTop = gameText.scrollHeight;
             }
-            // Check if all directions have been entered
-            if (directions.length === 4) {
-                buttonsContainer.style.display = "block"; // Show buttons
+    
+            // Function to update health bar width
+            function updateHealthBar(responseText) {
+                // Split the response text by the delimiter
+                var responseParts = responseText.split('$');
+    
+                // Extract the health percentage from the response
+                var healthPercentage = parseInt(responseParts[0]);
+    
+                // Update width of health bar
+                var healthBar = document.querySelector(".health-bar .bar");
+                healthBar.style.width = healthPercentage + "%";
             }
-            sendCommand(userInput);
-            commandLine.value = ""; // Clear input field
-        });
-
-        function sendCommand(userInput) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", form.action, true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Clear previous game text
-                    gameText.innerHTML = "";
-                    // Split response text into lines
-                    var responseLines = xhr.responseText.split('\n');
-                    // Display each line of response
-                    responseLines.forEach(function(line) {
-                        gameText.innerHTML += "<p>" + line + "</p>";
-                    });
-                    gameText.scrollTop = gameText.scrollHeight;
+    
+            // Function to send initial GET request
+            function sendGetRequest() {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "game", true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Handle response if needed
+                    }
+                };
+                xhr.send();
+            }
+    
+            // Event listener for form submission
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent default form submission
+                var userInput = commandLine.value.trim().toLowerCase();
+                if (userInput === "north" || userInput === "south" || userInput === "east" || userInput === "west") {
+                    if (!directions.includes(userInput)) {
+                        directions.push(userInput); // Add direction to array if not already present
+                    }
                 }
-            };
-            xhr.send("userInput=" + encodeURIComponent(userInput));
-        }
-
-        function sendGetRequest() {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "game", true);
-            xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-            // Handle response if needed
-            }
-        };
-        xhr.send();
-}
-
-        document.getElementById("button1").addEventListener("click", function() {
-            sendCommand("west"); 
+                // Check if all directions have been entered
+                if (directions.length === 4) {
+                    buttonsContainer.style.display = "block"; // Show buttons
+                }
+                sendCommand(userInput);
+                commandLine.value = ""; // Clear input field
+            });
+    
+            // Event listeners for direction buttons
+            document.getElementById("button1").addEventListener("click", function() {
+                sendCommand("west"); 
+            });
+            document.getElementById("button2").addEventListener("click", function() {
+                sendCommand("east"); 
+            });
+            document.getElementById("button3").addEventListener("click", function() {
+                sendCommand("north"); 
+            });
+            document.getElementById("button4").addEventListener("click", function() {
+                sendCommand("south"); 
+            });
+    
+            // Initial GET request
+            sendGetRequest();
+            sendCommand("preStart");
         });
-        document.getElementById("button2").addEventListener("click", function() {
-            sendCommand("east"); 
-        });
-        document.getElementById("button3").addEventListener("click", function() {
-            sendCommand("north"); 
-        });
-        document.getElementById("button4").addEventListener("click", function() {
-            sendCommand("south"); 
-        });
-    });
-</script>
+    </script>
+    
+    
+    
+    
 
 </body>
 </html>
