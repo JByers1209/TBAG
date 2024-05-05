@@ -800,8 +800,8 @@ public class DerbyDatabase implements IDatabase {
 						"	room_id integer primary key " +
 						"		generated always as identity (start with 1, increment by 1), " +									
 						"	name varchar(90)," +
-						"	longDescription varchar(150)," +
-						"	shortDescription varchar(150)," +
+						"	longDescription varchar(1000)," +
+						"	shortDescription varchar(300)," +
 						"	hasVisited varchar(40)," +
 						"	needsKey varchar(40)," +
 						"	keyName varchar(40)" +
@@ -888,8 +888,8 @@ public class DerbyDatabase implements IDatabase {
 						"	room_id integer primary key " +
 						"		generated always as identity (start with 1, increment by 1), " +									
 						"	name varchar(90)," +
-						"	longDescription varchar(150)," +
-						"	shortDescription varchar(150)," +
+						"	longDescription varchar(1000)," +
+						"	shortDescription varchar(350)," +
 						"	hasVisited varchar(40)," +
 						"	needsKey varchar(40)," +
 						"	keyName varchar(40)" +
