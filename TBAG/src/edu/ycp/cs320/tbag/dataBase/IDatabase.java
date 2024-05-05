@@ -21,4 +21,5 @@ public interface IDatabase {
 	public void updateItem(int itemID, int roomID, int ownerID);
 	public User findUser(String username);
 	public List<Item> findItemsByName(String name);
+	public void insertUser(String username, String password);
 }

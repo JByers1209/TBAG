@@ -654,9 +654,36 @@ public class DerbyDatabase implements IDatabase {
 	    });
 	}
 
-
-
 	
+	public void insertUser(String username, String password) {
+	    executeTransaction(new Transaction<Void>() {
+	        @Override
+	        public Void execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+
+	            try {
+	                // Construct the SQL query to insert a new user
+	                stmt = conn.prepareStatement(
+	                        "INSERT INTO users (username, password) VALUES (?, ?)"
+	                );
+
+	                stmt.setString(1, username);
+	                stmt.setString(2, password);
+
+	                // Execute the insert query
+	                stmt.executeUpdate();
+
+	                System.out.println("User " + username + " inserted successfully.");
+	            } finally {
+	                // Close resources
+	                DBUtil.closeQuietly(stmt);
+	            }
+
+	            return null;
+	        }
+	    });
+	}
+
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
 			return doExecuteTransaction(txn);
