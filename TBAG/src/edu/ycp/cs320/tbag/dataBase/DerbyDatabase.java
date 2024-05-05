@@ -16,8 +16,6 @@ import edu.ycp.cs320.tbag.model.Item;
 import edu.ycp.cs320.tbag.model.KeyItem;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
-import edu.ycp.cs320.tbag.model.SaveData;
-import edu.ycp.cs320.tbag.model.SaveGame;
 import edu.ycp.cs320.tbag.model.User;
 import edu.ycp.cs320.tbag.model.Weapon;
 import edu.ycp.cs320.tbag.model.NPC;
@@ -37,253 +35,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	private static final int MAX_ATTEMPTS = 10;
-	private int actorCount, itemCount, roomCount;
-	
-	
-	public int getActorCount() {
-		return actorCount;
-	}
-	
-	public int getItemCount() {
-		return itemCount;
-	}
-	
-	public int getRoomCount() {
-		return roomCount;
-	}
-	
-	@Override
-	public void saveActor(int saveID, Actor actor) {
-		executeTransaction(new Transaction<Object>() {
-			@Override
-			public Object execute(Connection conn) throws SQLException {
-				PreparedStatement stmt = null;
-				ResultSet resultSet = null;
-				
-			
-				try {
-					
-					boolean actorInDatabase;
-			
-				
-					if (findActorByID(actor.getActorID()) == null) {
-						actorInDatabase = false;
-					}else {
-						actorInDatabase = true;
-					}
-					if(actorInDatabase == false) {
-						System.out.println("No actor in database with id of " + actor.getActorID());
-						return null;
-						
-					}
-					
-					
-					// save actor in database 
-					//    format for actors in save id_slot1 = actorID, id_slot2 = roomID
-					stmt = conn.prepareStatement(
-							"insert into saves (save_id, save_type, id_slot1, id_slot2, id_slot3, actor_level, actor_xp, actor_current_health, actor_max_health, room_has_visited, room_needs_key, log) "
-									+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-						  
-					);
-					
-					stmt.setInt(1, saveID);
-					stmt.setString(2, "actor");
-					stmt.setInt(3, actor.getActorID());
-					stmt.setInt(4, actor.getRoomID());
-					stmt.setInt(5, -1);
-					stmt.setInt(6, actor.getLevel());
-					stmt.setInt(7, actor.getXP());
-					stmt.setInt(8, actor.getCurrentHealth());
-					stmt.setInt(9, actor.getMaxHealth());
-					stmt.setString(10, "null");
-					stmt.setString(11, "null");
-					stmt.setString(12, "null");
-					
-					
-				
-					stmt.executeUpdate();
-					
-					return null;
-				
-				} finally {
-					DBUtil.closeQuietly(resultSet);
-					DBUtil.closeQuietly(stmt);
-				}
-			}
-		});//end transaction
-		
-	}//end saveActor
-	
 
-
-
-	@Override
-	public void saveRoom(int saveID, Room room) {
-		executeTransaction(new Transaction<Object>() {
-			@Override
-			public Object execute(Connection conn) throws SQLException {
-				PreparedStatement stmt = null;
-				ResultSet resultSet = null;
-				
-			
-				try {
-					
-					boolean roomInDatabase;
-			
-				
-					if (findRoomByRoomID(room.getRoomID()) == null) {
-						roomInDatabase = false;
-					}else {
-						roomInDatabase = true;
-					}
-					if(roomInDatabase == false) {
-						System.out.println("No room in database with id of " + room.getRoomID());
-						return null;
-						
-					}
-					
-					
-					// save room in database 
-					//    format for room in save id_slot1 = roomID
-					stmt = conn.prepareStatement(
-							"insert into saves (save_id, save_type, id_slot1, id_slot2, id_slot3, actor_level, actor_xp, actor_current_health, actor_max_health, room_has_visited, room_needs_key, log) "
-									+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-						  
-					);
-					
-					stmt.setInt(1, saveID);
-					stmt.setString(2, "room");
-					stmt.setInt(3, room.getRoomID());
-					stmt.setInt(4, -1);
-					stmt.setInt(5, -1);
-					stmt.setInt(6, -1);
-					stmt.setInt(7, -1);
-					stmt.setInt(8, -1);
-					stmt.setInt(9, -1);
-					stmt.setString(10, room.getVisited());
-					stmt.setString(11, room.getNeedsKey());
-					stmt.setString(12, "null");
-					
-					
-				
-					stmt.executeUpdate();
-					
-					return null;
-				
-				} finally {
-					DBUtil.closeQuietly(resultSet);
-					DBUtil.closeQuietly(stmt);
-				}
-			}
-		});//end transaction
-		
-
-	}//end saveRoom
-
-
-
-
-	@Override
-	public void saveItem(int saveID, Item item) {
-		executeTransaction(new Transaction<Object>() {
-			@Override
-			public Object execute(Connection conn) throws SQLException {
-				PreparedStatement stmt = null;
-				ResultSet resultSet = null;
-				
-			
-				try {
-					
-		
-				
-				
-					
-					
-					// save item in database 
-					//    format for item in save id_slot1 = itemID, id_slot2 = roomID, id_slot3 = ownerID
-					stmt = conn.prepareStatement(
-							"insert into saves (save_id, save_type, id_slot1, id_slot2, id_slot3, actor_level, actor_xp, actor_current_health, actor_max_health, room_has_visited, room_needs_key, log) "
-									+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-						  
-					);
-					
-					stmt.setInt(1, saveID);
-					stmt.setString(2, "item");
-					stmt.setInt(3, item.getItemID());
-					stmt.setInt(4, item.getRoomID());
-					stmt.setInt(5, item.getOwnerID());
-					stmt.setInt(6, -1);
-					stmt.setInt(7, -1);
-					stmt.setInt(8, -1);
-					stmt.setInt(9, -1);
-					stmt.setString(10, "null");
-					stmt.setString(11, "null");
-					stmt.setString(12, "null");
-					
-					
-				
-					stmt.executeUpdate();
-					
-					return null;
-				
-				} finally {
-					DBUtil.closeQuietly(resultSet);
-					DBUtil.closeQuietly(stmt);
-				}
-			}
-		});//end transaction
-		
-	}//end save item
-
-	@Override
-	public void saveLog(int saveID, String log) {
-		executeTransaction(new Transaction<Object>() {
-			@Override
-			public Object execute(Connection conn) throws SQLException {
-				PreparedStatement stmt = null;
-				ResultSet resultSet = null;
-				
-			
-				try {
-					
-		
-				
-				
-					// save log in database 
-					stmt = conn.prepareStatement(
-							"insert into saves (save_id, save_type, id_slot1, id_slot2, id_slot3, actor_level, actor_xp, actor_current_health, actor_max_health, room_has_visited, room_needs_key, log) "
-									+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-						  
-					);
-					
-					stmt.setInt(1, saveID);
-					stmt.setString(2, "log");
-					stmt.setInt(3, -1);
-					stmt.setInt(4, -1);
-					stmt.setInt(5, -1);
-					stmt.setInt(6, -1);
-					stmt.setInt(7, -1);
-					stmt.setInt(8, -1);
-					stmt.setInt(9, -1);
-					stmt.setString(10, "null");
-					stmt.setString(11, "null");
-					stmt.setString(12, log);
-					
-					
-				
-					stmt.executeUpdate();
-					
-					return null;
-				
-				} finally {
-					DBUtil.closeQuietly(resultSet);
-					DBUtil.closeQuietly(stmt);
-				}
-			}
-		});//end transaction
-		
-	}//end save log
-	
 	
 	public List<RoomConnection> findConnectionsByRoomID(int roomID) {
 	    return executeTransaction(new Transaction<List<RoomConnection>>() {
@@ -564,70 +316,8 @@ public class DerbyDatabase implements IDatabase {
 		
 	}//end findActorByID
 	
-	
-	
 	@Override
-	public Item findItemByID(int itemID) {
-		return executeTransaction(new Transaction<Item>() {
-		@Override
-		public Item execute(Connection conn) throws SQLException {
-	
-			PreparedStatement stmt = null;
-			ResultSet resultSet = null;
-			Item item = null;
-			
-			try {
-				stmt = conn.prepareStatement("select * "+ 
-			                                 "from items " +
-					                         "where items.item_id = ?");
-				
-				stmt.setInt(1, itemID);
-				
-				resultSet = stmt.executeQuery();
-				
-				Boolean found = false;
-				while (resultSet.next()) {
-					found = true;
-                    int itemType = resultSet.getInt("type");
-                    switch (itemType) {
-                        case 1:
-                            item = new Weapon();
-                            break;
-                        case 2:
-                            item = new Consumable();
-                            break;
-                        case 3:
-                            item = new KeyItem();
-                            break;
-                        default:
-                            // If item type is not recognized, return null
-                            return null;
-                    }
-					loadItems(item, resultSet, 1);
-					
-				}
-				
-				// check if the ID was found
-				if (!found) {
-					System.out.println("<" + itemID + "> was not found in the actors table");
-		
-				}
-				
-			}finally {
-				DBUtil.closeQuietly(resultSet);
-				DBUtil.closeQuietly(stmt);
-			}
-			
-		
-			return item;
-		}
-		
-	});
-		
-	}//end findItemByID
-	
-	@Override
-	public void updateActor(Actor actor) {
+	public void updateActor(int actorID, Actor actor) {
 		executeTransaction(new Transaction<Object>() {
 			@Override
 			public Object execute(Connection conn) throws SQLException {
@@ -638,14 +328,14 @@ public class DerbyDatabase implements IDatabase {
 					
 					boolean actorInDatabase;
 				
-					if (findActorByID(actor.getActorID()) == null) {
+					if (findActorByID(actorID) == null) {
 						actorInDatabase = false;
 					}else {
 						actorInDatabase = true;
 					}
 					
 					if(actorInDatabase == false) {
-						System.out.println("No actor in database with id of " + actor.getActorID());
+						System.out.println("No actor in database with id of " + actorID);
 						return null;
 						
 					}
@@ -671,7 +361,7 @@ public class DerbyDatabase implements IDatabase {
 					stmt.setInt(4, actor.getXP());
 					stmt.setInt(5, actor.getCurrentHealth());
 					stmt.setInt(6, actor.getMaxHealth());
-					stmt.setInt(7, actor.getActorID());
+					stmt.setInt(7, actorID);
 				
 					stmt.executeUpdate();
 					
@@ -836,7 +526,54 @@ public class DerbyDatabase implements IDatabase {
 	        }
 	    });
 	}
+	
+	public List<Item> findItemsByName(String name) {
+	    return executeTransaction(new Transaction<List<Item>>() {
+	        @Override
+	        public List<Item> execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+	            ResultSet resultSet = null;
 
+	            try {
+	                stmt = conn.prepareStatement(
+	                        "SELECT * FROM items WHERE name = ?"
+	                );
+	                stmt.setString(1, name);
+
+	                List<Item> result = new ArrayList<>();
+
+	                resultSet = stmt.executeQuery();
+
+	                while (resultSet.next()) {
+	                    Item item = null;
+	                    int itemType = resultSet.getInt("type");
+	                    switch (itemType) {
+	                        case 1:
+	                            item = new Weapon();
+	                            break;
+	                        case 2:
+	                            item = new Consumable();
+	                            break;
+	                        case 3:
+	                            item = new KeyItem();
+	                            break;
+	                        default:
+	                            // Handle unknown item types or create a generic Item object
+	                            break;
+	                    }
+	                    // Load common attributes
+	                    loadItems(item, resultSet, 1);
+	                    result.add(item);
+	                }
+
+	                return result;
+	            } finally {
+	                DBUtil.closeQuietly(resultSet);
+	                DBUtil.closeQuietly(stmt);
+	            }
+	        }
+	    });
+	}
 	
 	@Override
 	public void updateItem(int itemID, int roomID, int ownerID) {
@@ -874,232 +611,79 @@ public class DerbyDatabase implements IDatabase {
 	            return null;
 	        }
 	    });
-	}//end updateItem
+	}
 	
-	public List<User> findUserByUsername(String username) {
-	    return executeTransaction(new Transaction<List<User>>() {
+	public User findUser(String username) {
+	    return executeTransaction(new Transaction<User>() {
 	        @Override
-	        public List<User> execute(Connection conn) throws SQLException {
+	        public User execute(Connection conn) throws SQLException {
 	            PreparedStatement stmt = null;
 	            ResultSet resultSet = null;
+	            User result = null;
 
 	            try {
-	                stmt = conn.prepareStatement("SELECT * FROM users WHERE username = ?");
+	                // Construct the SQL query to retrieve the room based on room_id
+	            	stmt = conn.prepareStatement(
+	            			"SELECT * FROM users WHERE username=?"
+	                );
+
 	                stmt.setString(1, username);
 
-	                List<User> result = new ArrayList<>();
 	                resultSet = stmt.executeQuery();
 
-	                while (resultSet.next()) {
-	                    User user = new User();
-	                    // Assuming loadUser method populates user data from ResultSet
-	                    loadUsers(user, resultSet, 1); // Assuming this method exists
-	                    result.add(user);
-	                }
-
-	                return result;
-	            } finally {
-	                // Closing resources in a finally block
-	                DBUtil.closeQuietly(resultSet);
-	                DBUtil.closeQuietly(stmt);
-	            }
-	        }
-	    });
-	}//end find userByUsername
-	
-	
-	public void createUser(User user) {
-	    executeTransaction(new Transaction<Void>() {
-        @Override
-        public Void execute(Connection conn) throws SQLException {
-            PreparedStatement stmt = null;
-            ResultSet resultSet = null;
-
-            try {
-                stmt = conn.prepareStatement("insert into users (username, password) values (?, ?)");
-                stmt.setString(1, user.getUsername());
-                stmt.setString(2, user.getPassword());
-
-                stmt.executeUpdate();
-             
-            } finally {
-                // Closing resources in a finally block
-                DBUtil.closeQuietly(resultSet);
-                DBUtil.closeQuietly(stmt);
-            }
-            return null;
-        }
-    });
-		
-	}//end createUser
-	
-	public void addSaveGame(SaveGame saveGame) {
-	    executeTransaction(new Transaction<Void>() {
-        @Override
-        public Void execute(Connection conn) throws SQLException {
-            PreparedStatement stmt = null;
-            ResultSet resultSet = null;
-
-            try {
-                stmt = conn.prepareStatement("insert into save_games (user_id, save_name, save_id) values (?, ?, ?)");
-                stmt.setInt(1, saveGame.getUserID());
-                stmt.setString(2, saveGame.getSaveName());
-                stmt.setInt(3, saveGame.getSaveID());
-                stmt.executeUpdate();
-             
-            } finally {
-                // Closing resources in a finally block
-                DBUtil.closeQuietly(resultSet);
-                DBUtil.closeQuietly(stmt);
-            }
-            return null;
-        }
-    });
-		
-	}//end createUser
-	
-	@Override
-	public List<SaveData> getSaveData(int saveID){
-	    return executeTransaction(new Transaction<List<SaveData>>() {
-	        @Override
-	        public List<SaveData> execute(Connection conn) throws SQLException {
-	            PreparedStatement stmt = null;
-	            ResultSet resultSet = null;
-
-	            try {
-	                stmt = conn.prepareStatement("SELECT * FROM saves WHERE save_id = ?");
-	                stmt.setInt(1, saveID);
-
-	                List<SaveData> result = new ArrayList<>();
-	                resultSet = stmt.executeQuery();
-
-	                while (resultSet.next()) {
-	                    SaveData saveData = new SaveData();
-	                    // Assuming loadUser method populates user data from ResultSet
-	                    loadSaveData(saveData, resultSet, 1); // Assuming this method exists
-	                    result.add(saveData);
-	                }
-
-	                return result;
-	            } finally {
-	                // Closing resources in a finally block
-	                DBUtil.closeQuietly(resultSet);
-	                DBUtil.closeQuietly(stmt);
-	            }
-	        }
-	    });
-		
-	
-	}//end getSaveData
-
-	@Override
-	public List<SaveGame> getSaveGames(int userID){
-	    return executeTransaction(new Transaction<List<SaveGame>>() {
-	        @Override
-	        public List<SaveGame> execute(Connection conn) throws SQLException {
-	            PreparedStatement stmt = null;
-	            ResultSet resultSet = null;
-
-	            try {
-	                stmt = conn.prepareStatement("SELECT * FROM save_games WHERE user_id = ?");
-	                stmt.setInt(1, userID);
-
-	                List<SaveGame> result = new ArrayList<>();
-	                resultSet = stmt.executeQuery();
-
-	                while (resultSet.next()) {
-	                	SaveGame saveGame = new SaveGame();
-	                    // Assuming loadUser method populates user data from ResultSet
-	                    loadSaveGame(saveGame, resultSet, 1); // Assuming this method exists
-	                    result.add(saveGame);
-	                }
-
-	                return result;
-	            } finally {
-	                // Closing resources in a finally block
-	                DBUtil.closeQuietly(resultSet);
-	                DBUtil.closeQuietly(stmt);
-	            }
-	        }
-	    });
-		
-	
-	}//end getSaveGame
-
-	
-	@Override
-	public SaveGame getSaveGameByName(String saveName){
-	    return executeTransaction(new Transaction<SaveGame>() {
-	        @Override
-	        public SaveGame execute(Connection conn) throws SQLException {
-	            PreparedStatement stmt = null;
-	            ResultSet resultSet = null;
-
-	            try {
-	                stmt = conn.prepareStatement("SELECT * FROM save_games WHERE save_name = ?");
-	                stmt.setString(1, saveName);
-
-	             
-	                resultSet = stmt.executeQuery();
-	                SaveGame saveGame = new SaveGame();
-	                while (resultSet.next()) {
-	                    loadSaveGame(saveGame, resultSet, 1);
-	                }
-
-	                return saveGame;
-	            } finally {
-	                // Closing resources in a finally block
-	                DBUtil.closeQuietly(resultSet);
-	                DBUtil.closeQuietly(stmt);
-	            }
-	        }
-	    });
-		
-	
-	}//end getSaveGame
-	
-	
-	public int getNextSaveID(){
-	    return executeTransaction(new Transaction<Integer>() {
-	        @Override
-	        public Integer execute(Connection conn) throws SQLException {
-	            PreparedStatement stmt = null;
-	            ResultSet resultSet = null;
-	            int largestSaveID = 0;
-
-	            try {
-	                stmt = conn.prepareStatement("SELECT * FROM save_games");
-
-	                List<SaveGame> result = new ArrayList<>();
-	                resultSet = stmt.executeQuery();
-
-	                while (resultSet.next()) {
-	                	SaveGame saveGame = new SaveGame();
-	                    // Assuming loadUser method populates user data from ResultSet
-	                    loadSaveGame(saveGame, resultSet, 1); // Assuming this method exists
-	                    result.add(saveGame);
-	                }
+	                // Check if the result set contains any rows
+	                if (resultSet.next()) {
+	                    // If a room is found, create a Room object and populate its attributes
+	                    result = new User();
+	                    result.setUserID(resultSet.getInt(1));
+	                    result.setUsername(resultSet.getString(2));
+	                    result.setPassword(resultSet.getString(3));
 	                
-	                for(SaveGame saveGame: result) {
-	                	
-	                	if(saveGame.getSaveID() > largestSaveID) {
-	                		largestSaveID = saveGame.getSaveID();
-	                	}
+	                } else {
+	                    // No room found
+	                    System.out.println("User with u " + username + " not found.");
 	                }
-	                
-
-	                return (largestSaveID + 1);
 	            } finally {
-	                // Closing resources in a finally block
+	                // Close resources
 	                DBUtil.closeQuietly(resultSet);
 	                DBUtil.closeQuietly(stmt);
 	            }
+
+	            return result;
 	        }
 	    });
-		
+	}
+
 	
-	}//end getNextSaveID
-	
+	public void insertUser(String username, String password) {
+	    executeTransaction(new Transaction<Void>() {
+	        @Override
+	        public Void execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt = null;
+
+	            try {
+	                // Construct the SQL query to insert a new user
+	                stmt = conn.prepareStatement(
+	                        "INSERT INTO users (username, password) VALUES (?, ?)"
+	                );
+
+	                stmt.setString(1, username);
+	                stmt.setString(2, password);
+
+	                // Execute the insert query
+	                stmt.executeUpdate();
+
+	                System.out.println("User " + username + " inserted successfully.");
+	            } finally {
+	                // Close resources
+	                DBUtil.closeQuietly(stmt);
+	            }
+
+	            return null;
+	        }
+	    });
+	}
+
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
 		try {
 			return doExecuteTransaction(txn);
@@ -1144,7 +728,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	private Connection connect() throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:derby:tbag.db;create=true");
+		Connection conn = DriverManager.getConnection("jdbc:derby:C:/Users/josmb/git/tbag.db;create=true");
 		
 		// Set autocommit to false to allow execution of
 		// multiple queries/statements as part of the same transaction.
@@ -1162,30 +746,6 @@ public class DerbyDatabase implements IDatabase {
 		room.setNeedsKey(resultSet.getString(index++));
 		room.setKeyName(resultSet.getString(index++));
 	}
-	
-	private void loadSaveData(SaveData saveData, ResultSet resultSet, int index) throws SQLException {
-		saveData.setSaveID(resultSet.getInt(index++));
-		saveData.setSaveType(resultSet.getString(index++));
-		saveData.setIdSlot1(resultSet.getInt(index++));
-		saveData.setIdSlot2(resultSet.getInt(index++));
-		saveData.setIdSlot3(resultSet.getInt(index++));
-		saveData.setLevel(resultSet.getInt(index++));
-		saveData.setXp(resultSet.getInt(index++));
-		saveData.setCurrentHealth(resultSet.getInt(index++));
-		saveData.setMaxHealth(resultSet.getInt(index++));
-		saveData.setHasVisited(resultSet.getString(index++));
-		saveData.setNeedsKey(resultSet.getString(index++));
-		saveData.setLog(resultSet.getString(index++));
-	}
-	
-	private void loadSaveGame(SaveGame saveGame, ResultSet resultSet, int index) throws SQLException {
-		saveGame.setUserID(resultSet.getInt(index++));
-		saveGame.setSaveName(resultSet.getString(index++));
-		saveGame.setSaveID(resultSet.getInt(index++));
-		
-	}	
-	
-	
 	
 	private void loadRoomConnection(RoomConnection roomConnection, ResultSet resultSet, int index) throws SQLException {
 		roomConnection.setConnectionID(resultSet.getInt(index++));
@@ -1227,13 +787,12 @@ public class DerbyDatabase implements IDatabase {
 		executeTransaction(new Transaction<Boolean>() {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
+
 				PreparedStatement stmt1 = null;
 				PreparedStatement stmt2 = null;
 				PreparedStatement stmt3 = null;
 				PreparedStatement stmt4 = null;
 				PreparedStatement stmt5 = null;
-				PreparedStatement stmt6 = null;
-				PreparedStatement stmt7 = null;
 				
 				try {
 					stmt1 = conn.prepareStatement(
@@ -1300,35 +859,7 @@ public class DerbyDatabase implements IDatabase {
 							")"
 						);
 						stmt5.executeUpdate();
-				
-						
-						stmt6 = conn.prepareStatement(
-								"create table saves (" +
-								"	save_id integer"+									
-								"   save_type varchar(40)," +
-								"	id_slot1 integer," +
-								"	id_slot2 integer," +
-								"	id_slot3 integer," +
-								"	actor_level integer," +
-								"	actor_xp integer," +
-								"	actor_current_health integer," +
-								"	actor_max_health integer," +
-								"	room_has_visited varchar(40)," +
-								"	room_needs_key varchar(40)," +
-								"   log varchar(4000)" + 
-								")"
-							);
-							stmt6.executeUpdate();	
-							
-							stmt7 = conn.prepareStatement("create table save_games (" +
-								"	user_id integer"+									
-								"   save_name varchar(40)," +
-								"	save_id integer," +
-								")");
-							stmt7.executeUpdate();	
-						
-						
-						
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmt1);
@@ -1336,11 +867,133 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmt3);
 					DBUtil.closeQuietly(stmt4);
 					DBUtil.closeQuietly(stmt5);
-					DBUtil.closeQuietly(stmt6);
-					DBUtil.closeQuietly(stmt7);
 				}
 			}
 		});
+	}
+	
+	public void reCreateTables() {
+		executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+
+				PreparedStatement stmt1 = null;
+				PreparedStatement stmt2 = null;
+				PreparedStatement stmt3 = null;
+				PreparedStatement stmt4 = null;
+				
+				try {
+					stmt1 = conn.prepareStatement(
+						"create table rooms (" +
+						"	room_id integer primary key " +
+						"		generated always as identity (start with 1, increment by 1), " +									
+						"	name varchar(90)," +
+						"	longDescription varchar(150)," +
+						"	shortDescription varchar(150)," +
+						"	hasVisited varchar(40)," +
+						"	needsKey varchar(40)," +
+						"	keyName varchar(40)" +
+						")"
+					);
+					stmt1.executeUpdate();
+					
+					stmt2 = conn.prepareStatement(
+						    "create table roomConnections (" +
+						    "	connection_id integer primary key " +
+							"		generated always as identity (start with 1, increment by 1), " +
+							"	 room_id integer constraint room_id references rooms, " +
+						    "    move varchar(40)," +
+						    "    destId integer" +
+						    ")"
+						);
+					stmt2.executeUpdate();
+					
+					stmt3 = conn.prepareStatement(
+						"create table actors (" +
+						"	actor_id integer primary key " +
+						"		generated always as identity (start with 1, increment by 1), " +									
+						"	room_id integer," +
+						"   name varchar(40)," +
+						"	level integer," +
+						"   xp integer," +
+						"   current_health integer," + 
+						"   max_health integer" + 
+						")"
+					);
+					stmt3.executeUpdate();
+					
+					stmt4 = conn.prepareStatement(
+							"create table items (" +
+							"	item_id integer primary key " +
+							"		generated always as identity (start with 1, increment by 1), " +									
+							"	type integer," +
+							"   name varchar(40)," +
+							"	description varchar(100)," +
+							"   throwable varchar(40)," +
+							"   damage integer," + 
+							"   effect varchar(40)," + 
+							"   room_id integer," + 
+							"   owner_id integer" + 
+							")"
+						);
+						stmt4.executeUpdate();
+					
+					return true;
+				} finally {
+					DBUtil.closeQuietly(stmt1);
+					DBUtil.closeQuietly(stmt2);
+					DBUtil.closeQuietly(stmt3);
+					DBUtil.closeQuietly(stmt4);
+				}
+			}
+		});
+	}
+
+	public void dropTables() {
+	    executeTransaction(new Transaction<Boolean>() {
+	        @Override
+	        public Boolean execute(Connection conn) throws SQLException {
+	            PreparedStatement stmt1 = null;
+	            PreparedStatement stmt2 = null;
+	            PreparedStatement stmt3 = null;
+	            PreparedStatement stmt4 = null;
+	            PreparedStatement dropFk1 = null;
+	            PreparedStatement dropFk2 = null;
+
+	            try {
+	                // Drop foreign key constraints
+	                dropFk1 = conn.prepareStatement("ALTER TABLE roomConnections DROP CONSTRAINT room_id");
+	                dropFk1.executeUpdate();
+
+	                // Drop rooms table
+	                stmt1 = conn.prepareStatement("DROP TABLE rooms");
+	                stmt1.executeUpdate();
+
+	                // Drop roomConnections table
+	                stmt2 = conn.prepareStatement("DROP TABLE roomConnections");
+	                stmt2.executeUpdate();
+
+	                // Drop actors table
+	                stmt3 = conn.prepareStatement("DROP TABLE actors");
+	                stmt3.executeUpdate();
+
+	                // Drop items table
+	                stmt4 = conn.prepareStatement("DROP TABLE items");
+	                stmt4.executeUpdate();
+
+	                System.out.println("Tables dropped successfully.");
+	                return true;
+	            } finally {
+	                // Close prepared statements
+	                DBUtil.closeQuietly(stmt1);
+	                DBUtil.closeQuietly(stmt2);
+	                DBUtil.closeQuietly(stmt3);
+	                DBUtil.closeQuietly(stmt4);
+	                DBUtil.closeQuietly(dropFk1);
+	                DBUtil.closeQuietly(dropFk2);
+	            }
+	        }
+	    });
 	}
 	
 	public void loadInitialData() {
@@ -1430,10 +1083,6 @@ public class DerbyDatabase implements IDatabase {
 	                }
 	                insertUsers.executeBatch();
 
-	                
-	                actorCount = actorList.size();
-	                roomCount = roomList.size();
-	                itemCount = itemList.size();
 	                return true;
 	            } finally {
 	                DBUtil.closeQuietly(insertRoom);
@@ -1441,6 +1090,95 @@ public class DerbyDatabase implements IDatabase {
 	                DBUtil.closeQuietly(insertActor);
 	                DBUtil.closeQuietly(insertItem);
 	                DBUtil.closeQuietly(insertUsers);
+	            }
+	        }
+	    });
+	}
+	
+	public void reLoadInitialData() {
+	    executeTransaction(new Transaction<Boolean>() {
+	        @Override
+	        public Boolean execute(Connection conn) throws SQLException {
+	            List<Room> roomList;
+	            List<RoomConnection> connectionList;
+	            List<Actor> actorList;
+	            List<Item> itemList;
+	           
+	            try {
+	                roomList = InitialData.getRooms();
+	                connectionList = InitialData.getConnections();
+	                actorList = InitialData.getActors();
+	                itemList = InitialData.getItems();
+	               
+	            } catch (IOException e) {
+	                throw new SQLException("Couldn't read initial data", e);
+	            }
+
+	            PreparedStatement insertRoom = null;
+	            PreparedStatement insertConnection = null;
+	            PreparedStatement insertActor = null;
+	            PreparedStatement insertItem = null;
+	           
+
+	            try {
+	                // Populate rooms table
+	                insertRoom = conn.prepareStatement("insert into rooms (name, longDescription, shortDescription, hasVisited, needsKey, keyName) values (?, ?, ?, ?, ?, ?)");
+	                for (Room room : roomList) {
+	                    insertRoom.setString(1, room.getName());
+	                    insertRoom.setString(2, room.getLongDescription());
+	                    insertRoom.setString(3, room.getShortDescription());
+	                    insertRoom.setString(4, room.getVisited());
+	                    insertRoom.setString(5, room.getNeedsKey());
+	                    insertRoom.setString(6, room.getKeyName());
+	                    insertRoom.addBatch();
+	                }
+	                insertRoom.executeBatch();
+
+	                // Populate connections table
+	                insertConnection = conn.prepareStatement("insert into roomConnections (room_id, move, destId) values (?, ?, ?)");
+	                for (RoomConnection roomConnection : connectionList) {
+	                    insertConnection.setInt(1, roomConnection.getRoomID());
+	                    insertConnection.setString(2, roomConnection.getMove());
+	                    insertConnection.setInt(3, roomConnection.getDestId());
+	                    insertConnection.addBatch();
+	                }
+	                insertConnection.executeBatch();
+
+	                // Populate actors table
+	                insertActor = conn.prepareStatement("insert into actors (room_id, name, level, xp, current_health, max_health) values (?, ?, ?, ? ,?, ?)");
+	                for (Actor actor : actorList) {
+	                    insertActor.setInt(1, actor.getRoomID());
+	                    insertActor.setString(2, actor.getName());
+	                    insertActor.setInt(3, actor.getLevel());
+	                    insertActor.setInt(4, actor.getXP());
+	                    insertActor.setInt(5, actor.getCurrentHealth());
+	                    insertActor.setInt(6, actor.getMaxHealth());
+	                    insertActor.addBatch();
+	                }
+	                insertActor.executeBatch();
+
+	                // Populate items table
+	                insertItem = conn.prepareStatement("insert into items (type, name, description, throwable, damage, effect, room_id, owner_id) values (?, ?, ?, ?, ?, ?, ?, ?)");
+	                for (Item item : itemList) {
+	                    insertItem.setInt(1, item.getType());
+	                    insertItem.setString(2, item.getName());
+	                    insertItem.setString(3, item.getDescription());
+	                    insertItem.setString(4, item.getThrowable());
+	                    insertItem.setInt(5, item.getDamage());
+	                    insertItem.setString(6, item.getEffect());
+	                    insertItem.setInt(7, item.getRoomID());
+	                    insertItem.setInt(8, item.getOwnerID());
+	                    insertItem.addBatch();
+	                }
+	                insertItem.executeBatch();
+
+
+	                return true;
+	            } finally {
+	                DBUtil.closeQuietly(insertRoom);
+	                DBUtil.closeQuietly(insertConnection);
+	                DBUtil.closeQuietly(insertActor);
+	                DBUtil.closeQuietly(insertItem);
 	            }
 	        }
 	    });
@@ -1458,7 +1196,5 @@ public class DerbyDatabase implements IDatabase {
 		
 		System.out.println("Success!");
 	}
-
-
 
 }

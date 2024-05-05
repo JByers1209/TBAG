@@ -11,20 +11,20 @@ body {
 }
 
 #wrapper {
-    display: flex;
-    flex-direction: row; /* Stack elements horizontally */
-    align-items: center; /* Center items vertically */
-    justify-content: space-between; /* Space out the elements */
-    padding: 10px; /* Add padding to the wrapper */
-    margin-top: -30px;
+    position: relative; /* Add relative positioning to act as a reference for absolutely positioned elements */
 }
 
 /* CSS for the health bar */
 .health-bar-container {
     text-align: center;
     position: absolute;
+<<<<<<< HEAD:TBAG/war/_view/gameStylesheet.css
     top: 300px; /* Adjust the value to move the health bar higher */
     right: 15%;
+=======
+    top: 220px; /* Specific top position */
+    right: -13%; /* Specific right position */
+>>>>>>> master:TBAG/war/gameStylesheet.css
     transform: translateX(20%);
 }
 
@@ -57,9 +57,10 @@ body {
 }
 
 #content-container {
-    display: flex;
-    align-items: center; /* Center items vertically */
-    margin-left: 100px;
+    position: absolute; /* Change to absolute positioning */
+    top: 50%; /* Position content in the middle vertically */
+    transform: translateY(-50%); /* Adjust to center content vertically */
+    left: 100px; /* Adjust left position */
 }
 
 #game-container {
@@ -73,6 +74,7 @@ body {
     padding: 10px;
     margin-right: 100px; /* Adjust margin between the game container and buttons */
     margin-left: 100px;
+    top: 200px; /* Adjust the top position to move the game container lower */
 }
 
 #game-text {
@@ -101,11 +103,13 @@ body {
     align-items: center; /* Center buttons vertically */
     background-color: black;
     height: 150px;
-    position: relative;
+    position: absolute; /* Change to absolute positioning */
+    right: -70px; /* Specific right position */
+    bottom: -50px; /* Specific bottom position */
 }
 .pause {
     position: absolute;
-    top: calc(50% + 300px); /* Adjust based on button size */
+    top: calc(50% + 350px); /* Adjust based on button size */
     transform: translate(-50%, -50%); 
     background-color: #511717; 
     border: none;
@@ -114,7 +118,7 @@ body {
     text-align: center;
     text-decoration: none;
     font-size: 16px;
-    Right: 230px;
+    Right: -130px;
     transition-duration: 0.4s;
     cursor: pointer;
     border-radius: 10px;

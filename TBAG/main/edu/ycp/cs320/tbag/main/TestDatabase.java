@@ -16,7 +16,7 @@ public class TestDatabase {
 			Scanner keyboard = new Scanner(System.in);
 
 			// Create the default IDatabase instance
-			InitDatabase.init();
+			InitDatabase.init(keyboard);
 			
 			System.out.print("Enter Actor ID: ");
 			int actorID = Integer.parseInt(keyboard.nextLine());
@@ -37,7 +37,7 @@ public class TestDatabase {
 			System.out.println(actor2.toString());
 			
 			Actor actor3 = new NPC(2, 7, "Less Friendly Ghost", 4, 600, 6, 64);
-			db.updateActor(actor3);
+			db.updateActor(2, actor3);
 			
 			Actor actor4 = db.findActorByID(2);
 		

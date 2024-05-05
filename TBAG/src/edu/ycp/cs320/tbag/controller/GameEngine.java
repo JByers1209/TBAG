@@ -1,65 +1,100 @@
 package edu.ycp.cs320.tbag.controller;
 
 import java.util.List;
+import java.util.Random;
 
 import edu.ycp.cs320.tbag.dataBase.DerbyDatabase;
 import edu.ycp.cs320.tbag.model.Actor;
 import edu.ycp.cs320.tbag.model.Item;
 import edu.ycp.cs320.tbag.model.Room;
 import edu.ycp.cs320.tbag.model.RoomConnection;
-import edu.ycp.cs320.tbag.model.SaveData;
-import edu.ycp.cs320.tbag.model.SaveGame;
 
 public class GameEngine {
-
+	
+	DerbyDatabase db = new DerbyDatabase();
+	
+	int userId = 0;
+	String username = null;
     String response;
     boolean hasStarted = false;
     boolean canMove = true;
-    Room currentRoom;
-    Actor player;
-    String gameLog = "Welcome to Spooky York! Type 'start' to begin.";
+    boolean inFight = false;
+    boolean decision = false;
+    boolean returnInput;
+    
+    Room currentRoom = db.findRoomByRoomID(1);
+    Room lastroom;
+    Actor player = db.findActorByID(1);
+    Actor enemy;
+    String actionResult;
+    String gameLog = currentRoom.getLongDescription();
     List<Item> items = null;
     List<RoomConnection> connection = null;
     int nextRoomId;
     
-
-    DerbyDatabase db = new DerbyDatabase();
-
-    public void setup() {
-        player = db.findActorByID(1);
-        currentRoom = db.findRoomByRoomID(5);
-    }
-
-    public String start() {
-        if (hasStarted) {
-            return "Game has already started";
-        } else {
-            setup();
-            String startingText = currentRoom.getLongDescription();
-            currentRoom.setVisited("true");
-            db.updateRoomByRoom(currentRoom);
-            hasStarted = true;
-            return startingText;
-        }
-    }
+	public void reset() {
+		userId = 0;
+		username = null;
+		response = null;
+	    hasStarted = false;
+	    canMove = true;
+	    inFight = false;
+	    decision = false;
+	    
+	    currentRoom = db.findRoomByRoomID(1);
+	    player = db.findActorByID(1);
+	    gameLog = currentRoom.getLongDescription();
+	    items = null;
+	    connection = null;
+	}
 
     public String processUserInput(String userInput) {
         String input = userInput.toLowerCase().trim();
 
-        if (input.equals("start")) {
-            response = start();
-        } else if (!hasStarted) {
-            response = "Type start to begin";
+        if (input.equals("prestart") && !hasStarted) {
+            // Handle the "prestart" command if the game hasn't started yet
+            db.dropTables();
+            db.reCreateTables();
+            db.reLoadInitialData();
+            reset();
+            response = gameLog;
+            returnInput = false;
+        } else if (input.equals("prestart")) {
+            // Handle the "prestart" command if the game has already started
+            db.dropTables();
+            db.reCreateTables();
+            db.reLoadInitialData();
+            reset();
+            returnInput = false;
+            response = gameLog;
+        } else if (inFight) {
+            // Player is in a fight, so only process fight-related commands
+            response = processFightCommands(input);
+        } else if (decision) {
+            response = processDecision(input);
         } else {
+            // Process other commands
             response = processCommand(input);
+            returnInput = true;
         }
 
-        gameLog += "\n >" + userInput;
-        gameLog += "\n" + response;
+
+        if (!hasStarted) {
+            hasStarted = true;
+        }
+
+        // Append user input and response to gameLog if returnInput is true
+        if (returnInput && !input.equals("prestart")) {
+            db.updateActor(1, player);
+            gameLog += "\n >" + userInput;
+            gameLog += "\n" + response;
+        }
+
         return gameLog;
     }
 
-    private String processCommand(String input) {
+
+	private String processCommand(String input) {
         if (isDirectionCommand(input)) {
             return processDirectionCommand(input);
         } else {
@@ -68,7 +103,9 @@ public class GameEngine {
     }
 
     private boolean isDirectionCommand(String input) {
-        return input.equals("north") || input.equals("south") || input.equals("east") || input.equals("west");
+        return input.equals("north") || input.equals("south") || input.equals("east") || input.equals("west") || 
+        		input.equals("climb") || input.equals("crawl") || input.equals("up") || input.equals("down") || input.equals("left")
+        || input.equals("right");
     }
 
     private String processDirectionCommand(String direction) {
@@ -94,16 +131,55 @@ public class GameEngine {
         if (nextRoom.getNeedsKey().equals("true") && !nextRoom.getKeyName().equals("none")) {
             return unlockDoor(nextRoom);
         } else {
+        	lastroom = currentRoom;
             player.moveTo(nextRoom);
             currentRoom = player.getCurrentRoom();
+            player.setRoomID(currentRoom.getRoomID());
+            db.updateActor(1, player);
+            String moveResult;
             if (nextRoom.getVisited().equals("false")) {
-                return "You move " + direction + ". New Location: " + currentRoom.getName() + ". " + currentRoom.getLongDescription();
+            	nextRoom.setVisited("true");
+            	db.updateRoomByRoom(nextRoom);
+                moveResult = "You move " + direction + ". New Location: " + currentRoom.getName() + ". " + currentRoom.getLongDescription();
             } else {
-                return "You move " + direction + " to " + currentRoom.getName() + ". " + currentRoom.getShortDescription();
+                moveResult = "You move " + direction + " to " + currentRoom.getName() + ". " + currentRoom.getShortDescription();
             }
+
+            // Check if there is an NPC in the next room after the player has been moved
+            Actor npcInNextRoom = db.findActorByRoomID(currentRoom.getRoomID());
+            if (npcInNextRoom != null && npcInNextRoom.getActorID() != 1) {
+            	enemy = npcInNextRoom;
+                moveResult += "\n" + startFight(enemy);
+            }
+            return moveResult;
         }
     }
 
+
+    private String startFight(Actor enemy) {
+    	decision = true;
+        return "A " + enemy.getName() + " stands in front of your way! You can either fight or run.";
+    }
+    
+    //Function used to process the fight decision
+    private String processDecision(String input) {
+        if (input.equals("fight")) {
+            inFight = true;
+            decision = false; // Reset decision flag
+            return "You engage in combat!";
+        } else if (input.equals("run")) {
+            // Move the player back to the previous room
+            player.moveTo(db.findRoomByRoomID(lastroom.getRoomID()));
+            currentRoom = player.getCurrentRoom();
+            decision = false; // Reset decision flag
+            return "You run back to the location you came from. Current location: " + currentRoom.getName() + ".";
+        } else {
+            // Invalid command
+            return "Invalid decision. You can either 'fight' or 'run'.";
+        }
+    }
+
+//Function used for unlocking rooms
     private String unlockDoor(Room nextRoom) {
         String keyName = nextRoom.getKeyName();
         items = db.findItemsByOwnerID(1);
@@ -113,13 +189,14 @@ public class GameEngine {
                 currentRoom = player.getCurrentRoom();
                 nextRoom.setNeedsKey("false");
                 db.updateRoomByRoom(nextRoom);
-                db.updateItem(item.getItemID(), currentRoom.getRoomID(), 1);
+                db.updateItem(item.getItemID(), 0, 0);
                 return "You use the " + keyName + " to unlock the door. " + currentRoom.getLongDescription();
             }
         }
         return "The following location is locked.";
     }
 
+    //Function used to process non fight commands
     private String processOtherCommands(String input) {
         switch (input) {
             case "health":
@@ -140,11 +217,209 @@ public class GameEngine {
             default:
                 if (input.startsWith("take ")) {
                     return takeItem(input.substring(5));
+                } else if (input.startsWith("save ")) {
+                	
+                    return "saved " + input.substring(5);
+                } else if (input.startsWith("load ")) {
+                	
+                    return "Loaded " + input.substring(5);
                 } else {
                     return "Invalid command.";
                 }
         }
     }
+    
+    //Function used to process fighting commands
+    private String processFightCommands(String input) {
+        if (input.startsWith("use ")) {
+            String itemName = input.substring(4);
+            actionResult = useItem(itemName);
+            return checkFightStatus(actionResult);
+        } else if (input.startsWith("throw ")) {
+            String itemName = input.substring(6);
+            actionResult = throwItem(itemName);
+            return checkFightStatus(actionResult);
+        } else {
+            switch (input) {
+                case "kick":
+                	actionResult = kick();
+                    return checkFightStatus(actionResult);
+                case "punch":
+                	actionResult = punch();
+                    return checkFightStatus(actionResult);
+                default:
+                    return "Invalid fight command.";
+            }
+        }
+    }
+    
+    //Function used to check the health of both fighters and end the fight
+    private String checkFightStatus(String actionResult) {
+        if (enemy.getCurrentHealth() <= 0) {
+            // NPC's health is 0 or less, handle victory
+        	inFight = false;
+        	List<Item> item = db.findItemsByOwnerID(enemy.getActorID());
+        	
+        	for (Item items : item) {
+                // Update each item's information
+                items.setDescription("New description");
+                // Update other fields as needed
+                db.updateItem(items.getItemID(), enemy.getRoomID(), 0);
+            }
+        	
+        	enemy.setRoomID(0);
+        	db.updateActor(enemy.getActorID(), enemy);
+            return "You defeated the " + enemy.getName() + "!";
+        } else if (player.getCurrentHealth() <= 0) {
+            // Player's health is 0 or less, handle defeat
+        	inFight = false;
+            return "You were defeated by " + enemy.getName() + ".";
+        } else {
+            // Neither player nor NPC's health is 0 or less, return action result
+            return actionResult;
+        }
+    }
+
+    private String useItem(String itemName) {
+        // Get the items owned by the player
+        items = db.findItemsByOwnerID(1);
+        
+        // Iterate through the player's items
+        for (Item item : items) {
+            // Check if the item's name matches the provided itemName
+            if (item.getName().equals(itemName)) {
+                // Check the type of the item
+                String itemType = item.getEffect();
+                
+                // Perform actions based on the item type
+                switch (itemType) {
+                    case "damage":
+                    	Random random = new Random();
+                        int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
+
+                        // Determine the outcome based on the random number
+                        if (randomNumber < 66) {
+                            // 66% chance of outcome 1
+                            return processDamage1(item);
+                        } else if (randomNumber > 66) {
+                            // 33% chance of outcome 2
+                            return processDamage2(item);
+                        }
+                    case "health":
+                    	player.setCurrentHealth(player.getCurrentHealth() + item.getDamage());
+                        return " You use the " + item.getName();
+                    case "key":
+                        return " You can't use a key here.";
+                    default:
+                        // Handle unknown item types
+                        return "Unknown item!";
+                }
+            }
+        }
+        
+        // If the itemName does not match any of the player's items
+        return "You do not have an item by that name.";
+    }
+
+// Functions used to process the damage the user makes to the enemy
+    private String processDamage1(Item item) {
+        // Process outcome 1
+        enemy.setCurrentHealth(enemy.getCurrentHealth() - item.getDamage());
+        db.updateActor(enemy.getActorID(), enemy);
+        String outcome = "You use the " + item.getName() + " against the " + enemy.getName() + ".";
+        return enemyFightsBack(outcome);
+    }
+
+    private String processDamage2(Item item) {
+        // Process outcome 2
+    	String outcome = "You attempt to use the " + item.getName() + " against the " + enemy.getName() + " but miss.";
+    	return enemyFightsBack(outcome);
+    }
+
+    // Function used to determine if the user takes damage from the enemy
+    private String enemyFightsBack(String outcome) {
+    	Random random = new Random();
+        int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
+        String result = null;
+        // Determine the outcome based on the random number
+        if (randomNumber < 33) {
+        	player.setCurrentHealth(player.getCurrentHealth() - 10);
+        	result = "\n The " + enemy.getName() + " fights back and hits you. ";
+        } else if (randomNumber < 66) {
+        	player.setCurrentHealth(player.getCurrentHealth() - 15);
+        	result = "\n The " + enemy.getName() + " fights back and hits you. ";
+        } else {
+        	result = "\n The " + enemy.getName() + " fights back and misses you. ";
+        }
+    	result = outcome + result + 
+    			"\n Your health: " + player.getCurrentHealth() + " | " + enemy.getName() + " health: " + enemy.getCurrentHealth();;
+    	return result;
+    }
+    
+    private String throwItem(String itemName) {
+    	Random random = new Random();
+    	String result = null;
+        int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
+        List<Item> item = db.findItemsByName(itemName);
+        if(item.get(0).getThrowable().equals("True")) {
+        	// Determine the outcome based on the random number
+            if (randomNumber < 66) {
+                
+            	db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
+                result = "You throw the " + itemName + " and hit the enemy!";
+                return enemyFightsBack(result);
+            } else if( randomNumber < 90){
+                
+            	db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
+                result = "You throw the " + itemName + " and miss the enemy.";
+                return enemyFightsBack(result);
+            }else {
+            	db.updateItem(item.get(0).getItemID(), 0, enemy.getActorID());
+            	result = "You throw the " + itemName + " and the " + enemy.getName() + " catches it!";
+            	return enemyFightsBack(result);
+            }
+        }else {
+        	return "You cannot throw that item!";
+        }
+      
+    }
+
+    private String kick() {
+    	Random random = new Random();
+    	String result = null;
+        int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
+            if (randomNumber < 66) {
+                enemy.setCurrentHealth(enemy.getCurrentHealth() - 5);
+                result = "You kick the " + enemy.getName() + ".";
+                return enemyFightsBack(result);
+            } else if( randomNumber < 85){
+            	enemy.setCurrentHealth(enemy.getCurrentHealth() - 8);
+                result = "You kick the " + enemy.getName() + " really hard. ";
+                return enemyFightsBack(result);
+            }else {
+            	result = "You attempt to kick the " + enemy.getName() + " but miss.";
+            	return enemyFightsBack(result);
+            }
+    }
+
+    private String punch() {
+    	Random random = new Random();
+    	String result = null;
+        int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
+            if (randomNumber < 66) {
+                enemy.setCurrentHealth(enemy.getCurrentHealth() - 8);
+                result = "You punch the " + enemy.getName() + ".";
+                return enemyFightsBack(result);
+            } else if( randomNumber < 85){
+            	enemy.setCurrentHealth(enemy.getCurrentHealth() - 12);
+                result = "You punch the " + enemy.getName() + " really hard. ";
+                return enemyFightsBack(result);
+            }else {
+            	result = "You swing a punch at the " + enemy.getName() + " but miss.";
+            	return enemyFightsBack(result);
+            }
+    }
+
 
     private String searchRoom() {
         items = db.findItemsByRoomID(currentRoom.getRoomID());
@@ -181,96 +456,22 @@ public class GameEngine {
             return "There is no " + itemName + " in this room.";
         }
     }
-    
-    
-    public void saveGame(String saveName) {
-    	
-    	int actorCount = db.getActorCount() , roomCount = db.getRoomCount(), itemCount = db.getItemCount();
-    	List<SaveGame> saveGames = db.getSaveGames(userID);
-    	
-    	//check if save already exists
-    	boolean saveExists = false;
-    	for(SaveGame saveGame: saveGames) {
-    		if(saveGame.getSaveName().equals(saveName)) {
-    			saveExists = true;
-    		}
-    	}
-    	//if already exists error
-    	if(saveExists) {
-    		System.out.println("Error: Save Already Exists with Given Name");
-    	
-        //else if doesn't exist generate a new saveID and make a new save game and save the data
-    	}else { 	
-	    	int saveID = db.getNextSaveID();
-	    	
-	    	
-	    	//save game
-	    	SaveGame newSaveGame = new SaveGame();
-	    	newSaveGame.setUserID(userID);
-	    	newSaveGame.setSaveID(saveID);
-	    	newSaveGame.setSaveName(saveName);
-	    	db.addSaveGame(newSaveGame);
-	    	  	
-	    	//save actors
-	    	for(int i = 1; i <= actorCount; i++) {
-	    		Actor actor = db.findActorByID(i);
-	    		db.saveActor(saveID, actor);
-	    	}
-	    	
-	    	//save rooms
-	    	for(int i = 1; i <= roomCount; i++ ) {
-	    		Room room = db.findRoomByRoomID(i);
-	    		db.saveRoom(saveID, room);
-	    	}
-	    	
-	    	//save items
-	    	for(int i = 1; i <= itemCount; i++ ) {
-	    		Item item = db.findItemByID(i);
-	    		db.saveItem(saveID, item);
-	    	}  
-	    	
-	    	
-	    	//save log
-	    	db.saveLog(saveID, gameLog);
-    	}
-    }
-    
-    public void loadGame(String saveName) {
-    	
-    	SaveGame saveGame = db.getSaveGameByName(saveName);
-    	List<SaveData> saveDataList = db.getSaveData(saveGame.getSaveID());
-    	
-    	
-    	for(SaveData saveData: saveDataList) {
-    		if(saveData.getSaveType().equals("actor")) {
-    			Actor actorToUpdate = db.findActorByID(saveData.getIdSlot1());
-    			actorToUpdate.update(saveData);
-    			db.updateActor(actorToUpdate);
-    			
-    		}else if(saveData.getSaveType().equals("room")) {
-    			Room roomToUpdate = db.findRoomByRoomID(saveData.getIdSlot1());
-    			roomToUpdate.update(saveData);
-    			db.updateRoomByRoom(roomToUpdate);
-    			
-    		}else if(saveData.getSaveType().equals("item")) {
-    			Item itemToUpdate = db.findItemByID(saveData.getIdSlot1());
-    			itemToUpdate.update(saveData);
-    			db.updateItem(itemToUpdate.getItemID(), itemToUpdate.getRoomID(), itemToUpdate.getOwnerID());
-    		}else {
-    			gameLog = saveData.getLog();
-    		}
-    	}
-    	
-    	
-    	
-    	
-    	
-    	
-    }//end loadGame
-    
-    
-    
-    
-    
-}//end gameEngine
+
+	public void setUserId(int userId) {
+		this.userId=(userId);
+	}
+	
+	public void setUsername(String username) {
+		this.username=(username);
+	}
+	
+	public int getPlayerHealth() {
+		return player.getCurrentHealth();
+	}
+	
+	public String getPlayerMaxHealth() {
+		Actor playerInfo = db.findActorByID(1);
+		return "$" + playerInfo.getMaxHealth();
+	}
+}
 

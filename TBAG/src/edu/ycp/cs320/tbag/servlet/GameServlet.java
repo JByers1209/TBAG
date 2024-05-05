@@ -9,11 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import edu.ycp.cs320.tbag.controller.GameEngine;
+import edu.ycp.cs320.tbag.dataBase.DerbyDatabase;
 
 public class GameServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private GameEngine gameEngine; // Instantiate GameEngine
-
+    DerbyDatabase db = new DerbyDatabase();
     @Override
     public void init() throws ServletException {
         super.init();
@@ -21,14 +22,36 @@ public class GameServlet extends HttpServlet {
     }
  
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
+        
+        if (session != null && session.getAttribute("user_id") != null) {
+            int userId = (int) session.getAttribute("user_id");
+            String username = (String) session.getAttribute("username");
+            
+            // Pass the user ID and username to the GameEngine
+            gameEngine.setUserId(userId);
+            gameEngine.setUsername(username);
+            
+            // If the user is logged in, forward to the game page
+            req.getRequestDispatcher("_view/game.jsp").forward(req, resp);
+        } else {
+            // If the user is not logged in, redirect to the login page
+            req.getRequestDispatcher("_view/login.jsp").forward(req, resp);
+        }
+    }
+
+
+    
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
    
-        	 
         String userInput = req.getParameter("userInput");
 
         // Process user input using GameEngine
-        String gameResponse = gameEngine.processUserInput(userInput);
+        String gameResponse = gameEngine.getPlayerHealth() + "\n" + gameEngine.processUserInput(userInput);
 
         // Set response content type
         resp.setContentType("text/plain");
@@ -36,25 +59,5 @@ public class GameServlet extends HttpServlet {
         // Send game response back to client
         resp.getWriter().write(gameResponse);
     }
-    
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		 HttpSession session = req.getSession(false);
-		 
-    	 if (session != null && session.getAttribute("username") != null) {
-    		 resp.sendRedirect("/_view/game.jsp");
-         } else {
-        	 resp.sendRedirect("/_view/login.jsp");
-        	 
-		String function = req.getParameter("function");
-    
-    if ("Resume".equals(function)) {
-        req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
-    }
-  
-    else {
-    	req.getRequestDispatcher("/_view/pause.jsp").forward(req, resp);
-    	}
-    }
-  }
+
 }
