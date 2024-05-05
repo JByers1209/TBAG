@@ -51,31 +51,33 @@ public class GameEngine {
     public String processUserInput(String userInput) {
         String input = userInput.toLowerCase().trim();
 
-        if (inFight) {
+        if (input.equals("prestart") && !hasStarted) {
+            // Handle the "prestart" command if the game hasn't started yet
+            db.dropTables();
+            db.reCreateTables();
+            db.reLoadInitialData();
+            reset();
+            response = gameLog;
+            returnInput = false;
+        } else if (input.equals("prestart")) {
+            // Handle the "prestart" command if the game has already started
+            db.dropTables();
+            db.reCreateTables();
+            db.reLoadInitialData();
+            reset();
+            returnInput = false;
+            response = gameLog;
+        } else if (inFight) {
             // Player is in a fight, so only process fight-related commands
             response = processFightCommands(input);
         } else if (decision) {
             response = processDecision(input);
         } else {
-            if (input.equals("prestart") && !hasStarted) {
-            	db.dropTables();
-                db.reCreateTables();
-                db.reLoadInitialData();
-            	reset();
-                response = gameLog;
-                returnInput = false;
-            } else if (input.equals("prestart")) {
-            	db.dropTables();
-                db.reCreateTables();
-                db.reLoadInitialData();
-            	reset();
-                returnInput = false;
-                response = gameLog;
-            } else {
-                response = processCommand(input);
-                returnInput = true;
-            }
+            // Process other commands
+            response = processCommand(input);
+            returnInput = true;
         }
+
 
         if (!hasStarted) {
             hasStarted = true;
