@@ -107,7 +107,7 @@ public class GameEngine {
     private boolean isDirectionCommand(String input) {
         return input.equals("north") || input.equals("south") || input.equals("east") || input.equals("west") || 
         		input.equals("climb") || input.equals("crawl") || input.equals("up") || input.equals("down") || input.equals("left")
-        || input.equals("right");
+        || input.equals("right") || input.equals("drive") || input.equals("walk");
     }
 
     private String processDirectionCommand(String direction) {
@@ -220,8 +220,10 @@ public class GameEngine {
                 if (input.startsWith("take ")) {
                     return takeItem(input.substring(5));
                 } else if (input.startsWith("save ")) {
+                	saveGame(input.substring(5));
                     return "saved " + input.substring(5);
                 } else if (input.startsWith("load ")) {
+                	loadGame(input.substring(5));
                     return "Loaded " + input.substring(5);
                 } else if (input.startsWith("use ")) {
                     String itemName = input.substring(4);
