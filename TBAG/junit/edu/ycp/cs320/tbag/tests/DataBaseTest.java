@@ -63,7 +63,7 @@ public class DataBaseTest {
 		assertEquals("Josh's House", two.getName());
 		assertEquals("false", two.getVisited());
 		assertEquals("true", two.getNeedsKey());
-		assertEquals("blue key", two.getKeyName());
+		assertEquals("rusty key", two.getKeyName());
 	}
 	
 	@Test
@@ -98,17 +98,17 @@ public class DataBaseTest {
         items = db.findItemsByRoomID(2);
         assertEquals(1, items.size());
         assertEquals("lightsaber", items.get(0).getName());
-        assertEquals(1, items.get(0).getItemID());
+        assertEquals(4, items.get(0).getItemID());
         
         items = db.findItemsByRoomID(6);
         assertEquals(1, items.size());
         assertEquals("bandages", items.get(0).getName());
-        assertEquals(2, items.get(0).getItemID());
+        assertEquals(8, items.get(0).getItemID());
         
         items = db.findItemsByRoomID(8);
         assertEquals(1, items.size());
         assertEquals("rusty key", items.get(0).getName());
-        assertEquals(3, items.get(0).getItemID());
+        assertEquals(2, items.get(0).getItemID());
         
     }
 	
@@ -125,14 +125,14 @@ public class DataBaseTest {
         items = db.findItemsByOwnerID(3);
         assertEquals(0, items.size());
         
-        db.updateItem(1, 0, 0);
+        db.updateItem(1, 1, 0);
     }
 	
 	@Test
 	public void testUpdateItem() {
 		List<Item> items;
 		
-		//Ensures that Actor 1 starts with the Knife on every test
+		//Ensures that Actor 1 starts with the lightsaber on every test
 		db.updateItem(4, 0, 1);
 		
 		//Checks that Actor 1 has a lightsaber.
@@ -157,7 +157,7 @@ public class DataBaseTest {
 		assertEquals(0, items.size());
 		
 		//Resets the database to its original value
-		db.updateItem(4, 0, 0);
+		db.updateItem(4, 2, 0);
 		
 	}
 	
