@@ -256,6 +256,8 @@ public class GameEngine {
                 case "punch":
                 	actionResult = punch();
                     return checkFightStatus(actionResult);
+                case "inventory":
+                	return displayInventory();
                 default:
                     return "Invalid fight command.";
             }
@@ -360,9 +362,9 @@ public class GameEngine {
         	result = "\n The " + enemy.getName() + " fights back and hits you. ";
         } else if (randomNumber < 66) {
         	player.setCurrentHealth(player.getCurrentHealth() - 15);
-        	result = "\n The " + enemy.getName() + " fights back and hits you. ";
+        	result = "\n The " + enemy.getName() + " hits you really hard. ";
         } else {
-        	result = "\n The " + enemy.getName() + " fights back and misses you. ";
+        	result = "\n The " + enemy.getName() + " tries to fight back but misses you. ";
         }
     	result = outcome + result + 
     			"\n " + enemy.getName() + " health: " + enemy.getCurrentHealth();
@@ -468,7 +470,7 @@ public class GameEngine {
         List<Item> itemToTake = db.findItemsByNameAndRoomID(itemName, currentRoom.getRoomID());
         if (!itemToTake.isEmpty()) {
             db.updateItem(itemToTake.get(0).getItemID(), currentRoom.getRoomID(), 1);
-            return "You take the " + itemName + "." + itemToTake.get(0).getDescription();
+            return "You take the " + itemToTake.get(0).getDescription() + ".";
         } else {
             return "There is no " + itemName + " in this room.";
         }
