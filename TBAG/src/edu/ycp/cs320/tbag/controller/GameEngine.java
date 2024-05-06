@@ -200,6 +200,7 @@ public class GameEngine {
 
     //Function used to process non fight commands
     private String processOtherCommands(String input) {
+    	System.out.println("Other Commands");
         switch (input) {
             case "health":
                 return "Health: " + player.getCurrentHealth();
@@ -221,8 +222,11 @@ public class GameEngine {
                     return takeItem(input.substring(5));
                 } else if (input.startsWith("save ")) {
                 	saveGame(input.substring(5));
-                    return "saved " + input.substring(5);
+                    return "saved game as " + input.substring(5);
                 } else if (input.startsWith("load ")) {
+                	db.dropTables();
+                    db.reCreateTables();
+                    db.reLoadInitialData();
                 	loadGame(input.substring(5));
                     return "Loaded " + input.substring(5);
                 } else if (input.startsWith("use ")) {
