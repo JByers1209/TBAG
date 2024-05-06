@@ -190,10 +190,10 @@ public class GameEngine {
                 nextRoom.setNeedsKey("false");
                 db.updateRoomByRoom(nextRoom);
                 db.updateItem(item.getItemID(), 0, 0);
-                return "You use the " + keyName + " to unlock the door. " + currentRoom.getLongDescription();
+                return "You use the " + keyName + ". " + currentRoom.getLongDescription();
             }
         }
-        return "The following location is locked.";
+        return nextRoom.getName() + " is locked. " + "Maybe you can find a " + nextRoom.getKeyName() + ".";
     }
 
     //Function used to process non fight commands
@@ -468,7 +468,7 @@ public class GameEngine {
         List<Item> itemToTake = db.findItemsByNameAndRoomID(itemName, currentRoom.getRoomID());
         if (!itemToTake.isEmpty()) {
             db.updateItem(itemToTake.get(0).getItemID(), currentRoom.getRoomID(), 1);
-            return "You take the " + itemName + ".";
+            return "You take the " + itemName + "." + itemToTake.get(0).getDescription();
         } else {
             return "There is no " + itemName + " in this room.";
         }
