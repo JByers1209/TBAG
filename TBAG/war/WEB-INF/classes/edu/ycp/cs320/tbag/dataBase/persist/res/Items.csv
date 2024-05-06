@@ -1,5 +1,5 @@
 1 | knife | switcheblade | True | 10 | damage | 1 | 0 
-3 | rusty key | Used to enter a rusty door. | False | 0 | key | 8 | 0
+3 | rusty key | rusty key | False | 0 | key | 8 | 0
 1 | sword | fancy and strong sword | True | 15 | damage | 12 | 0
 1 | lightsaber | powerful Jedi weapon | TRUE | 25 | damage | 2 | 0
 2 | bandages | some pink bandage | FALSE | 10 | health | 3 | 0
