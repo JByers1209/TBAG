@@ -5,6 +5,7 @@
 1  | east  | 2 
 2  | drive | 3 
 2  | drive | 8
+2  | west  | 7
 3  | east  | 19 
 3  | north | 20 
 3  | drive | 2
@@ -17,6 +18,7 @@
 7  | north | 11 
 7  | climb | 12 
 7  | drive | 3 
+7  | drive | 5 
 8  | walk  | 13 
 8  | walk  | 15 
 8  | drive | 6 
