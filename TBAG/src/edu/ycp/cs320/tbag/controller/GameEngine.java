@@ -24,7 +24,7 @@ public class GameEngine {
     boolean decision = false;
     boolean returnInput;
     
-    Room currentRoom = db.findRoomByRoomID(1);
+    Room currentRoom =db.findRoomByRoomID(1);
     Room lastroom;
     Actor player = db.findActorByID(1);
     Actor enemy;
@@ -219,12 +219,11 @@ public class GameEngine {
                 if (input.startsWith("take ")) {
                     return takeItem(input.substring(5));
                 } else if (input.startsWith("save ")) {
+                	player.setRoomID(currentRoom.getRoomID());
+                	db.updateActor(player);
                 	saveGame(input.substring(5));
                     return "saved game as " + input.substring(5);
                 } else if (input.startsWith("load ")) {
-                	db.dropTables();
-                    db.reCreateTables();
-                    db.reLoadInitialData();
                     return loadGame(userId, input.substring(5));
                 } else if (input.startsWith("use ")) {
                     String itemName = input.substring(4);
@@ -312,10 +311,10 @@ public class GameEngine {
                             int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
 
                             // Determine the outcome based on the random number
-                            if (randomNumber < 66) {
+                            if (randomNumber < 85) {
                                 // 66% chance of outcome 1
                                 return processDamage1(item);
-                            } else if (randomNumber > 66) {
+                            } else if (randomNumber > 85) {
                                 // 33% chance of outcome 2
                                 return processDamage2(item);
                             }
@@ -377,13 +376,15 @@ public class GameEngine {
         int randomNumber = random.nextInt(100); // Generate a random number between 0 and 99
         List<Item> item = db.findItemsByName(itemName);
         if(!inFight) {
-        	db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
-            result = "You throw the " + itemName + ".";
+        	if(item.get(0).getName().equals("null talisman")) {
+    			return "You throw the " + item.get(0).getName() + ". It shatters into pieces. The dark clouds over York have lifted.";
+    		}else {
+    			db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
+                result = "You throw the " + itemName + ".";
+    		}
         }else {
         	if(item.get(0).getThrowable().equals("True")) {
-        		if(item.get(0).getItemID() == 16) {
-        			return "You throw the " + item.get(0).getName() + ". It shatters into pieces. The dark clouds over York have lifted.";
-        		}else {
+        		{
         			// Determine the outcome based on the random number
                     if (randomNumber < 66) {
                         
@@ -447,7 +448,15 @@ public class GameEngine {
     private String searchRoom() {
         items = db.findItemsByRoomID(currentRoom.getRoomID());
         if (items != null && !items.isEmpty()) {
-            return "You search the area and find the following items: " + items.get(0).getName() + ".";
+        	StringBuilder inventory = new StringBuilder("You search the area and find the following items: ");
+            for (int i = 0; i < items.size(); i++) {
+                inventory.append(items.get(i).getName());
+                if (i < items.size() - 1) {
+                    inventory.append(", ");
+                }
+            }
+            inventory.append(".");
+            return inventory.toString();
         } else {
             return "You search the room but find nothing.";
         }

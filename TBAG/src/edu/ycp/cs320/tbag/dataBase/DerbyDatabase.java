@@ -1374,7 +1374,7 @@ public class DerbyDatabase implements IDatabase {
 								"	actor_max_health integer," +
 								"	room_has_visited varchar(40)," +
 								"	room_needs_key varchar(40)," +
-								"   log varchar(4000)" + 
+								"   log varchar(10000)" + 
 								")"
 							);
 						stmt6.executeUpdate();	

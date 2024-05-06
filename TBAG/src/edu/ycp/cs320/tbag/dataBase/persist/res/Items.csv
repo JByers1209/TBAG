@@ -1,16 +1,16 @@
 1 | knife | switcheblade | True | 10 | damage | 1 | 0 
 3 | rusty key | rusty key | False | 0 | key | 8 | 0
 1 | sword | fancy and strong sword | True | 15 | damage | 12 | 0
-1 | lightsaber | powerful Jedi weapon | TRUE | 25 | damage | 2 | 0
-2 | bandages | some pink bandage | FALSE | 10 | health | 3 | 0
-1 | salt 	| large tub of salt | TRUE | 5 | damage | 4 | 0
-2 | bandages | purple bandages | FALSE | 10 | health | 5 | 0
-2 | bandages | blue bandages | FALSE | 10 | health | 6 | 0
-2 | water bottle | pink stanley | FALSE | 10 | health | 10 | 0
-1 | rosary | old lady's rosary | TRUE | 5 | damage | 13 | 0 
-2 | crab soup | some good o'l crab soup | FALSE | 15 | health | 14 | 0
-2 | water bottle | dasani water bottle | FALSE | 10 | health | 15 | 0 
-1 | rubber duck | small yellow rubber duck | TRUE | 5 | damage | 19 |0
-2 | tacos | three hard shell tacos | FALSE | 15 | health | 20 | 0 
-1 | axe | double sided war axe | TRUE | 25 | damage | 23 | 0
-1 | null Talisman | glowing red orb | TRUE | 50 | damage | 0 | 3
+1 | lightsaber | powerful Jedi weapon | True | 50 | damage | 2 | 0
+2 | bandages | some pink bandage | False | 50 | health | 3 | 0
+1 | salt 	| large tub of salt | True | 5 | damage | 4 | 0
+2 | bandages | purple bandages | False | 50 | health | 5 | 0
+2 | bandages | blue bandages | False | 50 | health | 6 | 0
+2 | water bottle | pink stanley | False | 10 | health | 10 | 0
+1 | rosary | old lady's rosary | True | 5 | damage | 13 | 0 
+2 | crab soup | some good o'l crab soup | False | 15 | health | 14 | 0
+2 | water bottle | dasani water bottle | False | 20 | health | 15 | 0 
+1 | rubber duck | small yellow rubber duck | True | 5 | damage | 19 |0
+2 | tacos | three hard shell tacos | False | 25 | health | 20 | 0 
+1 | axe | double sided war axe | True | 25 | damage | 23 | 0
+1 | null talisman | glowing red orb | True | 50 | damage | 0 | 3
