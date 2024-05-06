@@ -15,8 +15,8 @@ public class GameEngine {
 	
 	DerbyDatabase db = new DerbyDatabase();
 	
-	int userId = 0;
-	String username = null;
+	int userId;
+	String username;
     String response;
     boolean hasStarted = false;
     boolean canMove = true;
@@ -35,8 +35,6 @@ public class GameEngine {
     int nextRoomId;
     
 	public void reset() {
-		userId = 0;
-		username = null;
 		response = null;
 	    hasStarted = false;
 	    canMove = true;
@@ -107,7 +105,7 @@ public class GameEngine {
     private boolean isDirectionCommand(String input) {
         return input.equals("north") || input.equals("south") || input.equals("east") || input.equals("west") || 
         		input.equals("climb") || input.equals("crawl") || input.equals("up") || input.equals("down") || input.equals("left")
-        || input.equals("right");
+        || input.equals("right") || input.equals("drive") || input.equals("walk");
     }
 
     private String processDirectionCommand(String direction) {
@@ -142,9 +140,9 @@ public class GameEngine {
             if (nextRoom.getVisited().equals("false")) {
             	nextRoom.setVisited("true");
             	db.updateRoomByRoom(nextRoom);
-                moveResult = "You move " + direction + ". " + currentRoom.getLongDescription();
+                moveResult = currentRoom.getLongDescription();
             } else {
-                moveResult = "You move " + direction + " to " + currentRoom.getName() + ". " + currentRoom.getShortDescription();
+                moveResult = currentRoom.getShortDescription();
             }
 
             // Check if there is an NPC in the next room after the player has been moved
@@ -200,6 +198,7 @@ public class GameEngine {
 
     //Function used to process non fight commands
     private String processOtherCommands(String input) {
+    	System.out.println("Other Commands");
         switch (input) {
             case "health":
                 return "Health: " + player.getCurrentHealth();
@@ -220,9 +219,13 @@ public class GameEngine {
                 if (input.startsWith("take ")) {
                     return takeItem(input.substring(5));
                 } else if (input.startsWith("save ")) {
-                    return "saved " + input.substring(5);
+                	saveGame(input.substring(5));
+                    return "saved game as " + input.substring(5);
                 } else if (input.startsWith("load ")) {
-                    return "Loaded " + input.substring(5);
+                	db.dropTables();
+                    db.reCreateTables();
+                    db.reLoadInitialData();
+                    return loadGame(userId, input.substring(5));
                 } else if (input.startsWith("use ")) {
                     String itemName = input.substring(4);
                     return  useItem(itemName);
@@ -540,47 +543,45 @@ public class GameEngine {
     	}
     }//end SaveGame
 	
-	
+    public String loadGame(int userId, String saveName) {
+        // Get the SaveGame object from the database
+    	String result = null;
+        SaveGame saveGame = db.getSaveGameByName(saveName);
+        System.out.println("Save game user id: " + saveGame.getUserID());
+        System.out.println("Current user id: " + userId);
+        if (saveGame.getUserID() != userId) {
+            // userId does not match, return without loading the game
+            System.out.println("You have no game saved under " + saveName);
+            result = "You don't have any games saved as " + saveName;
+        }else {
+        	// userId matches, continue loading the game data
+            List<SaveData> saveDataList = db.getSaveData(saveGame.getSaveID());
 
-	
-	
-    public void loadGame(String saveName) {
-    	
-    	SaveGame saveGame = db.getSaveGameByName(saveName);
-    	List<SaveData> saveDataList = db.getSaveData(saveGame.getSaveID());
-    	
-    	
-    	for(SaveData saveData: saveDataList) {
-    		if(saveData.getSaveType().equals("actor")) {
-    			Actor actorToUpdate = db.findActorByID(saveData.getIdSlot1());
-    			actorToUpdate.update(saveData);
-    			db.updateActor(actorToUpdate);
-    			
-    		}else if(saveData.getSaveType().equals("room")) {
-    			Room roomToUpdate = db.findRoomByRoomID(saveData.getIdSlot1());
-    			roomToUpdate.update(saveData);
-    			db.updateRoomByRoom(roomToUpdate);
-    			
-    		}else if(saveData.getSaveType().equals("item")) {
-    			Item itemToUpdate = db.findItemByID(saveData.getIdSlot1());
-    			itemToUpdate.update(saveData);
-    			db.updateItem(itemToUpdate.getItemID(), itemToUpdate.getRoomID(), itemToUpdate.getOwnerID());
-    		}else {
-    			gameLog = saveData.getLog();
-    		}
-    	}
-    	
-    	
-    	
-    	
-    	
-    	
-    }//end loadGame
-	
-	
-	
-	
-}//endGameEngine
+            for(SaveData saveData: saveDataList) {
+                if(saveData.getSaveType().equals("actor")) {
+                    Actor actorToUpdate = db.findActorByID(saveData.getIdSlot1());
+                    actorToUpdate.update(saveData);
+                    db.updateActor(actorToUpdate);
+                    
+                } else if(saveData.getSaveType().equals("room")) {
+                    Room roomToUpdate = db.findRoomByRoomID(saveData.getIdSlot1());
+                    roomToUpdate.update(saveData);
+                    db.updateRoomByRoom(roomToUpdate);
+                    
+                } else if(saveData.getSaveType().equals("item")) {
+                    Item itemToUpdate = db.findItemByID(saveData.getIdSlot1());
+                    itemToUpdate.update(saveData);
+                    db.updateItem(itemToUpdate.getItemID(), itemToUpdate.getRoomID(), itemToUpdate.getOwnerID());
+                } else {
+                    gameLog = saveData.getLog();
+                }
+                result = "Successfully loaded " + saveName;
+            }
+        }
+		return result;
+    }
+}
+
 
 
 
