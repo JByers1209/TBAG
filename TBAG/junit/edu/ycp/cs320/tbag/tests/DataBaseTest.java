@@ -33,14 +33,14 @@ public class DataBaseTest {
 		List<RoomConnection> room1;
 		List<RoomConnection> room5;
 		room1 = db.findConnectionsByRoomID(1);
-		assertEquals(4, room1.size());
-		assertEquals("north", room1.get(0).getMove());
-		assertEquals(3, room1.get(0).getDestId());
+		assertEquals(5, room1.size());
+		assertEquals("west", room1.get(0).getMove());
+		assertEquals(4, room1.get(0).getDestId());
 		
 		room5 = db.findConnectionsByRoomID(5);
-		assertEquals(4, room5.size());
-		assertEquals("north", room1.get(0).getMove());
-		assertEquals(2, room5.get(0).getDestId());
+		assertEquals(2, room5.size());
+		assertEquals("walk", room5.get(0).getMove());
+		assertEquals(21, room5.get(0).getDestId());
 		
 	}
 	
@@ -53,7 +53,7 @@ public class DataBaseTest {
 		Room one = db.findRoomByRoomID(1);
 		assertEquals(1, one.getRoomID());
 		assertEquals("Start", one.getName());
-		assertEquals("false", one.getVisited());
+		assertEquals("true", one.getVisited());
 		assertEquals("false", one.getNeedsKey());
 		assertEquals("none", one.getKeyName());
 		
@@ -63,7 +63,7 @@ public class DataBaseTest {
 		assertEquals("Josh's House", two.getName());
 		assertEquals("false", two.getVisited());
 		assertEquals("true", two.getNeedsKey());
-		assertEquals("blue key", two.getKeyName());
+		assertEquals("rusty key", two.getKeyName());
 	}
 	
 	@Test
@@ -71,22 +71,22 @@ public class DataBaseTest {
 		
 		System.out.println("Update Room Test");
 		Room room = db.findRoomByRoomID(1);
-		room.setVisited("false");
+		room.setVisited("true");
 		room.setNeedsKey("false");
 		db.updateRoomByRoom(room);
-		assertEquals("false", room.getVisited());
+		assertEquals("true", room.getVisited());
 		assertEquals("false", room.getNeedsKey());
 		
-		room.setVisited("true");
+		room.setVisited("false");
 		room.setNeedsKey("true");
 		db.updateRoomByRoom(room);
 		
 		room = db.findRoomByRoomID(1);
-		assertEquals("true", room.getVisited());
+		assertEquals("false", room.getVisited());
 		assertEquals("true", room.getNeedsKey());
 		
 		//Sets database back to default
-		room.setVisited("false");
+		room.setVisited("true");
 		room.setNeedsKey("false");
 		db.updateRoomByRoom(room);
 	}
@@ -97,18 +97,18 @@ public class DataBaseTest {
         
         items = db.findItemsByRoomID(2);
         assertEquals(1, items.size());
-        assertEquals("sword", items.get(0).getName());
-        assertEquals(1, items.get(0).getItemID());
+        assertEquals("lightsaber", items.get(0).getName());
+        assertEquals(4, items.get(0).getItemID());
         
         items = db.findItemsByRoomID(6);
         assertEquals(1, items.size());
-        assertEquals("bandage", items.get(0).getName());
-        assertEquals(2, items.get(0).getItemID());
+        assertEquals("bandages", items.get(0).getName());
+        assertEquals(8, items.get(0).getItemID());
         
         items = db.findItemsByRoomID(8);
         assertEquals(1, items.size());
-        assertEquals("blue key", items.get(0).getName());
-        assertEquals(3, items.get(0).getItemID());
+        assertEquals("rusty key", items.get(0).getName());
+        assertEquals(2, items.get(0).getItemID());
         
     }
 	
@@ -116,26 +116,29 @@ public class DataBaseTest {
     public void testFindItemsByOwnerID() {	
         List<Item> items;
         
+        db.updateItem(1, 0, 1);
+        
         items = db.findItemsByOwnerID(1);
-        assertEquals(2, items.size());
+        assertEquals(1, items.size());
         assertEquals("knife", items.get(0).getName());
-        assertEquals("lightsaber", items.get(1).getName());
         
         items = db.findItemsByOwnerID(3);
         assertEquals(0, items.size());
+        
+        db.updateItem(1, 1, 0);
     }
 	
 	@Test
 	public void testUpdateItem() {
 		List<Item> items;
 		
-		//Ensures that Actor 1 starts with the Knife on every test
+		//Ensures that Actor 1 starts with the lightsaber on every test
 		db.updateItem(4, 0, 1);
 		
-		//Checks that Actor 1 has a Knife.
+		//Checks that Actor 1 has a lightsaber.
 		items = db.findItemsByOwnerID(1);
-        assertEquals(2, items.size());
-        assertEquals("knife", items.get(0).getName());
+        assertEquals(1, items.size());
+        assertEquals("lightsaber", items.get(0).getName());
         
         //Checks that Actor 2 has no item.
         items = db.findItemsByOwnerID(2);
@@ -144,17 +147,17 @@ public class DataBaseTest {
         //Sets Knife to be owned by actor 2.
         db.updateItem(4, 0, 2);
 		
-		//Checks that Actor 2 has a Knife.
+		//Checks that Actor 2 has a lightsaber.
 		items = db.findItemsByOwnerID(2);
 		assertEquals(1, items.size());
-		assertEquals("knife", items.get(0).getName());
+		assertEquals("lightsaber", items.get(0).getName());
 		    
-		//Checks that Actor 1 has 1 item(lightsaber).
+		//Checks that Actor 1 has no item.
 		items = db.findItemsByOwnerID(1);
-		assertEquals(1, items.size());
+		assertEquals(0, items.size());
 		
 		//Resets the database to its original value
-		db.updateItem(4, 0, 1);
+		db.updateItem(4, 2, 0);
 		
 	}
 	
@@ -163,8 +166,8 @@ public class DataBaseTest {
 	
         List<Item> items;
         
-        items = db.findItemsByNameAndRoomID("sword", 2);
-        assertEquals("sword", items.get(0).getName());
+        items = db.findItemsByNameAndRoomID("lightsaber", 2);
+        assertEquals("lightsaber", items.get(0).getName());
 
 
     }
@@ -205,7 +208,7 @@ public class DataBaseTest {
 		
 		assertEquals(150, NPC.getCurrentHealth());
 		
-		NPC.setCurrentHealth(150);
+		NPC.setCurrentHealth(200);
 		db.updateActor(NPC);
 	}
 	
@@ -221,7 +224,7 @@ public class DataBaseTest {
 	@Test
 	public void testFindItemByName() {
 		List<Item> item = db.findItemsByName("lightsaber");
-		assertEquals("False", item.get(0).getThrowable());
+		assertEquals("true", item.get(0).getThrowable());
 		assertEquals("lightsaber", item.get(0).getName());
 		assertEquals(1, item.get(0).getType());
 		assertEquals("damage", item.get(0).getEffect());
