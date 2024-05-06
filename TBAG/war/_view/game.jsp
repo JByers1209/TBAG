@@ -42,7 +42,7 @@
             <!-- pause button -->
             <div id="pause">
                 <form function="PauseServlet" method="get">
-                    <input type="submit" name="function" value="Save and Quit" class="pause">
+                    <input type="submit" name="function" value="Quit" class="pause">
                 </form>
             </div>
             <!-- HEALTH STATUS -->
