@@ -25,10 +25,6 @@
                 <form function="IndexServlet" method="get">
                     <input type="submit" name="function" value="Play" class="submit">
                 </form>
-                <!-- Display the "Resume Game" button -->
-                <form function="ResumeServlet" method="get">
-                    <input type="submit" name="function" value="Resume" class="submit">
-                </form>
                 <!-- Logout button -->
                 <form action="LogoutServlet" method="get">
                     <input type="submit" value="Logout" class="submit">
