@@ -381,22 +381,26 @@ public class GameEngine {
             result = "You throw the " + itemName + ".";
         }else {
         	if(item.get(0).getThrowable().equals("True")) {
-            	// Determine the outcome based on the random number
-                if (randomNumber < 66) {
-                    
-                	db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
-                    result = "You throw the " + itemName + " and hit the enemy!";
-                    return enemyFightsBack(result);
-                } else if( randomNumber < 90){
-                    
-                	db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
-                    result = "You throw the " + itemName + " and miss the enemy.";
-                    return enemyFightsBack(result);
-                }else {
-                	db.updateItem(item.get(0).getItemID(), 0, enemy.getActorID());
-                	result = "You throw the " + itemName + " and the " + enemy.getName() + " catches it!";
-                	return enemyFightsBack(result);
-                }
+        		if(item.get(0).getItemID() == 16) {
+        			return "You throw the " + item.get(0).getName() + ". It shatters into pieces. The dark clouds over York have lifted.";
+        		}else {
+        			// Determine the outcome based on the random number
+                    if (randomNumber < 66) {
+                        
+                    	db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
+                        result = "You throw the " + itemName + " and hit the enemy!";
+                        return enemyFightsBack(result);
+                    } else if( randomNumber < 90){
+                        
+                    	db.updateItem(item.get(0).getItemID(), player.getRoomID(), 0);
+                        result = "You throw the " + itemName + " and miss the enemy.";
+                        return enemyFightsBack(result);
+                    }else {
+                    	db.updateItem(item.get(0).getItemID(), 0, enemy.getActorID());
+                    	result = "You throw the " + itemName + " and the " + enemy.getName() + " catches it!";
+                    	return enemyFightsBack(result);
+                    }
+        		}
         	}
         }
         return "You cannot throw that item!";
