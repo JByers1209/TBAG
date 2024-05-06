@@ -1,18 +1,16 @@
 1 | knife | A switcheblade | True | 10 | damage | 1 | 0 
 3 | rusty key | Used to enter a rusty door. | False | 0 | key | 8 | 0
-1 | sword | A fancy and strong sword | True | 15 | damage | 11 | 0
-1 | lightsaber | A powerful Jedi weapon | true | 25 | damage | 2 | 0
-2 | bandages | some pink bandage | false | 10 | health | 3 | 0
-1 | salt 	| large tub of salt | true | 5 | damage | 4 | 0
-2 | bandages | purple bandages | false | 10 | health | 5 | 0
-2 | bandages | blue bandages | false | 10 | health | 6 | 0
-2 | water bottle | a pink stanley | false | 10 | health | 10 | 0
-1 | EMF | a EMF reader | true | 2 | damage | 12 | 0
-1 | Lantern | the lady's lantern | true | 5 | damage | 12 | 0
-1 | rosary | old lady's rosary | true | 5 | damage | 13 | 0 
-2 | crab soup | some good o'l crab soup | false | 15 | health | 14 | 0
-2 | water bottle | a dasani water bottle | false | 10 | health | 15 | 0 
-1 | rubber duck | a small yellow rubber duck | true | 1 | damage | 19 |0
-2 | tacos | three hard shell tacos | false | 15 | health | 20 | 0 
-1 | axe | a double sided war axe | true | 25 | damage | 23 | 0
-1 | null Talisman | a glowing red orb | true | 50 | damage | 25 | 0
+1 | sword | A fancy and strong sword | True | 15 | damage | 12 | 0
+1 | lightsaber | A powerful Jedi weapon | TRUE | 25 | damage | 2 | 0
+2 | bandages | some pink bandage | FALSE | 10 | health | 3 | 0
+1 | salt 	| large tub of salt | TRUE | 5 | damage | 4 | 0
+2 | bandages | purple bandages | FALSE | 10 | health | 5 | 0
+2 | bandages | blue bandages | FALSE | 10 | health | 6 | 0
+2 | water bottle | a pink stanley | FALSE | 10 | health | 10 | 0
+1 | rosary | old lady's rosary | TRUE | 5 | damage | 13 | 0 
+2 | crab soup | some good o'l crab soup | FALSE | 15 | health | 14 | 0
+2 | water bottle | a dasani water bottle | FALSE | 10 | health | 15 | 0 
+1 | rubber duck | a small yellow rubber duck | TRUE | 5 | damage | 19 |0
+2 | tacos | three hard shell tacos | FALSE | 15 | health | 20 | 0 
+1 | axe | a double sided war axe | TRUE | 25 | damage | 23 | 0
+1 | null Talisman | a glowing red orb | TRUE | 50 | damage | 0 | 3
